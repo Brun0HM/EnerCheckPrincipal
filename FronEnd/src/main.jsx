@@ -11,7 +11,8 @@ import Logar from "./pages/Logar.jsx";
 import Cadastrar from "./pages/Cadastrar.jsx";
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
-
+import DashBoardGeral from "./Pages/DashBoardGeral.jsx";
+import Planos from "./pages/Planos.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Header />
@@ -21,8 +22,9 @@ createRoot(document.getElementById("root")).render(
         <Route path="/dashboardProjeto" element={<DashboardProjeto />}></Route>
         <Route path="/login" element={<Logar />} />
         <Route path="/cadastrar" element={<Cadastrar />} />
+        <Route path="/dashboardGeral" element={<DashBoardGeral />} />
+        <Route path="/planos" element={<Planos />} />
       </Routes>
     </BrowserRouter>
-    <Footer/>
   </StrictMode>
 );
