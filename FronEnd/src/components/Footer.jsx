@@ -4,7 +4,7 @@ const AnoAtual = DataAtual.getUTCFullYear();
 
 const Footer = () => {
   return (
-  <footer className='bg-black text-start py-md-4 py-2 fixed-bottom'>
+  <footer className='bg-black text-start py-md-4 py-2'>
     <div className='container-fluid w-75'>
     <div className="row ">
       <div className="col col-12 col-md-3 mb-1 mb-md-4">
