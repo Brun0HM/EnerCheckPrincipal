@@ -1,0 +1,26 @@
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+.conformidade {
+  font-size: 0.85rem !important;
+}
+
+.zulzinho {
+  background-color: #e2e7f7 !important;
+}
+
+.circulo {
+  width: 70px !important;
+  height: 70px !important;
+}
+
+.circulozinho {
+  width: 40px !important;
+  height: 40px !important;
+}
+.fundo {
+  background-color: #f8f8f8 !important;
+}

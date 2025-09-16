@@ -1,0 +1,14 @@
+@import "variables";                // suas variáveis
+@import "bootstrap/scss/bootstrap"; // bootstrap com variáveis aplicadas
+
+.headerBlur {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 0 0 15px 15px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .mainContent {
+    padding-top: 120px;
+  }
