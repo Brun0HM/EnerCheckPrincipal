@@ -9,7 +9,13 @@ import Login from "./components/Login";
 
 const App = () => {
   return (
-    <div>
+    <div
+      style={{
+        background: "var(--bg)",
+        color: "var(--text)",
+        minHeight: "100vh",
+      }}
+    >
       <div className="container-fluid mt-5 text-center d-flex flex-column align-items-center justify-content-center">
         <div className={`mainContent`}>
           <div className="container mt-5 text-center d-flex flex-column align-items-center justify-content-center">
