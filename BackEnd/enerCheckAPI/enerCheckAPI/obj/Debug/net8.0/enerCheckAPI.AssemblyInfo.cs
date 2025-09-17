@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("enerCheckAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+efd83de1189807cc523655dc8ace77ea668a6fea")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+734ff66e079de627b2308f0c14c22fcff766022e")]
 [assembly: System.Reflection.AssemblyProductAttribute("enerCheckAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("enerCheckAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
