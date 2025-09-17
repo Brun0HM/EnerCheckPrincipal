@@ -1,7 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\Sesi3\\Desktop\\EnerCheck\\BackEnd\\enerCheckAPI\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{AABCA731-14DD-46CB-8F83-577F40BB5F39}|enerCheckAPI\\enerCheckAPI.csproj|c:\\users\\sesi3\\desktop\\enercheck\\backend\\enercheckapi\\enercheckapi\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AABCA731-14DD-46CB-8F83-577F40BB5F39}|enerCheckAPI\\enerCheckAPI.csproj|solutionrelative:enercheckapi\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +14,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Sesi3\\Desktop\\EnerCheck\\BackEnd\\enerCheckAPI\\enerCheckAPI\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "enerCheckAPI\\Data\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\Sesi3\\Desktop\\EnerCheck\\BackEnd\\enerCheckAPI\\enerCheckAPI\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "enerCheckAPI\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-17T13:20:26.975Z",
+              "EditorCaption": ""
             }
           ]
         }
