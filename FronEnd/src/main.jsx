@@ -13,6 +13,7 @@ import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
 import DashBoardGeral from "./Pages/DashBoardGeral.jsx";
 import Planos from "./pages/Planos.jsx";
+import Tema from "./pages/TesteTheme.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Header />
@@ -24,6 +25,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/cadastrar" element={<Cadastrar />} />
         <Route path="/dashboardGeral" element={<DashBoardGeral />} />
         <Route path="/planos" element={<Planos />} />
+        <Route path="/tema" element={<Tema />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>
