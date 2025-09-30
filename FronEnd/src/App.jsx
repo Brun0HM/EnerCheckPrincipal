@@ -56,6 +56,7 @@ const App = () => {
                 className="img-fluid mt-5"
               />
             </div>
+            <span className="mb-5" id="recursos"></span>
             <div className="mt-5">
               <h1 className="fw-bold fs-1">Por que escolher o EnerCheck?</h1>
               <p className="fs-4 text-secondary">
@@ -101,7 +102,7 @@ const App = () => {
                     description="Ideal para engenheiros, construtoras e profissionais autônomos"
                   />
                 </div>
-                <div className="col-lg-4 col-md-6 mb-3">
+                <div className="col-lg-4 col-md-6 mb-3" id="funciona">
                   <Motivos
                     icon="bi bi-award"
                     title="Qualidade garantida"
@@ -143,7 +144,9 @@ const App = () => {
                   <div className="bg-primary p-4 fw-bold fs-4 rounded-circle text-white d-flex justify-content-center align-items-center circulo mb-3">
                     3
                   </div>
-                  <h4 className="fw-semibold">Relatório Detalhado</h4>
+                  <h4 className="fw-semibold" id="depoimentos">
+                    Relatório Detalhado
+                  </h4>
                   <p className="text-secondary fs-5">
                     Receba o relatório detalhado com todas as conformidades
                     identificadas

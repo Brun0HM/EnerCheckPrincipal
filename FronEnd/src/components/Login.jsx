@@ -29,7 +29,7 @@ const Login = () => {
             <input className="form-check-input" type="checkbox" />
             <p className="fw-semibold">Lembrar de mim</p>
           </div>
-          <a className="text-decoration-none" href="">
+          <a className="text-decoration-none" href="/cadastrar">
             Esqueceu a senha?
           </a>
         </div>

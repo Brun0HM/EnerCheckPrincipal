@@ -10,23 +10,24 @@ import DashboardProjeto from "./Pages/DashboardProjeto.jsx";
 import Logar from "./pages/Logar.jsx";
 import Cadastrar from "./pages/Cadastrar.jsx";
 import Header from "./components/Header.jsx";
-import Footer from "./components/Footer.jsx";
 import DashBoardGeral from "./Pages/DashBoardGeral.jsx";
 import Planos from "./pages/Planos.jsx";
 import Tema from "./pages/TesteTheme.jsx";
+import Footer from "./components/Footer.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Header />
     <BrowserRouter>
+      <Header />
       <Routes>
         <Route path="/*" element={<App />} />
         <Route path="/dashboardProjeto" element={<DashboardProjeto />}></Route>
         <Route path="/login" element={<Logar />} />
-        <Route path="/cadastrar" element={<Cadastrar />} />
+        <Route path="/cadastro" element={<Cadastrar />} />
         <Route path="/dashboardGeral" element={<DashBoardGeral />} />
         <Route path="/planos" element={<Planos />} />
         <Route path="/tema" element={<Tema />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   </StrictMode>
 );
