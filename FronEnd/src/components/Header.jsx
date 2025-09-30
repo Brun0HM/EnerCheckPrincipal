@@ -5,6 +5,7 @@ import { useTheme } from "../hooks/useTheme"; // <-- importa o hook
 const Header = () => {
   const [MenuOpen, setMenuOpen] = useState(false);
   const { theme, toggleTheme } = useTheme(); // <-- usa o hook
+  
 
   return (
     <header className="container-fluid position-fixed fixed-top my-0 headerBlur text-center">
