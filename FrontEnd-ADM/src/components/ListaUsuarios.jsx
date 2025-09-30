@@ -1,7 +1,12 @@
 import React from "react";
 import { ComponenteLista } from "./ComponenteLista";
+import usuarios from "../apis/usuarios";
+
 
 export const ListaUsuarios = () => {
+const user = usuarios;
+
+
   return (
     <div className="border border-2 border-dark border-opacity-10 shadow d-flex flex-column rounded-4 px-3 py-3">
       <div className="d-flex justify-content-between align-items-center">
@@ -16,13 +21,26 @@ export const ListaUsuarios = () => {
         </button>
       </div>
 
-          <div className="d-flex flex-column gap-2">
-            <ComponenteLista />
-            <ComponenteLista />
-            <ComponenteLista />
-            <ComponenteLista />
-            <ComponenteLista />
-            <ComponenteLista />
+          <div className="d-flex flex-column gap-2 overflow-y-scroll" style={{ maxHeight: "500px" }} >
+            {
+              user.map((users) => (
+                <ComponenteLista
+                key={users.id}
+                nome={users.usuarioNome}
+                desc={users.email}
+    
+                topic1={'CREA'}
+                t1info={users.crea}
+
+                topic2={'Data de Criação'}
+                t2info={users.dataCriacao}
+    
+                topic3={'Plano'}
+                t3info={users.planos[0]?.nome}
+                />
+              ))
+            }
+
 
           </div>
       
