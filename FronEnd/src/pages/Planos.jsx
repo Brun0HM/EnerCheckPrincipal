@@ -4,7 +4,13 @@ import PerguntasFrequentes from "../components/PerguntasFrequentes";
 
 const Planos = () => {
   return (
-    <div>
+    <div
+      style={{
+        background: "var(--bg)",
+        color: "var(--text)",
+        minHeight: "100vh",
+      }}
+    >
       <div className="container-fluid text-center d-flex flex-column align-items-center justify-content-center">
         <div className={`mainContent`}>
           <div className="container mt-5 text-center d-flex flex-column align-items-center justify-content-center px-3">
@@ -30,7 +36,10 @@ const Planos = () => {
               </div>
             </div>
           </div>
-          <div className="d-flex flex-column flex-lg-row justify-content-center align-items-center align-items-lg-stretch gap-3 px-3">
+          <div
+            className="d-flex flex-column flex-lg-row justify-content-center align-items-stretch gap-3 px-3"
+            style={{ minHeight: "600px" }}
+          >
             <TiposPlanos
               icon="bi bi-star"
               title="Básco"
