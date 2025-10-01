@@ -34,6 +34,11 @@ const Header = () => {
                 <button
                   className="navbar-toggler btn btn-dark fs-4 rounded-3 d-lg-none ms-auto"
                   type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#navbarSupportedContent"
+                  aria-controls="navbarSupportedContent"
+                  aria-expanded="false"
+                  aria-label="Toggle navigation"
                   onClick={() => setMenuOpen(!MenuOpen)}
                 >
                   <i className={`${MenuOpen ? "bi bi-x " : "bi bi-list"}`}></i>
