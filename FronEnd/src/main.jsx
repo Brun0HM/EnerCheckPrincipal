@@ -10,7 +10,8 @@ import DashboardProjeto from "./Pages/DashboardProjeto.jsx";
 import Logar from "./pages/Logar.jsx";
 import Cadastrar from "./pages/Cadastrar.jsx";
 import Header from "./components/Header.jsx";
-import DashBoardGeral from "./Pages/DashBoardGeral.jsx";
+import DashBoardGeral from "./pages/DashboardGeral.jsx";
+
 import Planos from "./pages/Planos.jsx";
 import Tema from "./pages/TesteTheme.jsx";
 import Footer from "./components/Footer.jsx";

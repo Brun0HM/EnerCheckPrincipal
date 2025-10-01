@@ -3,17 +3,15 @@ import { InfoGeralContainer } from "../components/InfoGeralContainer";
 import { ContainerChecagem } from "../components/ContainerChecagem";
 
 const DashboardProjeto = () => {
-    
-    const [comentarioGeral, setComentarioGeral] = useState("");
-    const [comentConform, setComentConform] = useState("");
-    const [comentInstalacao, setComentInstalacao] = useState("");
-    
-    const pontuacaoGeral = 70;
+  const [comentarioGeral, setComentarioGeral] = useState("");
+  const [comentConform, setComentConform] = useState("");
+  const [comentInstalacao, setComentInstalacao] = useState("");
+
+  const pontuacaoGeral = 10;
 
   const pontuacaoConformidade = 90;
 
   const pontuacaoInstalacao = 50;
-
 
   const trocarComentario = () => {
     if (pontuacaoGeral <= 50) {
@@ -30,7 +28,7 @@ const DashboardProjeto = () => {
     }
   };
 
-    const trocarComentInst = () => {
+  const trocarComentInst = () => {
     if (pontuacaoInstalacao <= 50) {
       setComentInstalacao("Razoável, ajustes necessários");
     }
@@ -44,8 +42,6 @@ const DashboardProjeto = () => {
       setComentInstalacao("Erros críticos a serem revisados");
     }
   };
-
-
 
   const trocarComentConform = () => {
     if (pontuacaoConformidade <= 50) {
@@ -68,49 +64,57 @@ const DashboardProjeto = () => {
 
   useEffect(() => {
     trocarComentConform();
-  }, [pontuacaoConformidade])
+  }, [pontuacaoConformidade]);
 
   useEffect(() => {
     trocarComentInst();
-  }, [pontuacaoInstalacao])
+  }, [pontuacaoInstalacao]);
 
   return (
-    <div className="d-flex flex-column gap-2">
-      <div className="my-3 d-flex flex-row p-3 gap-3">
-        <InfoGeralContainer
-          topico={"Pontuação Geral"}
-          iconeTopico={"bi-rocket-takeoff"}
-          corNumero={"primary"}
-          pontuacaoGeral={pontuacaoGeral}
-          comentario={comentarioGeral}
-        />
+    <div
+      style={{
+        background: "var(--bg)",
+        color: "var(--text)",
+        minHeight: "100vh",
+      }}
+    >
+      <div className="d-flex flex-column gap-2">
+        <div className="my-3 d-flex flex-row p-3 gap-3">
+          <InfoGeralContainer
+            topico={"Pontuação Geral"}
+            iconeTopico={"bi-rocket-takeoff"}
+            corNumero={"primary"}
+            pontuacaoGeral={pontuacaoGeral}
+            comentario={comentarioGeral}
+          />
 
-        <InfoGeralContainer
-          topico={"Pontuação de Conformidade"}
-          iconeTopico={"bi-rocket-takeoff"}
-          corNumero={"success"}
-          pontuacaoGeral={pontuacaoConformidade}
-          comentario={comentConform}
-        />
+          <InfoGeralContainer
+            topico={"Pontuação de Conformidade"}
+            iconeTopico={"bi-rocket-takeoff"}
+            corNumero={"success"}
+            pontuacaoGeral={pontuacaoConformidade}
+            comentario={comentConform}
+          />
 
-        <InfoGeralContainer
-          topico={"Pontuação de Instalação"}
-          iconeTopico={"bi-rocket-takeoff"}
-          corNumero={"danger"}
-          pontuacaoGeral={pontuacaoInstalacao}
-          comentario={comentInstalacao}
-        />
-      </div>
+          <InfoGeralContainer
+            topico={"Pontuação de Instalação"}
+            iconeTopico={"bi-rocket-takeoff"}
+            corNumero={"danger"}
+            pontuacaoGeral={pontuacaoInstalacao}
+            comentario={comentInstalacao}
+          />
+        </div>
 
-      <div className="px-3 d-flex flex-row gap-3 my-2">
-        <ContainerChecagem
-          categoria={"Topico 1"}
-          descricao={"Descrição do topico 1"}
-        />
-        <ContainerChecagem
-          categoria={"Topico 2"}
-          descricao={"Descrição do topico 2"}
-        />
+        <div className="px-3 d-flex flex-row gap-3 my-2">
+          <ContainerChecagem
+            categoria={"Topico 1"}
+            descricao={"Descrição do topico 1"}
+          />
+          <ContainerChecagem
+            categoria={"Topico 2"}
+            descricao={"Descrição do topico 2"}
+          />
+        </div>
       </div>
     </div>
   );
