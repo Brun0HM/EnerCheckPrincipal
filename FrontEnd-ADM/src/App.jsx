@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState } from 'react'
+
 
 function App() {
   const [email, setEmail] = useState("");
@@ -11,7 +12,8 @@ function App() {
   };
 
   return (
-    <div>
+    <>
+        <div>
       <div className="d-flex justify-content-center align-items-center vh-100">
         <div
           className="bg-white p-4 rounded-3 border border-black border-opacity-25 shadow"
@@ -71,6 +73,8 @@ function App() {
         </div>
       </div>
     </div>
+    </>
+
   );
 }
 
