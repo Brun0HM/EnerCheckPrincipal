@@ -2,10 +2,7 @@ import React from "react";
 import "./App.css";
 import Motivos from "./components/Motivos";
 import Depoimentos from "./components/Depoimentos";
-import Header from "./components/Header";
 import "./styles/main.scss";
-import Footer from "./components/Footer";
-import Login from "./components/Login";
 
 const App = () => {
   return (
@@ -202,11 +199,11 @@ const App = () => {
                   trabalho com o EnerCheck
                 </p>
 
-                <div>
-                  <button className="btn btn-dark fw-semibold">
+                <div className="pb-5">
+                  <button className="btn btn-primary fw-semibold">
                     Comece Gratuitamente
                   </button>
-                  <button className="btn btn-outline-dark fw-semibold ms-3">
+                  <button className="btn btn-outline-primary fw-semibold ms-3">
                     Falar com Especialista
                   </button>
                 </div>
