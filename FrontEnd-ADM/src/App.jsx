@@ -1,12 +1,16 @@
 import { useState } from 'react'
 import { TabelaGeral } from './components/TabelaGeral'
 import { ListaUsuarios } from './components/ListaUsuarios'
+import OffCanva from './components/OffCanva'
 
 function App() {
 
 
   return (
-
+<>
+      <div >
+      <OffCanva/>
+      </div>
     <div className='p-2 w-100 h-100'>
       <h3 className='text-capitalize fw-bold text-start m-0'>administração de usuários</h3>
       <p className='fs-6 fw-light'>Ler, criar, editar e excluir cadastro de usuários</p>
@@ -16,6 +20,7 @@ function App() {
     </div>
     
     </div>
+    </>
   )
 }
 
