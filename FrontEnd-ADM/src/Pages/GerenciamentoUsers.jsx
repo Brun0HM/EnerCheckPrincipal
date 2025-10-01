@@ -3,14 +3,12 @@ import { TabelaGeral } from '../components/TabelaGeral'
 import { ContainerLista } from '../components/ContainerLista'
 import usuarios from '../apis/usuarios'
 import { ListaUsers } from '../components/ListaUsers'
-import OffCanva from '../components/OffCanva'
+
 
 const GerenciamentoUsers = () => {
   return (
     <>
-    <div>
-      <OffCanva/>
-    </div>
+
     <div className='px-3 py-5'>
       <h3 className='text-capitalize fw-bold text-start m-0'>Administração de usuários</h3>
       <p className='fs-6 fw-light'>Ler, criar, editar e excluir cadastro de usuários</p>
