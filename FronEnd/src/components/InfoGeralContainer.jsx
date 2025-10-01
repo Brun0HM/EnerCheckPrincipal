@@ -2,7 +2,7 @@ import React from "react";
 
 export const InfoGeralContainer = (props) => {
   return (
-    <div className="container border border-1 border-dark-subtle bg-secondary bg-opacity-10 rounded-3 w-50 py-3 px-3">
+    <div className="container border border-1 border-dark-subtle bg-white rounded-3 w-50 py-3 px-3">
       <div className="d-flex flex-column ">
         <div className="d-flex flex-row justify-content-between">
           <p className="fw-medium">{props.topico}</p>
@@ -24,7 +24,9 @@ export const InfoGeralContainer = (props) => {
               style={{ width: `${props.pontuacaoGeral}%` }}
             ></div>
           </div>
-          <p className="small fw-regular mt-2 mt-md-1">{props.comentario}</p>
+          <p className="small fw-regular text-black mt-2 mt-md-1">
+            {props.comentario}
+          </p>
         </div>
       </div>
     </div>

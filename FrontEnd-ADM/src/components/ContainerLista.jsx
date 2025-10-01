@@ -1,13 +1,18 @@
 import React from "react";
 import { ComponenteLista } from "./ComponenteLista";
+import usuarios from "../apis/usuarios";
+import { ListaUsers } from "./ListaUsers";
 
-export const ListaUsuarios = () => {
+
+export const ContainerLista = (props) => {
+
+
   return (
     <div className="border border-2 border-dark border-opacity-10 shadow d-flex flex-column rounded-4 px-3 py-3">
       <div className="d-flex justify-content-between align-items-center">
         <div>
-            <p className="m-0 fw-bold fs-5">Lista de usuários</p>
-            <p className="small">Gerencie todos os usuários disponíveis no sistema</p>
+            <p className="m-0 fw-bold fs-5">{props.topico}</p>
+            <p className="small">{props.desc}</p>
         </div>
         <button className="btn btn-dark py-1 px-3 rounded-3">
             <div className="d-flex flex-row align-items-center">
@@ -16,15 +21,7 @@ export const ListaUsuarios = () => {
         </button>
       </div>
 
-          <div className="d-flex flex-column gap-2">
-            <ComponenteLista />
-            <ComponenteLista />
-            <ComponenteLista />
-            <ComponenteLista />
-            <ComponenteLista />
-            <ComponenteLista />
-
-          </div>
+          {props.lista}
       
     </div>
   );

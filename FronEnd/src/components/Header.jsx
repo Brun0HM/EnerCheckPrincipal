@@ -34,13 +34,16 @@ const Header = () => {
                 <button
                   className="navbar-toggler btn btn-dark fs-4 rounded-3 d-lg-none ms-auto"
                   type="button"
+                  aria-controls="navbarSupportedContent"
+                  aria-expanded={MenuOpen}
+                  aria-label="Toggle navigation"
                   onClick={() => setMenuOpen(!MenuOpen)}
                 >
                   <i className={`${MenuOpen ? "bi bi-x " : "bi bi-list"}`}></i>
                 </button>
 
                 <div
-                  className="collapse navbar-collapse"
+                   className={`collapse navbar-collapse ${MenuOpen ? 'show' : ''}`}
                   id="navbarSupportedContent"
                 >
                   <ul className="navbar-nav flex-column flex-lg-row ms-auto">
