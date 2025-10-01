@@ -41,7 +41,7 @@ export default function App() {
             component={HomeScreen} // Tela associada a rota
             options={{
               tabBarIcon: ({ color, size }) => (
-                <Text style={{ fontSize: size * 0.8, color }}>🏠</Text>
+                <Text style={{ fontSize: size * 0.8, color }}>🤖</Text>
               ),
             }}
           />
