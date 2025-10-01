@@ -78,7 +78,7 @@ const DashboardProjeto = () => {
         minHeight: "100vh",
       }}
     >
-      <div className="d-flex flex-column gap-2">
+      <div className="d-flex flex-column container gap-2">
         <div className="my-3 d-flex flex-row p-3 gap-3">
           <InfoGeralContainer
             topico={"Pontuação Geral"}
