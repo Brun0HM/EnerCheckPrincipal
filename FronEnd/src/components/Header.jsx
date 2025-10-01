@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import "../styles/main.scss";
 import { useTheme } from "../hooks/useTheme"; // <-- importa o hook
+import { useNavigate } from "react-router";
 
 const Header = () => {
   const [MenuOpen, setMenuOpen] = useState(false);
   const { theme, toggleTheme } = useTheme(); // <-- usa o hook
+  const navigate = useNavigate();
 
   return (
     <header className="container-fluid position-fixed fixed-top my-0 headerBlur text-center">
@@ -12,7 +14,7 @@ const Header = () => {
         <div className="my-2">
           <div className="row align-items-center">
             {/* Logo e título */}
-            <div className="col-6 col-lg-auto">
+            <div className="col-6 col-lg-auto" onClick={() => navigate("/")}>
               <a
                 className="d-flex align-items-center ms-3 ms-lg-5 text-decoration-none"
                 href="/*"
@@ -46,7 +48,7 @@ const Header = () => {
                     <li className="nav-item">
                       <a
                         className="text-decoration-none text-dark mx-3 nav-link"
-                        href="#"
+                        href="#recursos"
                       >
                         Recursos
                       </a>
@@ -54,7 +56,7 @@ const Header = () => {
                     <li className="nav-item">
                       <a
                         className="text-decoration-none text-dark mx-3 nav-link"
-                        href="#"
+                        href="#funciona"
                       >
                         Como Funciona
                       </a>
@@ -62,7 +64,7 @@ const Header = () => {
                     <li className="nav-item">
                       <a
                         className="text-decoration-none text-dark mx-3 nav-link"
-                        href="#"
+                        href="#depoimentos"
                       >
                         Depoimentos
                       </a>
@@ -70,13 +72,11 @@ const Header = () => {
 
                     {/* Botões de login e teste */}
                     <li className="nav-item">
-                      <button className="btn btn-light border-black mx-3 my-1">
-                        <a
-                          className="text-decoration-none text-dark"
-                          href="/login"
-                        >
-                          Entrar
-                        </a>
+                      <button
+                        className="btn btn-light border-black mx-3 my-1"
+                        onClick={() => navigate("/login")}
+                      >
+                        <a className="text-decoration-none text-dark">Entrar</a>
                       </button>
                     </li>
                     <li className="nav-item">
