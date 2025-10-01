@@ -80,7 +80,10 @@ const Header = () => {
                       </button>
                     </li>
                     <li className="nav-item">
-                      <button className="btn btn-dark mx-3 my-1">
+                      <button
+                        className="btn btn-dark mx-3 my-1"
+                        onClick={() => navigate("/planos")}
+                      >
                         <a className="text-decoration-none text-light" href="#">
                           Experimente Grátis!
                         </a>
