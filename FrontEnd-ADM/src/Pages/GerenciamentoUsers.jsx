@@ -9,10 +9,10 @@ const GerenciamentoUsers = () => {
   return (
     <>
 
-    <div className='px-3 py-5'>
+    <div className='container'>
       <h3 className='text-capitalize fw-bold text-start m-0'>Administração de usuários</h3>
       <p className='fs-6 fw-light'>Ler, criar, editar e excluir cadastro de usuários</p>
-    <div className='container d-flex flex-column gap-3'>
+    <div className='d-flex flex-column'>
 
     <TabelaGeral
     topic1={"Cadastros Totais"}
