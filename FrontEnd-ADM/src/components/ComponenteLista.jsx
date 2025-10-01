@@ -15,7 +15,7 @@ export const ComponenteLista = (props) => {
                 </div>
                 <div className="d-flex flex-column gap-0 align-items-center">
                 <p className="m-0 fw-medium fs-5 text-primary">{props.topic2}</p>
-                <p className="fw-semibold m-0">{props.t2info}</p>
+                <p className="fw-semibold m-0 invisible">{props.t2info}</p>
                 </div>
 
                 <div className="d-flex flex-column gap-0 align-items-center">

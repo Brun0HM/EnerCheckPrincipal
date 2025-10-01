@@ -6,6 +6,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { BrowserRouter, Route, Routes } from "react-router"
 import App from './App.jsx'
 import GerenciamentoUsers from './Pages/GerenciamentoUsers.jsx';
+import GerenciamentoPlanos from './Pages/GerenciamentoPlanos.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -13,6 +14,7 @@ createRoot(document.getElementById('root')).render(
     <Routes>  
       <Route path="/*" element={<App />}> </Route>
       <Route path='/users' element={<GerenciamentoUsers />} />
+      <Route  path='/planos' element={<GerenciamentoPlanos />} />
     </Routes>
     </BrowserRouter>
   </StrictMode>
