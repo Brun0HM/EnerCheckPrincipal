@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router";
 const OffCanva = () => {
 const [activePage, setActivePage] = useState('/')
   const navigate = useNavigate();
-  const location = useLocation;
+  const location = useLocation(); 
 
   useEffect(() => {
     setActivePage(location.pathname);
