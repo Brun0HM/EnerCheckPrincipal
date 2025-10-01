@@ -2,9 +2,14 @@ import React from 'react'
 import { TabelaGeral } from '../components/TabelaGeral'
 import { ContainerLista } from '../components/ContainerLista'
 import { ListaPlanos } from '../components/ListaPlanos'
+import OffCanva from '../components/OffCanva'
 
 const GerenciamentoPlanos = () => {
   return (
+    <>
+    <div>
+      <OffCanva/>
+    </div>
     <div className='container'>
         <h3 className='text-capitalize fw-bold text-start m-0'>Administração de planos</h3>
         <p className='fs-6 fw-light'>Ler, criar, editar e excluir cadastro de planos</p>
@@ -29,6 +34,7 @@ const GerenciamentoPlanos = () => {
 
     </div>
     </div>
+    </>
   )
 }
 
