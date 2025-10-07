@@ -1,23 +1,26 @@
-import App from "./App.jsx";
-import GerenciamentoUsers from "./Pages/GerenciamentoUsers.jsx";
-import GerenciamentoPlanos from "./Pages/GerenciamentoPlanos.jsx";
+import App from './App.jsx'
+import GerenciamentoUsers from './Pages/GerenciamentoUsers.jsx';
+import GerenciamentoPlanos from './Pages/GerenciamentoPlanos.jsx';
+import GerenciamentoIa from './Pages/GerenciamentoIa.jsx';
 import OffCanva from "./components/OffCanva.jsx";
 import { Route, Routes, useLocation } from "react-router";
 
 const AppWrapper = () => {
-  const location = useLocation();
-  const showOffCanva = ["/users", "/planos"].includes(location.pathname);
+const location = useLocation();
+const showOffCanva = ['/users', '/planos', '/projetos'].includes(location.pathname);
 
-  return (
-    <>
-      {showOffCanva && <OffCanva />}
-      <Routes>
-        <Route path="/*" element={<App />} />
-        <Route path="/users" element={<GerenciamentoUsers />} />
-        <Route path="/planos" element={<GerenciamentoPlanos />} />
-      </Routes>
-    </>
-  );
+return (
+  <>
+    {showOffCanva && <OffCanva />}
+    <Routes>  
+      <Route path="/*" element={<App />} />
+      <Route path='/users' element={<GerenciamentoUsers />} />
+      <Route path='/planos' element={<GerenciamentoPlanos />} />
+      <Route path='/projetos' element={<GerenciamentoIa/>} />
+
+    </Routes>
+  </>
+);
 };
 
 export default AppWrapper;

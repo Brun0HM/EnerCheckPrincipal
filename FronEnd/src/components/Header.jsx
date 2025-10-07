@@ -43,7 +43,9 @@ const Header = () => {
                 </button>
 
                 <div
-                   className={`collapse navbar-collapse ${MenuOpen ? 'show' : ''}`}
+                  className={`collapse navbar-collapse ${
+                    MenuOpen ? "show" : ""
+                  }`}
                   id="navbarSupportedContent"
                 >
                   <ul className="navbar-nav flex-column flex-lg-row ms-auto">

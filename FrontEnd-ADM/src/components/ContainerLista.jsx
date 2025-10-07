@@ -1,7 +1,4 @@
 import React from "react";
-import { ComponenteLista } from "./ComponenteLista";
-import usuarios from "../apis/usuarios";
-import { ListaUsers } from "./ListaUsers";
 
 export const ContainerLista = (props) => {
   return (
