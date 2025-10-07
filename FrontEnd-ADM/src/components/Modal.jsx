@@ -6,6 +6,7 @@ const Modal = (props) => {
   const [email, setEmail] = useState("");
   const [crea, setCrea] = useState("");
   const [plano, setPlano] = useState("");
+  const [isCreaValid, setIsCreaValid] = useState(false);
 
   const handleCadastrar = () => {
     const novoUsuario = {
@@ -22,8 +23,19 @@ const Modal = (props) => {
     setEmail("");
     setCrea("");
     setPlano("");
+    setIsCreaValid(true); // Reseta a validação
 
     props.modalOpen();
+  };
+
+  const handleCreaChange = (e) => {
+    const value = e.target.value;
+    if (value.length === 10) {
+      setIsCreaValid(true);
+    } else {
+      setIsCreaValid(false);
+    }
+    setCrea(value);
   };
 
   return (
@@ -51,15 +63,17 @@ const Modal = (props) => {
           />
         </div>
         <div className="CREA col-11 col-md-10">
-          <label htmlFor="">CREA</label>
-          {/* 10 digitos */}
+          <label htmlFor="crea">CREA</label>
           <input
             id="crea"
             value={crea}
-            onChange={(e) => setCrea(e.target.value)}
+            onChange={handleCreaChange}
             type="number"
-            className="form-control"
+            className={`form-control ${isCreaValid ? "" : "is-invalid"}`} // Adiciona classe de validação
           />
+          <div className="invalid-feedback">
+            O CREA deve ter exatamente 10 dígitos.
+          </div>
         </div>
         <div className="Plano col-11 col-md-10">
           <label htmlFor="">Plano</label>
@@ -72,7 +86,11 @@ const Modal = (props) => {
           />
         </div>
         <div className="col-10 d-flex justify-content-between mt-3">
-          <button className="btn btn-primary col-5" onClick={handleCadastrar}>
+          <button
+            className="btn btn-primary col-5"
+            disabled={!isCreaValid}
+            onClick={handleCadastrar}
+          >
             Cadastrar
           </button>
           <button
