@@ -8,15 +8,13 @@ export const ContainerLista = (props) => {
           <p className="m-0 fw-bold fs-5">{props.topico}</p>
           <p className="small">{props.desc}</p>
         </div>
-        <button className="btn btn-dark py-1 px-3 rounded-3">
+        <button className={`btn btn-dark py-1 px-3 rounded-3 ${props.sumiu}`}>
           <div
-            className="d-flex flex-row align-items-center"
+            className="d-flex flex-row align-items-center "
             onClick={props.ModalOpen}
           >
             <i className="bi bi-person-plus-fill text-primary fs-3 me-2"></i>{" "}
-            <b className="fs-5" onClick={props.ModalOpen}>
-              Cadastrar
-            </b>
+            <b className="fs-5">Cadastrar</b>
           </div>
         </button>
       </div>

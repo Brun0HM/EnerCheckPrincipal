@@ -8,8 +8,10 @@ export const ComponenteLista = (props) => {
         <p className="m-0 small">{props.desc}</p>
       </div>
 
-                {props.topic1 && (
-        <div className={`d-flex flex-column gap-0 align-items-center ${props.display1}`} >
+      {props.topic1 && (
+        <div
+          className={`d-flex flex-column gap-0 align-items-center ${props.display1}`}
+        >
           <p className="m-0 fw-medium fs-5 text-primary">{props.topic1}</p>
           <p className="fw-semibold m-0">{props.t1info}</p>
         </div>
@@ -48,7 +50,6 @@ export const ComponenteLista = (props) => {
         <i className="bi bi-pencil-fill text-warning"></i>
         <i className="bi bi-eye-fill text-info" onClick={props.view}></i>
       </div>
-                
-            </div>
-  )
-}
+    </div>
+  );
+};
