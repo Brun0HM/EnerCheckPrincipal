@@ -15,6 +15,7 @@ import DashBoardGeral from "./pages/DashboardGeral.jsx";
 import Planos from "./pages/Planos.jsx";
 import Tema from "./pages/TesteTheme.jsx";
 import Footer from "./components/Footer.jsx";
+import UploadProjeto from "./pages/UploadProjeto.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
@@ -27,6 +28,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/dashboardGeral" element={<DashBoardGeral />} />
         <Route path="/planos" element={<Planos />} />
         <Route path="/tema" element={<Tema />} />
+        <Route path="/uploadProjeto" element={<UploadProjeto />} />
       </Routes>
       <Footer />
     </BrowserRouter>

@@ -5,7 +5,7 @@ import { ComponenteLista } from './ComponenteLista'
 
 export const ListaUsers = () => {
   return (
-    <div className="d-flex flex-column gap-2 overflow-y-auto rounded-4 " style={{ maxHeight: "500px" }} >
+    <div className="d-flex flex-column gap-2 overflow-y-auto rounded-4" style={{ maxHeight: "500px" }} >
             {
               usuarios.map((users) => (
                 <ComponenteLista

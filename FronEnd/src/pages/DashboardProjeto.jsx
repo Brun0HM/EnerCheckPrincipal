@@ -78,10 +78,10 @@ const DashboardProjeto = () => {
         minHeight: "100vh",
       }}
     >
-      <div className="d-flex flex-column container gap-2">
+      <div className="d-flex flex-column container gap-2 my-5">
         <div className="my-3 d-flex flex-row p-3 gap-3">
           <InfoGeralContainer
-            topico={"Pontuação Geral"}
+            topico={"Condutores e Circuitos"}
             iconeTopico={"bi-rocket-takeoff"}
             corNumero={"primary"}
             pontuacaoGeral={pontuacaoGeral}
@@ -89,7 +89,7 @@ const DashboardProjeto = () => {
           />
 
           <InfoGeralContainer
-            topico={"Pontuação de Conformidade"}
+            topico={"Pontos de Utilização"}
             iconeTopico={"bi-rocket-takeoff"}
             corNumero={"success"}
             pontuacaoGeral={pontuacaoConformidade}
@@ -97,7 +97,7 @@ const DashboardProjeto = () => {
           />
 
           <InfoGeralContainer
-            topico={"Pontuação de Instalação"}
+            topico={"Proteção e Segurança"}
             iconeTopico={"bi-rocket-takeoff"}
             corNumero={"danger"}
             pontuacaoGeral={pontuacaoInstalacao}
