@@ -9,6 +9,7 @@ import DashBoardGeral from "./pages/DashboardGeral";
 import Planos from "./pages/Planos";
 import Tema from "./pages/TesteTheme";
 import Footer from "./components/Footer";
+import ResumoPedido from "./components/ResumoPedido.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -19,7 +20,7 @@ const Layout = () => {
 
   return (
     <>
-      {!shouldHideNavbar && <Header />}
+      {/* {!shouldHideNavbar && <Header />} */}
       <Routes>
         <Route path="/*" element={<App />} />
         <Route path="/dashboardProjeto" element={<DashboardProjeto />}></Route>
@@ -28,8 +29,9 @@ const Layout = () => {
         <Route path="/dashboardGeral" element={<DashBoardGeral />} />
         <Route path="/planos" element={<Planos />} />
         <Route path="/tema" element={<Tema />} />
+        <Route path="/teste" element={<ResumoPedido />} />
       </Routes>
-      {!shouldHideNavbar && <Footer />}
+      {/* {!shouldHideNavbar && <Footer />} */}
     </>
   );
 };
