@@ -8,11 +8,10 @@ const Modal = (props) => {
   const [plano, setPlano] = useState("");
 
   const handleCadastrar = () => {
-    // Cria um novo objeto de usuário
     const novoUsuario = {
       usuarioNome: nome,
       email: email,
-      dataCriacao: new Date().toLocaleDateString(), // Data atual
+      dataCriacao: new Date().toLocaleDateString(),
       crea: crea,
       planos: [{ nome: plano }],
     };
