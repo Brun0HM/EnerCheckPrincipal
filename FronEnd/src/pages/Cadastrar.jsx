@@ -12,7 +12,8 @@ const Cadastrar = () => {
         backgroundColor: "var(--bg)",
         color: "var(--text)",
         transition: "all 0.3s ease",
-        paddingBottom: "4rem",
+        paddingBottom: "35rem",
+        paddingTop: "30rem",
       }}
     >
       {/* Espaçamento superior */}
