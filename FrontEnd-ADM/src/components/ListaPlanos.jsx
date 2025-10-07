@@ -15,7 +15,7 @@ export const ListaPlanos = () => {
           topic1={"Preço"}
           t1info={plano.preco}
           topic2={"Requisições"}
-          t2info={plano.requisicoes}
+          t2info={plano.req}
           topic3={"Ativo?"}
           t3info={plano.ativo ? "Sim" : "Não"}
         />
