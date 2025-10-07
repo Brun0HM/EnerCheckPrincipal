@@ -2,20 +2,35 @@ import React, { useState } from 'react'
 import usuarios from '../apis/usuarios'
 import { ComponenteLista } from './ComponenteLista'
 import VisualizarLista from './VisualizarLista';
+import DeleteModal from './DeleteModal';
 
 
 export const ListaUsers = () => {
    const [selectedItem, setSelectedItem] = useState(null);
-      const [showModal, setShowModal] = useState(false);
-    
-      const handleView = (item)=>{
-        setSelectedItem(item);
-        setShowModal(true);
-      }
-      const handleCloseModal = ()=>{
-        setSelectedItem(null);
-        setShowModal(false);
-      }
+    const [showModalView, setShowModalView] = useState(false);
+    const [showModalDelete, setShowModalDelete] = useState(false);
+      
+  
+    const handleView = (item)=>{
+      setSelectedItem(item);
+      setShowModalView(true);
+    }
+    const handleCloseModalView = ()=>{
+      setSelectedItem(null);
+      setShowModalView(false);
+    }
+    const handleCloseModalDelete = ()=>{
+      setSelectedItem(null);
+      setShowModalDelete(false);
+    }
+    const handleDelete = (item) => {
+      setSelectedItem(item);
+      setShowModalDelete(true);
+    }
+  
+    const handleConfirmDelete = (itemId) => {
+      console.log(`Excluindo item com ID: ${itemId}`);
+    }
   return (
     <>
     <div className="d-flex flex-column gap-2 overflow-y-auto rounded-4 " style={{ maxHeight: "500px" }} >
@@ -35,18 +50,29 @@ export const ListaUsers = () => {
                 topic3={'Plano'}
                 t3info={item.planos[0]?.nome}
                 view={()=> handleView(item)}
+                delete={()=> handleDelete(item)}
                 />
               ))
             }
 
 
           </div>
-          {showModal &&(
+          {showModalView &&(
       <div className='modal show d-block' tabIndex="-1">
-        <div className='modal-backdrop show' onClick={handleCloseModal}></div>
+        <div className='modal-backdrop show' onClick={handleCloseModalView}></div>
         <VisualizarLista
         item={selectedItem}
-        onClose={handleCloseModal}
+        onClose={handleCloseModalView}
+        />
+      </div>
+    )}
+     {showModalDelete &&(
+      <div className='modal show d-block' tabIndex="-1">
+        <div className='modal-backdrop show' onClick={handleCloseModalDelete}></div>
+        <DeleteModal
+        item={selectedItem}
+        onClose={handleCloseModalDelete}
+        onConfirm={handleConfirmDelete}
         />
       </div>
     )}
