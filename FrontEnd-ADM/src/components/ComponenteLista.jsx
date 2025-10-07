@@ -47,7 +47,7 @@ export const ComponenteLista = (props) => {
       <div className="d-flex flex-row gap-3 align-items-center">
         <i className="bi bi-trash-fill text-danger"></i>
         <i className="bi bi-pencil-fill text-warning"></i>
-        <i className="bi bi-eye-fill text-info"></i>
+        <i className="bi bi-eye-fill text-info" onClick={props.view}></i>
       </div>
                 
             </div>

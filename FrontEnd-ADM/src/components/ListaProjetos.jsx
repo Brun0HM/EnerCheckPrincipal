@@ -1,5 +1,6 @@
 import React from 'react'
 import monitoramento from '../apis/monitoramento'
+import { ComponenteLista } from './ComponenteLista';
 
 const ListaProjetos = () => {
   return (
@@ -19,6 +20,7 @@ const ListaProjetos = () => {
           t3info={monitoramento.data}
           topic4={"Status"}
           t4info={monitoramento.statusProjeto}
+          view={""}
         />
       ))}
     </div>
