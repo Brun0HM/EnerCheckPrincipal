@@ -15,6 +15,8 @@ const DashboardGeral = () => {
         background: "var(--bg)",
         color: "var(--text)",
         minHeight: "100vh",
+        paddingTop: "3rem",
+        paddingBottom: "2rem",
       }}
     >
       <div className="container mt-5">

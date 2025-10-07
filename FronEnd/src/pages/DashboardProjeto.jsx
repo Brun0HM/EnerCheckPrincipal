@@ -85,12 +85,11 @@ const DashboardProjeto = () => {
         paddingBottom: "2rem",
       }}
     >
-      {/* Container principal centralizado e responsivo */}
       <div className="container-fluid px-3 px-md-4">
         <div className="row justify-content-center">
           <div className="col-12 col-xxl-10">
             {/* Cabeçalho da página */}
-            <div className="text-center mb-4">
+            <div className="text-start mb-4">
               <h1 className="fw-bold mb-2" style={{ color: "var(--text)" }}>
                 Dashboard do Projeto
               </h1>
