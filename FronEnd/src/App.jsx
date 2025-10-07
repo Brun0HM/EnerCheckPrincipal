@@ -6,8 +6,10 @@ import "./styles/main.scss";
 import pesso1 from "./assets/FotoPerfilPessoa01.png";
 import pesso2 from "./assets/FotoPerfilPessoa02.png";
 import pesso3 from "./assets/FotoPerfilPessoa03.png";
+import { useNavigate } from "react-router";
 
 const App = () => {
+  const navigate = useNavigate();
   return (
     <div
       style={{
@@ -40,8 +42,10 @@ const App = () => {
                 </span>
               </div>
               <div className="d-flex gap-3 justify-content-center">
-                <button className="btn btn-dark fw-semibold">
-                  Experimente Agora
+                <button className="btn btn-primary fw-semibold">
+                  <span onClick={() => navigate("/planos")}>
+                    Experimente Agora
+                  </span>
                 </button>
                 <button className="btn btn-outline-primary fw-semibold">
                   Ver Demonstração
@@ -204,10 +208,19 @@ const App = () => {
 
                 <div className="pb-5">
                   <button className="btn btn-primary fw-semibold">
-                    Comece Gratuitamente
+                    <span onClick={() => navigate("/cadastro")}>
+                      Comece Gratuitamente
+                    </span>
                   </button>
                   <button className="btn btn-outline-primary fw-semibold ms-3">
-                    Falar com Especialista
+                    <a
+                      className="text-decoration-none text-white"
+                      href="https://wa.me/5514997912841"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Falar com Especialista
+                    </a>
                   </button>
                 </div>
               </div>
