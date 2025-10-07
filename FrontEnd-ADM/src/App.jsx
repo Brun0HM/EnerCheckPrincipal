@@ -1,20 +1,44 @@
 import { useState } from "react";
-import Modal from "./components/Modal";
+import { useNavigate } from "react-router";
 
 function App() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [errors, setErrors] = useState({});
+
+  const navigate = useNavigate();
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!email.trim()) {
+      newErrors.email = "O e-mail é obrigatório";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Digite um e-mail válido";
+    }
+
+    if (!senha.trim()) {
+      newErrors.senha = "A senha é obrigatória";
+    } else if (senha.length < 6) {
+      newErrors.senha = "A senha deve ter pelo menos 6 caracteres";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log("Dados do formulário:", { email, senha });
+    if (validateForm()) {
+      console.log("Dados do formulário:", { email, senha });
+      navigate("/users");
+    }
   };
 
   return (
     <>
-      <Modal />
-      {/* <div>
+      <div>
         <div className="d-flex justify-content-center align-items-center vh-100">
           <div
             className="bg-white p-4 rounded-3 border border-black border-opacity-25 shadow"
@@ -40,12 +64,14 @@ function App() {
                 <input
                   type="email"
                   id="email"
-                  className="form-control"
+                  className={`form-control ${errors.email ? "is-invalid" : ""}`}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required
                   placeholder="Digite seu e-mail"
                 />
+                {errors.email && (
+                  <div className="invalid-feedback">{errors.email}</div>
+                )}
               </div>
 
               <div className="mb-3">
@@ -58,12 +84,14 @@ function App() {
                 <input
                   type="password"
                   id="senha"
-                  className="form-control"
+                  className={`form-control ${errors.senha ? "is-invalid" : ""}`}
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}
-                  required
                   placeholder="Digite sua senha"
                 />
+                {errors.senha && (
+                  <div className="invalid-feedback">{errors.senha}</div>
+                )}
               </div>
               <div className="d-grid">
                 <button
@@ -76,7 +104,7 @@ function App() {
             </form>
           </div>
         </div>
-      </div> */}
+      </div>
     </>
   );
 }

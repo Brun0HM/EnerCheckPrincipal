@@ -9,11 +9,12 @@ const Planos = () => {
         background: "var(--bg)",
         color: "var(--text)",
         minHeight: "100vh",
+        paddingBottom: "2rem",
       }}
     >
       <div className="container-fluid text-center d-flex flex-column align-items-center justify-content-center">
         <div className={`mainContent`}>
-          <div className="container mt-5 text-center d-flex flex-column align-items-center justify-content-center px-3">
+          <div className="container text-center d-flex flex-column align-items-center justify-content-center px-3">
             <div>
               <p className="bg-primary text-light fw-semibold p-1 rounded-2 conformidade">
                 Planos Flexíveis

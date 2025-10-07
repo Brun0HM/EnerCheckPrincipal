@@ -2,15 +2,20 @@ import React, { useEffect, useState } from "react";
 import { InfoGeralContainer } from "../components/InfoGeralContainer";
 import { ContainerChecagem } from "../components/ContainerChecagem";
 
+/**
+ * Dashboard de Projeto - Tela de análise detalhada de projeto elétrico
+ *
+ * Exibe pontuações, análises de conformidade e checagem de circuitos.
+ * Design centralizado e responsivo com suporte completo a temas.
+ */
 const DashboardProjeto = () => {
   const [comentarioGeral, setComentarioGeral] = useState("");
   const [comentConform, setComentConform] = useState("");
   const [comentInstalacao, setComentInstalacao] = useState("");
 
+  // Pontuações dos diferentes aspectos do projeto
   const pontuacaoGeral = 10;
-
   const pontuacaoConformidade = 90;
-
   const pontuacaoInstalacao = 50;
 
   const trocarComentario = () => {
@@ -76,44 +81,115 @@ const DashboardProjeto = () => {
         background: "var(--bg)",
         color: "var(--text)",
         minHeight: "100vh",
+        paddingTop: "6rem",
+        paddingBottom: "2rem",
       }}
     >
-      <div className="d-flex flex-column container gap-2">
-        <div className="my-3 d-flex flex-row p-3 gap-3">
-          <InfoGeralContainer
-            topico={"Pontuação Geral"}
-            iconeTopico={"bi-rocket-takeoff"}
-            corNumero={"primary"}
-            pontuacaoGeral={pontuacaoGeral}
-            comentario={comentarioGeral}
-          />
+      <div className="container-fluid px-3 px-md-4">
+        <div className="row justify-content-center">
+          <div className="col-12 col-xxl-10">
+            {/* Cabeçalho da página */}
+            <div className="text-start mb-4">
+              <h1 className="fw-bold mb-2" style={{ color: "var(--text)" }}>
+                Dashboard do Projeto
+              </h1>
+              <p
+                className="fs-5 mb-0"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                Análise detalhada de conformidade e instalação elétrica
+              </p>
+            </div>
 
-          <InfoGeralContainer
-            topico={"Pontuação de Conformidade"}
-            iconeTopico={"bi-rocket-takeoff"}
-            corNumero={"success"}
-            pontuacaoGeral={pontuacaoConformidade}
-            comentario={comentConform}
-          />
+            {/* Seção de pontuações - Layout responsivo */}
+            <div className="row g-3 mb-4">
+              <div className="col-12 col-md-4">
+                <InfoGeralContainer
+                  topico={"Pontuação Geral"}
+                  iconeTopico={"bi-speedometer2"}
+                  corNumero={"danger"}
+                  pontuacaoGeral={pontuacaoGeral}
+                  comentario={comentarioGeral}
+                />
+              </div>
+              <div className="col-12 col-md-4">
+                <InfoGeralContainer
+                  topico={"Conformidade NBR"}
+                  iconeTopico={"bi-shield-check"}
+                  corNumero={"success"}
+                  pontuacaoGeral={pontuacaoConformidade}
+                  comentario={comentConform}
+                />
+              </div>
+              <div className="col-12 col-md-4">
+                <InfoGeralContainer
+                  topico={"Instalação"}
+                  iconeTopico={"bi-tools"}
+                  corNumero={"warning"}
+                  pontuacaoGeral={pontuacaoInstalacao}
+                  comentario={comentInstalacao}
+                />
+              </div>
+            </div>
 
-          <InfoGeralContainer
-            topico={"Pontuação de Instalação"}
-            iconeTopico={"bi-rocket-takeoff"}
-            corNumero={"danger"}
-            pontuacaoGeral={pontuacaoInstalacao}
-            comentario={comentInstalacao}
-          />
-        </div>
+            {/* Seção de análise detalhada */}
+            <div className="row g-4">
+              <div className="col-12 col-lg-6">
+                <ContainerChecagem
+                  categoria={"Circuitos de Força"}
+                  descricao={"Análise dos circuitos de força e dimensionamento"}
+                />
+              </div>
+              <div className="col-12 col-lg-6">
+                <ContainerChecagem
+                  categoria={"Proteção e Segurança"}
+                  descricao={
+                    "Verificação de dispositivos de proteção (DR, disjuntores)"
+                  }
+                />
+              </div>
+            </div>
 
-        <div className="px-3 d-flex flex-row gap-3 my-2">
-          <ContainerChecagem
-            categoria={"Topico 1"}
-            descricao={"Descrição do topico 1"}
-          />
-          <ContainerChecagem
-            categoria={"Topico 2"}
-            descricao={"Descrição do topico 2"}
-          />
+            {/* Card de ações rápidas */}
+            <div className="row justify-content-center mt-4">
+              <div className="col-12 col-md-8 col-lg-6">
+                <div
+                  className="p-4 rounded-4 border text-center theme-card"
+                  style={{
+                    backgroundColor: "var(--card-bg)",
+                    borderColor: "var(--card-border)",
+                  }}
+                >
+                  <h5 className="fw-bold mb-3" style={{ color: "var(--text)" }}>
+                    Ações Disponíveis
+                  </h5>
+                  <div className="d-flex flex-column flex-sm-row gap-2 justify-content-center">
+                    <button
+                      className="btn btn-lg"
+                      style={{
+                        backgroundColor: "var(--primary)",
+                        borderColor: "var(--primary)",
+                        color: "#ffffff",
+                      }}
+                    >
+                      <i className="bi bi-download me-2"></i>
+                      Baixar Relatório
+                    </button>
+                    <button
+                      className="btn btn-outline btn-lg"
+                      style={{
+                        borderColor: "var(--primary)",
+                        color: "var(--primary)",
+                      }}
+                    >
+                      <i className="bi bi-arrow-repeat me-2"></i>
+                      Reprocessar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
