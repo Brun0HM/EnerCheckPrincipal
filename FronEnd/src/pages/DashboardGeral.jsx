@@ -2,6 +2,12 @@ import React from "react";
 import { CardStatusProjetoDashboard } from "../components/CardStatusProjetoDashboard";
 import { ProjetosRecentes } from "../components/ProjetosRecentes";
 
+/**
+ * Página Dashboard Geral - Adaptada para tema escuro/claro
+ *
+ * Dashboard principal com cards de status, projetos recentes e ações rápidas.
+ * Todos os elementos se adaptam automaticamente ao tema selecionado.
+ */
 const DashboardGeral = () => {
   return (
     <div
@@ -12,9 +18,12 @@ const DashboardGeral = () => {
       }}
     >
       <div className="container mt-5">
+        {/* Cabeçalho da página */}
         <div className="align-align-items-start justify-content-start">
-          <h1 className="fw-bolder">Dashboard</h1>
-          <h5 className="fw-normal text-secondary">
+          <h1 className="fw-bolder" style={{ color: "var(--text)" }}>
+            Dashboard
+          </h1>
+          <h5 className="fw-normal" style={{ color: "var(--text-secondary)" }}>
             Gerencie seus projetos elétricos e verificações de conformidade
           </h5>
         </div>
@@ -53,10 +62,21 @@ const DashboardGeral = () => {
         </div>
 
         {/* Projetos Recentes */}
-        <div className="p-3 rounded-4 border bg-white shadow mb-4">
+        <div
+          className="p-3 rounded-4 border shadow mb-4 theme-card"
+          style={{
+            backgroundColor: "var(--card-bg)",
+            borderColor: "var(--card-border)",
+            color: "var(--text)",
+          }}
+        >
           <div>
-            <h4 className="fw-bold text-black ">Projetos Recentes</h4>
-            <p className="text-secondary">Seus últimos projetos verificados</p>
+            <h4 className="fw-bold" style={{ color: "var(--text)" }}>
+              Projetos Recentes
+            </h4>
+            <p style={{ color: "var(--text-secondary)" }}>
+              Seus últimos projetos verificados
+            </p>
           </div>
 
           {/* Projetos */}
@@ -80,25 +100,59 @@ const DashboardGeral = () => {
         </div>
 
         <div className="d-flex flex-column flex-lg-row gap-3">
+          {/* Card Novo Projeto */}
           <div className="flex-fill">
-            <div className="p-3 rounded-4 border bg-white shadow h-100">
-              <h4 className="fw-bold text-black">Novo Projeto</h4>
-              <p className="text-secondary">
+            <div
+              className="p-3 rounded-4 border shadow h-100 theme-card"
+              style={{
+                backgroundColor: "var(--card-bg)",
+                borderColor: "var(--card-border)",
+                color: "var(--text)",
+              }}
+            >
+              <h4 className="fw-bold" style={{ color: "var(--text)" }}>
+                Novo Projeto
+              </h4>
+              <p style={{ color: "var(--text-secondary)" }}>
                 Faça upload de um novo projeto para verificação
               </p>
-              <button className="btn btn-primary fw-semibold rounded-3 w-100">
+              <button
+                className="btn fw-semibold rounded-3 w-100"
+                style={{
+                  backgroundColor: "var(--primary)",
+                  borderColor: "var(--primary)",
+                  color: "#ffffff",
+                }}
+              >
                 Fazer Upload
               </button>
             </div>
           </div>
 
+          {/* Card Relatórios */}
           <div className="flex-fill">
-            <div className="p-3 rounded-4 border bg-white shadow h-100">
-              <h4 className="fw-bold text-black">Relatórios</h4>
-              <p className="text-secondary">
+            <div
+              className="p-3 rounded-4 border shadow h-100 theme-card"
+              style={{
+                backgroundColor: "var(--card-bg)",
+                borderColor: "var(--card-border)",
+                color: "var(--text)",
+              }}
+            >
+              <h4 className="fw-bold" style={{ color: "var(--text)" }}>
+                Relatórios
+              </h4>
+              <p style={{ color: "var(--text-secondary)" }}>
                 Visualize relatórios detalhados de conformidade
               </p>
-              <button className="btn btn-outline-primary fw-semibold rounded-3 w-100">
+              <button
+                className="btn btn-outline fw-semibold rounded-3 w-100"
+                style={{
+                  borderColor: "var(--primary)",
+                  color: "var(--primary)",
+                  backgroundColor: "transparent",
+                }}
+              >
                 Ver Relatórios
               </button>
             </div>

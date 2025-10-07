@@ -13,16 +13,22 @@ const Header = () => {
       <div className="w-75 align-items-center justify-content-center m-auto">
         <div className="my-2">
           <div className="row align-items-center">
-            {/* Logo e título */}
+            {/* Logo e título - adaptado ao tema */}
             <div className="col-6 col-lg-auto" onClick={() => navigate("/")}>
               <a
                 className="d-flex align-items-center ms-3 ms-lg-5 text-decoration-none"
                 href="/*"
               >
-                <div className="btn btn-dark text-light fw-bold">
+                <div
+                  className="btn text-light fw-bold"
+                  style={{ backgroundColor: "var(--primary)" }}
+                >
                   <i className="bi bi-lightning-charge"></i>
                 </div>
-                <h4 className="text-dark fw-bolder fs-3 ms-2 mb-0">
+                <h4
+                  className="fw-bolder fs-3 ms-2 mb-0"
+                  style={{ color: "var(--text)" }}
+                >
                   Enercheck
                 </h4>
               </a>
@@ -32,12 +38,17 @@ const Header = () => {
             <div className="col-6 col-lg-auto ms-lg-auto">
               <nav className="navbar navbar-expand-lg p-0">
                 <button
-                  className="navbar-toggler btn btn-dark fs-4 rounded-3 d-lg-none ms-auto"
+                  className="navbar-toggler btn fs-4 rounded-3 d-lg-none ms-auto"
                   type="button"
                   aria-controls="navbarSupportedContent"
                   aria-expanded={MenuOpen}
                   aria-label="Toggle navigation"
                   onClick={() => setMenuOpen(!MenuOpen)}
+                  style={{
+                    backgroundColor: "var(--primary)",
+                    borderColor: "var(--primary)",
+                    color: "#ffffff",
+                  }}
                 >
                   <i className={`${MenuOpen ? "bi bi-x " : "bi bi-list"}`}></i>
                 </button>
@@ -49,58 +60,83 @@ const Header = () => {
                   id="navbarSupportedContent"
                 >
                   <ul className="navbar-nav flex-column flex-lg-row ms-auto">
-                    {/* Seus links */}
+                    {/* Links de navegação - adaptados ao tema */}
                     <li className="nav-item">
                       <a
-                        className="text-decoration-none text-dark mx-3 nav-link"
+                        className="text-decoration-none mx-3 nav-link"
                         href="#recursos"
+                        style={{ color: "var(--text)" }}
                       >
                         Recursos
                       </a>
                     </li>
                     <li className="nav-item">
                       <a
-                        className="text-decoration-none text-dark mx-3 nav-link"
+                        className="text-decoration-none mx-3 nav-link"
                         href="#funciona"
+                        style={{ color: "var(--text)" }}
                       >
                         Como Funciona
                       </a>
                     </li>
                     <li className="nav-item">
                       <a
-                        className="text-decoration-none text-dark mx-3 nav-link"
+                        className="text-decoration-none mx-3 nav-link"
                         href="#depoimentos"
+                        style={{ color: "var(--text)" }}
                       >
                         Depoimentos
                       </a>
                     </li>
 
-                    {/* Botões de login e teste */}
+                    {/* Botões de ação - adaptados ao tema */}
                     <li className="nav-item">
                       <button
-                        className="btn btn-light border-black mx-3 my-1"
+                        className="btn mx-3 my-1 btn-theme-secondary"
                         onClick={() => navigate("/login")}
+                        style={{
+                          backgroundColor: "var(--button-secondary)",
+                          borderColor: "var(--card-border)",
+                          color: "var(--button-secondary-text)",
+                        }}
                       >
-                        <a className="text-decoration-none text-dark">Entrar</a>
+                        Entrar
                       </button>
                     </li>
                     <li className="nav-item">
                       <button
-                        className="btn btn-dark mx-3 my-1"
+                        className="btn mx-3 my-1"
                         onClick={() => navigate("/planos")}
+                        style={{
+                          backgroundColor: "var(--primary)",
+                          borderColor: "var(--primary)",
+                          color: "#ffffff",
+                        }}
                       >
-                        <a className="text-decoration-none text-light" href="#">
-                          Experimente Grátis!
-                        </a>
+                        Experimente Grátis!
                       </button>
                     </li>
-                    {/* Botão de tema */}
+
+                    {/* Botão de alternância de tema - melhorado */}
                     <li className="nav-item d-flex align-items-center mx-3">
                       <button
-                        className="btn btn-outline-dark"
+                        className="btn btn-outline rounded-circle d-flex align-items-center justify-content-center"
                         onClick={toggleTheme}
+                        style={{
+                          borderColor: "var(--text-secondary)",
+                          color: "var(--text)",
+                          width: "40px",
+                          height: "40px",
+                        }}
+                        title={`Mudar para tema ${
+                          theme === "light" ? "escuro" : "claro"
+                        }`}
                       >
-                        {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+                        {theme === "light" ? (
+                          <i className="bi bi-moon-stars"></i>
+                        ) : (
+                          <i className="bi bi-brightness-high"></i>
+                        )}
                       </button>
                     </li>
                   </ul>
@@ -110,7 +146,13 @@ const Header = () => {
           </div>
         </div>
       </div>
-      <hr className="text-dark mb-0 fw-bolder" />
+      <hr
+        className="mb-0 fw-bolder"
+        style={{
+          borderColor: "var(--text-secondary)",
+          opacity: 0.3,
+        }}
+      />
     </header>
   );
 };

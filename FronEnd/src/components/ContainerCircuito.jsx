@@ -1,13 +1,52 @@
 import React from "react";
 
+/**
+ * Componente ContainerCircuito - Item individual de verificação
+ *
+ * Exibe o resultado de uma verificação específica de circuito com
+ * ícone de status, nome e descrição do resultado.
+ *
+ * @param {Object} props - Propriedades do componente
+ * @param {string} props.icone - Classe do ícone Bootstrap (sem 'bi')
+ * @param {string} props.estado - Classe de cor Bootstrap (text-success, text-danger)
+ * @param {string} props.topico - Nome/título do circuito
+ * @param {string} props.result - Descrição do resultado da verificação
+ */
 const ContainerCircuito = (props) => {
+  /**
+   * Define a cor do ícone baseada no estado
+   */
+  const getIconColor = (estado) => {
+    if (estado.includes("success")) return "#22c55e";
+    if (estado.includes("danger")) return "#ef4444";
+    if (estado.includes("warning")) return "#eab308";
+    return "var(--text-secondary)";
+  };
+
   return (
-    <div className="border border-1 rounded-3 pt-3 pb-2 px-3 d-flex flex-column my-3">
-      <div className="d-flex flex-row gap-2 align-items-center">
-        <i className={`bi ${props.icone} ${props.estado} fs-5`}></i>
-        <p className="fw-semibold m-0 text-black">{props.topico}</p>
+    <div
+      className="border rounded-3 p-3 my-3 theme-card"
+      style={{
+        backgroundColor: "var(--input-bg)",
+        borderColor: "var(--input-border)",
+        transition: "all 0.3s ease",
+      }}
+    >
+      {/* Linha principal com ícone e título */}
+      <div className="d-flex flex-row gap-3 align-items-center mb-2">
+        <i
+          className={`bi ${props.icone} fs-5`}
+          style={{ color: getIconColor(props.estado) }}
+        ></i>
+        <h6 className="fw-semibold mb-0" style={{ color: "var(--text)" }}>
+          {props.topico}
+        </h6>
       </div>
-      <p className="small text-black ms-4">{props.result}</p>
+
+      {/* Descrição do resultado */}
+      <p className="small mb-0 ms-4" style={{ color: "var(--text-secondary)" }}>
+        {props.result}
+      </p>
     </div>
   );
 };
