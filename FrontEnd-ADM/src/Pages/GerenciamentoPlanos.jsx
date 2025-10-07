@@ -35,7 +35,6 @@ const GerenciamentoPlanos = () => {
 
     </div>
     </div>
-    </>
   )
 }
 
