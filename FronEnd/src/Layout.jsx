@@ -12,7 +12,7 @@ import Footer from "./components/Footer.jsx";
 
 const Layout = () => {
   const location = useLocation();
-  
+
   // Rotas onde o Header e Footer não devem aparecer
   const hideNavbarRoutes = ["/login", "/cadastro"];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
