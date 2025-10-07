@@ -126,11 +126,42 @@ const Cadastro = () => {
 
     // Remove erro do campo quando o usuário começa a digitar
     if (errors[field]) {
-      setErrors((prev) => ({
-        ...prev,
-        [field]: null,
-      }));
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[field]; // Remove completamente a chave do objeto
+        return newErrors;
+      });
     }
+
+    // Reset do estado de submitted quando o usuário modifica campos
+    if (isSubmitted) {
+      setIsSubmitted(false);
+    }
+  };
+
+  /**
+   * Verifica se há erros ativos no formulário
+   */
+  const hasActiveErrors = () => {
+    const activeErrors = Object.keys(errors).filter(
+      (key) => errors[key] !== null && errors[key] !== undefined
+    );
+    return activeErrors.length > 0;
+  };
+
+  /**
+   * Verifica se o formulário pode ser submetido (campos obrigatórios preenchidos)
+   */
+  const canSubmit = () => {
+    return (
+      formData.nome.trim() &&
+      formData.sobrenome.trim() &&
+      formData.email.trim() &&
+      formData.senha &&
+      formData.confirmarSenha &&
+      formData.aceitaTermos &&
+      !hasActiveErrors()
+    );
   };
 
   /**
@@ -483,18 +514,26 @@ const Cadastro = () => {
               type="submit"
               className="btn w-100"
               style={{
-                backgroundColor: "var(--primary)",
-                borderColor: "var(--primary)",
+                backgroundColor: canSubmit()
+                  ? "var(--primary)"
+                  : "var(--text-secondary)",
+                borderColor: canSubmit()
+                  ? "var(--primary)"
+                  : "var(--text-secondary)",
                 color: "#ffffff",
                 padding: "0.75rem",
                 fontSize: "1rem",
                 fontWeight: "600",
+                opacity: canSubmit() ? 1 : 0.6,
+                cursor: canSubmit() ? "pointer" : "not-allowed",
               }}
-              disabled={isSubmitted && Object.keys(errors).length > 0}
+              disabled={!canSubmit()}
             >
-              {isSubmitted && Object.keys(errors).length > 0
+              {!canSubmit() && isSubmitted && hasActiveErrors()
                 ? "Corrija os erros acima"
-                : "Criar conta"}
+                : canSubmit()
+                ? "Criar conta"
+                : "Preencha todos os campos obrigatórios"}
             </button>
           </div>
         </div>
