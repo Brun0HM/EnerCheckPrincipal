@@ -38,7 +38,7 @@ const VisualizarLista = ({ item, onClose, title = "Visualizar" }) => {
             {item.planos && item.planos[0] && renderField("Plano", item.planos[0].nome)}
             
             {item.preco && renderField("Preço", item.preco)}
-            {item.requisicoes && renderField("Requisições", item.requisicoes)}
+            {item.req && renderField("Requisições", item.req)}
             {item.ativo !== undefined && renderField("Ativo", item.ativo ? "Sim" : "Não")}
             
             {item.id && renderField("ID", item.id)}

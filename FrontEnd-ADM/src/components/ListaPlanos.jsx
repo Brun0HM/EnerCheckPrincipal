@@ -28,7 +28,7 @@ export const ListaPlanos = () => {
           topic1={"Preço"}
           t1info={item.preco}
           topic2={"Requisições"}
-          t2info={item.requisicoes}
+          t2info={item.req}
           topic3={"Ativo?"}
           t3info={item.ativo ? "Sim" : "Não"}
           view={()=> handleView(item)}
