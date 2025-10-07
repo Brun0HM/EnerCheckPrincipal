@@ -15,7 +15,7 @@ const usuarios = [
     email: "thiagomazzi@gmail.com",
     dataCriacao: "06-06-2007",
     crea: "12345678",
-    "planos": [
+    planos: [
       {
         nome: "Plano Pro",
       },
