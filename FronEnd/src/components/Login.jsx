@@ -2,7 +2,7 @@ import "../App.css";
 
 const Login = () => {
   return (
-    <div className="row col-11 col-xl-3 p-4 fundo border border-2 rounded-4 shadow shadow-sm ">
+    <div className="row col-11 col-xl-3 p-4 fundo border border-2 rounded-4 shadow shadow-sm text-dark ">
       <div className="d-flex flex-column">
         <div className="d-flex flex-column text-start mb-1">
           <h5>Entrar</h5>
@@ -17,7 +17,7 @@ const Login = () => {
           />
         </div>
         <div className="mb-1">
-          <h6>Senha</h6>
+          <h6 className="text-dark">Senha</h6>
           <input
             className="w-100 form-control"
             placeholder="senha"

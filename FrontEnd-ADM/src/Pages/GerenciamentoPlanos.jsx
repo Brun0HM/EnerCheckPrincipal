@@ -35,6 +35,7 @@ const GerenciamentoPlanos = () => {
 
     </div>
     </div>
+    </>
   )
 }
 

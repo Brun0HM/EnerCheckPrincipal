@@ -2,7 +2,7 @@ import "../App.css";
 
 const Cadastro = () => {
   return (
-    <div className="row col-11 col-xl-3 p-4 fundo border border-2 rounded-4 shadow shadow-sm ">
+    <div className="row col-11 col-xl-3 p-4 fundo border border-2 rounded-4 shadow shadow-sm text-dark mb-">
       <div className="d-flex flex-column">
         <div className="d-flex flex-column text-start mb-1">
           <h5>Criar conta</h5>

@@ -5,7 +5,14 @@ import { useNavigate } from "react-router";
 const Logar = () => {
   const navigate = useNavigate();
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center vh-100">
+    <div
+      className="d-flex flex-column justify-content-center align-items-center vh-100"
+      style={{
+        background: "var(--bg)",
+        color: "var(--text)",
+        minHeight: "100vh",
+      }}
+    >
       <div className="mb-3">
         <div className="mb-3 d-flex justify-content-center align-items-center gap-2">
           <img src="https://placehold.co/40x40" alt="" />
@@ -17,7 +24,12 @@ const Logar = () => {
       <div className="d-flex flex-column justify-content-center align-items-center mt-3">
         <div className="d-flex gap-1 justify-content-center align-items-center mt-3 fs-5">
           <p className="m-0">Não tem uma conta?</p>
-          <a className="text text-decoration-none" onClick={()=>navigate("/cadastro")}>Criar conta</a>
+          <a
+            className="text text-decoration-none"
+            onClick={() => navigate("/cadastro")}
+          >
+            Criar conta
+          </a>
         </div>
         <div
           className="d-flex align-items-center mt-3 text-muted w-100"
