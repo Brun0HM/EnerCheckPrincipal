@@ -9,25 +9,46 @@ export const ComponenteLista = (props) => {
                 <p className="m-0 small">{props.desc}</p>
                 </div>
 
-                <div className="d-flex flex-column gap-0 align-items-center">
-                <p className="m-0 fw-medium fs-5 text-primary">{props.topic1}</p>
-                <p className="fw-semibold m-0">{props.t1info}</p>
-                </div>
-                <div className="d-flex flex-column gap-0 align-items-center">
-                <p className="m-0 fw-medium fs-5 text-primary">{props.topic2}</p>
-                <p className="fw-semibold m-0 invisible">{props.t2info}</p>
-                </div>
+                {props.topic1 && (
+        <div className="d-flex flex-column gap-0 align-items-center">
+          <p className="m-0 fw-medium fs-5 text-primary">{props.topic1}</p>
+          <p className="fw-semibold m-0">{props.t1info}</p>
+        </div>
+      )}
 
-                <div className="d-flex flex-column gap-0 align-items-center">
-                <p className="m-0 fw-medium fs-5 text-primary">{props.topic3}</p>
-                <p className="fw-semibold m-0">{props.t3info}</p>
-                </div>
+      {props.topic2 && (
+        <div className="d-flex flex-column gap-0 align-items-center">
+          <p className="m-0 fw-medium fs-5 text-primary">{props.topic2}</p>
+          <p className="fw-semibold m-0">{props.t2info}</p>
+        </div>
+      )}
 
-                <div className="d-flex flex-row gap-3 align-items-center">
-                    <i className=" bi bi-trash-fill text-danger"></i>
-                    <i className="bi bi-pencil-fill text-warning"></i>
-                    <i className="bi bi-eye-fill text-info"></i>
-                </div>
+      {props.topic3 && (
+        <div className="d-flex flex-column gap-0 align-items-center">
+          <p className="m-0 fw-medium fs-5 text-primary">{props.topic3}</p>
+          <p className="fw-semibold m-0">{props.t3info}</p>
+        </div>
+      )}
+
+      {props.topic4 && (
+        <div className="d-flex flex-column gap-0 align-items-center">
+          <p className="m-0 fw-medium fs-5 text-primary">{props.topic4}</p>
+          <p className="fw-semibold m-0">{props.t4info}</p>
+        </div>
+      )}
+
+      {props.topic5 && (
+        <div className="d-flex flex-column gap-0 align-items-center">
+          <p className="m-0 fw-medium fs-5 text-primary">{props.topic5}</p>
+          <p className="fw-semibold m-0">{props.t5info}</p>
+        </div>
+      )}
+
+      <div className="d-flex flex-row gap-3 align-items-center">
+        <i className="bi bi-trash-fill text-danger"></i>
+        <i className="bi bi-pencil-fill text-warning"></i>
+        <i className="bi bi-eye-fill text-info"></i>
+      </div>
                 
             </div>
   )
