@@ -1,26 +1,51 @@
 /* src/styles/_variables.scss */
 
+// Tema claro
 $light-bg: #fff;
 $light-primary: #0D6EFD;
 $light-text: #131313;
 $light-text-secondary: #606060;
+$light-card-bg: #ffffff;
+$light-card-border: #e0e0e0;
 
+// Tema escuro  
 $dark-bg: #131313;
 $dark-primary: #0D6EFD;
 $dark-text: #FFF;
-$dark-text-secondary: #393f44;
+$dark-text-secondary: #b8bcc8;
+$dark-card-bg: #2a2a2a;
+$dark-card-border: #3a3a3a;
 
-/* Variáveis que serão usadas em todo o site */
+/* Variáveis CSS customizadas que serão usadas em todo o site */
 :root {
+  // Cores principais
   --bg: #{$light-bg};
   --primary: #{$light-primary};
   --text: #{$light-text};
   --text-secondary: #{$light-text-secondary};
+  
+  // Cores para componentes (cards, modais, etc.)
+  --card-bg: #{$light-card-bg};
+  --card-border: #{$light-card-border};
+  --input-bg: #{$light-bg};
+  --input-border: #{$light-card-border};
+  --button-secondary: #f8f9fa;
+  --button-secondary-text: #{$light-text};
 }
 
+/* Tema escuro - sobrescreve as variáveis quando data-theme="dark" */
 [data-theme="dark"] {
+  // Cores principais
   --bg: #{$dark-bg};
   --primary: #{$dark-primary};
   --text: #{$dark-text};
   --text-secondary: #{$dark-text-secondary};
+  
+  // Cores para componentes
+  --card-bg: #{$dark-card-bg};
+  --card-border: #{$dark-card-border};
+  --input-bg: #{$dark-card-bg};
+  --input-border: #{$dark-card-border};
+  --button-secondary: #{$dark-card-bg};
+  --button-secondary-text: #{$dark-text};
 }

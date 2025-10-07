@@ -44,57 +44,105 @@ const Login = () => {
   };
 
   return (
-    <div className="row col-11 col-xl-3 p-4 fundo border border-2 rounded-4 shadow shadow-sm text-dark ">
+    <div
+      className="row col-11 col-xl-3 p-4 border border-2 rounded-4 shadow shadow-sm theme-card"
+      style={{
+        backgroundColor: "var(--card-bg)",
+        borderColor: "var(--card-border)",
+        color: "var(--text)",
+      }}
+    >
       <form onSubmit={handleSubmit}>
         <div className="d-flex flex-column">
+          {/* Cabeçalho do formulário */}
           <div className="d-flex flex-column text-start mb-1">
-            <h5>Entrar</h5>
-            <p>Digite suas credenciais para acessar sua conta</p>
+            <h5 style={{ color: "var(--text)" }}>Entrar</h5>
+            <p style={{ color: "var(--text-secondary)" }}>
+              Digite suas credenciais para acessar sua conta
+            </p>
           </div>
+
+          {/* Campo de email */}
           <div className="mb-3">
-            <h6>Email</h6>
+            <h6 style={{ color: "var(--text)" }}>Email</h6>
             <input
-              className={`w-100 form-control ${
+              className={`w-100 form-control theme-input ${
                 errors.email ? "is-invalid" : ""
               }`}
               placeholder="seu@email.com"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              style={{
+                backgroundColor: "var(--input-bg)",
+                borderColor: "var(--input-border)",
+                color: "var(--text)",
+              }}
             />
             {errors.email && (
               <div className="invalid-feedback d-block">{errors.email}</div>
             )}
           </div>
+
+          {/* Campo de senha */}
           <div className="mb-1">
-            <h6 className="text-dark">Senha</h6>
+            <h6 style={{ color: "var(--text)" }}>Senha</h6>
             <input
-              className={`w-100 form-control ${
+              className={`w-100 form-control theme-input ${
                 errors.senha ? "is-invalid" : ""
               }`}
               placeholder="senha"
               type="password"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
+              style={{
+                backgroundColor: "var(--input-bg)",
+                borderColor: "var(--input-border)",
+                color: "var(--text)",
+              }}
             />
             {errors.senha && (
               <div className="invalid-feedback d-block">{errors.senha}</div>
             )}
           </div>
+
+          {/* Opções adicionais */}
           <div className="d-flex justify-content-between mt-1">
-            <div className="d-flex gap-1">
-              <input className="form-check-input" type="checkbox" />
-              <p className="fw-semibold">Lembrar de mim</p>
+            <div className="d-flex gap-1 align-items-center">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                style={{
+                  backgroundColor: "var(--input-bg)",
+                  borderColor: "var(--input-border)",
+                }}
+              />
+              <p className="fw-semibold m-0" style={{ color: "var(--text)" }}>
+                Lembrar de mim
+              </p>
             </div>
             <a
               className="text-decoration-none"
               href="/cadastrar"
-              style={{ cursor: "pointer" }}
+              style={{
+                cursor: "pointer",
+                color: "var(--primary)",
+              }}
             >
               Esqueceu a senha?
             </a>
           </div>
-          <button type="submit" className="btn btn-primary">
+
+          {/* Botão de submit */}
+          <button
+            type="submit"
+            className="btn mt-3"
+            style={{
+              backgroundColor: "var(--primary)",
+              borderColor: "var(--primary)",
+              color: "#ffffff",
+            }}
+          >
             Entrar
           </button>
         </div>
