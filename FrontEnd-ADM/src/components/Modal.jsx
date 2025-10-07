@@ -6,9 +6,14 @@ const Modal = (props) => {
   const [email, setEmail] = useState("");
   const [crea, setCrea] = useState("");
   const [plano, setPlano] = useState("");
-  const [isCreaValid, setIsCreaValid] = useState(false);
+  const [isCreaValid, setIsCreaValid] = useState(true);
 
   const handleCadastrar = () => {
+    if (crea.length !== 10) {
+      setIsCreaValid(false);
+      return;
+    }
+
     const novoUsuario = {
       usuarioNome: nome,
       email: email,
@@ -76,14 +81,19 @@ const Modal = (props) => {
           </div>
         </div>
         <div className="Plano col-11 col-md-10">
-          <label htmlFor="">Plano</label>
-          <input
+          <label htmlFor="plano">Plano</label>
+          <select
             id="plano"
             value={plano}
             onChange={(e) => setPlano(e.target.value)}
-            type="text"
-            className="form-control"
-          />
+            className="form-select"
+          >
+            <option value="" disabled>
+              Selecione um plano
+            </option>
+            <option value="Plano Básico">Plano Básico</option>
+            <option value="Plano Pro">Plano Pro</option>
+          </select>
         </div>
         <div className="col-10 d-flex justify-content-between mt-3">
           <button
