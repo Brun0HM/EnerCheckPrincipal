@@ -1,14 +1,14 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router";
 import App from "./App.jsx";
-import DashboardProjeto from "./Pages/DashboardProjeto.jsx";
-import Logar from "./pages/Logar.jsx";
-import Cadastrar from "./pages/Cadastrar.jsx";
-import Header from "./components/Header.jsx";
-import DashBoardGeral from "./pages/DashboardGeral.jsx";
-import Planos from "./pages/Planos.jsx";
-import Tema from "./pages/TesteTheme.jsx";
-import Footer from "./components/Footer.jsx";
+import DashboardProjeto from "./pages/DashboardProjeto";
+import Logar from "./pages/Logar";
+import Cadastrar from "./pages/Cadastrar";
+import Header from "./components/Header";
+import DashBoardGeral from "./pages/DashboardGeral";
+import Planos from "./pages/Planos";
+import Tema from "./pages/TesteTheme";
+import Footer from "./components/Footer";
 
 const Layout = () => {
   const location = useLocation();
