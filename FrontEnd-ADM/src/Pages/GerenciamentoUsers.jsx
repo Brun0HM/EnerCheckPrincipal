@@ -10,14 +10,16 @@ const GerenciamentoUsers = () => {
 
   return (
     <>
-      <div className="container">
+      <div className="container mt-2 pt-2 mb-3 pb-3">
+      <div className="flex-shrink-0 mb-3">
         <h3 className="text-capitalize fw-bold text-start m-0">
           Administração de usuários
         </h3>
         <p className="fs-6 fw-light">
           Ler, criar, editar e excluir cadastro de usuários
         </p>
-        <div className="d-flex flex-column">
+        </div>
+        <div className="d-flex flex-column overflow-hidden">
           <TabelaGeral
             topic1={"Cadastros Totais"}
             t1info={usuarios.length}

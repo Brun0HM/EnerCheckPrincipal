@@ -4,10 +4,13 @@ import { ComponenteLista } from "./ComponenteLista";
 import VisualizarLista from "./VisualizarLista";
 import DeleteModal from "./DeleteModal";
 
-export const ListaPlanos = () => {
+export const ListaPlanos = ({paginatedData}) => {
    const [selectedItem, setSelectedItem] = useState(null);
     const [showModalView, setShowModalView] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
+
+       // Usar dados paginados se fornecidos, senão usar todos os dados
+       const dataToRender = paginatedData || planos;
   
     const handleView = (item)=>{
       setSelectedItem(item);
@@ -29,13 +32,14 @@ export const ListaPlanos = () => {
     const handleConfirmDelete = (itemId) => {
       console.log(`Excluindo item com ID: ${itemId}`);
     }
+    
   return (
     <>
     <div
       className="d-flex flex-column gap-2 overflow-y-auto rounded-4"
       style={{ maxHeight: "500px" }}
     >
-      {planos.map((item) => (
+      {dataToRender.map((item) => (
         <ComponenteLista
           key={item.id}
           nome={item.nome}

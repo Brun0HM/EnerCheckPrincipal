@@ -4,11 +4,14 @@ import { ComponenteLista } from './ComponenteLista';
 import VisualizarLista from './VisualizarLista';
 import DeleteModal from './DeleteModal';
 
-const ListaProjetos = () => {
+const ListaProjetos = ({ paginatedData}) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModalView, setShowModalView] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
     
+
+    // Usar dados paginados se fornecidos, senão usar todos os dados
+    const dataToRender = paginatedData || monitoramento;
 
   const handleView = (item)=>{
     setSelectedItem(item);
@@ -33,10 +36,10 @@ const ListaProjetos = () => {
   return (
     <>
  <div
-      className="d-flex flex-column gap-2 overflow-y-auto rounded-4"
+      className="d-flex flex-column gap-2 rounded-4"
       style={{ maxHeight: "500px" }}
     >
-      {monitoramento.map((item) => (
+      {dataToRender.map((item) => (
         <ComponenteLista
           key={item.id}
           nome={item.email}
