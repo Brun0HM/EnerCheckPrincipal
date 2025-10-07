@@ -1,6 +1,9 @@
+import { useNavigate } from "react-router";
 import "../App.css";
 
 const Cadastro = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="row col-11 col-xl-3 p-4 fundo border border-2 rounded-4 shadow shadow-sm text-dark mb-">
       <div className="d-flex flex-column">
@@ -79,6 +82,13 @@ const Cadastro = () => {
           </label>
         </div>
 
+        <span
+          className="mb-1 text-primary"
+          onClick={() => navigate("/login")}
+          style={{ cursor: "pointer" }}
+        >
+          Já tenho uma conta
+        </span>
         <button className="btn btn-primary">Criar conta</button>
       </div>
     </div>

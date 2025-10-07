@@ -3,14 +3,7 @@ import Cadastro from "../components/Cadastro";
 
 const Cadastrar = () => {
   return (
-    <div
-      className="d-flex flex-column justify-content-center align-items-center vh-100 mt-5"
-      style={{
-        background: "var(--bg)",
-        color: "var(--text)",
-        minHeight: "100vh",
-      }}
-    >
+    <div className="d-flex flex-column justify-content-center align-items-center vh-100">
       <div className="mt-5"></div>
       <div className="mb-3 mt-5 text-center">
         <div className="mb-2 d-flex justify-content-center align-items-center gap-2 ">
