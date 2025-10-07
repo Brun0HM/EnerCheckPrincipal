@@ -10,21 +10,21 @@ export const ComponenteLista = (props) => {
                 </div>
 
                 {props.topic1 && (
-        <div className="d-flex flex-column gap-0 align-items-center">
+        <div className={`d-flex flex-column gap-0 align-items-center ${props.display1}`} >
           <p className="m-0 fw-medium fs-5 text-primary">{props.topic1}</p>
           <p className="fw-semibold m-0">{props.t1info}</p>
         </div>
       )}
 
       {props.topic2 && (
-        <div className="d-flex flex-column gap-0 align-items-center">
+        <div className="d-flex flex-column gap-0 align-items-center d-lg-block d-none">
           <p className="m-0 fw-medium fs-5 text-primary">{props.topic2}</p>
           <p className="fw-semibold m-0">{props.t2info}</p>
         </div>
       )}
 
       {props.topic3 && (
-        <div className="d-flex flex-column gap-0 align-items-center">
+        <div className="d-flex flex-column gap-0 align-items-center d-lg-block d-none">
           <p className="m-0 fw-medium fs-5 text-primary">{props.topic3}</p>
           <p className="fw-semibold m-0">{props.t3info}</p>
         </div>
