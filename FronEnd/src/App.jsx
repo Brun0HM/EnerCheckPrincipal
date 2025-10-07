@@ -3,6 +3,9 @@ import "./App.css";
 import Motivos from "./components/Motivos";
 import Depoimentos from "./components/Depoimentos";
 import "./styles/main.scss";
+import pesso1 from "./assets/FotoPerfilPessoa01.png";
+import pesso2 from "./assets/FotoPerfilPessoa02.png";
+import pesso3 from "./assets/FotoPerfilPessoa03.png";
 
 const App = () => {
   return (
@@ -164,7 +167,7 @@ const App = () => {
                 <div className="row justify-content-center">
                   <div className="col-12 col-md-4 mb-3">
                     <Depoimentos
-                      foto="https://placehold.co/40x40"
+                      foto={pesso1}
                       user="Maria Rodriguez"
                       depoimento="O EnerCheck revolucionou nossa empresa. Reduzimos o tempo de análise de projetos em 80% e aumentamos significativamente a qualidade."
                       profissa="Engenheira Elétrica"
@@ -172,7 +175,7 @@ const App = () => {
                   </div>
                   <div className="col-12 col-md-4 mb-3">
                     <Depoimentos
-                      foto="https://placehold.co/40x40"
+                      foto={pesso2}
                       user="João Silva"
                       depoimento="Ferramenta indispensável para qualquer profissional da área elétrica. A precisão da análise é impressionante."
                       profissa="Diretor Técnico"
@@ -180,7 +183,7 @@ const App = () => {
                   </div>
                   <div className="col-12 col-md-4 mb-3 opn">
                     <Depoimentos
-                      foto="https://placehold.co/40x40"
+                      foto={pesso3}
                       user="Ana Costa"
                       depoimento="Conseguimos reduzir custos e melhorar a segurança dos nossos projetos. Recomendo para todas as construtoras."
                       profissa="Gerente de Projetos"
