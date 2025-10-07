@@ -2,18 +2,33 @@ import React, { useState } from 'react'
 import monitoramento from '../apis/monitoramento'
 import { ComponenteLista } from './ComponenteLista';
 import VisualizarLista from './VisualizarLista';
+import DeleteModal from './DeleteModal';
 
 const ListaProjetos = () => {
   const [selectedItem, setSelectedItem] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showModalView, setShowModalView] = useState(false);
+  const [showModalDelete, setShowModalDelete] = useState(false);
+    
 
   const handleView = (item)=>{
     setSelectedItem(item);
-    setShowModal(true);
+    setShowModalView(true);
   }
-  const handleCloseModal = ()=>{
+  const handleCloseModalView = ()=>{
     setSelectedItem(null);
-    setShowModal(false);
+    setShowModalView(false);
+  }
+  const handleCloseModalDelete = ()=>{
+    setSelectedItem(null);
+    setShowModalDelete(false);
+  }
+  const handleDelete = (item) => {
+    setSelectedItem(item);
+    setShowModalDelete(true);
+  }
+
+  const handleConfirmDelete = (itemId) => {
+    console.log(`Excluindo item com ID: ${itemId}`);
   }
   return (
     <>
@@ -35,15 +50,26 @@ const ListaProjetos = () => {
           topic4={"Status"}
           t4info={item.statusProjeto}
           view={()=> handleView(item)}
+          delete={()=> handleDelete(item)}
         />
       ))}
     </div>
-    {showModal &&(
+    {showModalView &&(
       <div className='modal show d-block' tabIndex="-1">
-        <div className='modal-backdrop show' onClick={handleCloseModal}></div>
+        <div className='modal-backdrop show' onClick={handleCloseModalView}></div>
         <VisualizarLista
         item={selectedItem}
-        onClose={handleCloseModal}
+        onClose={handleCloseModalView}
+        />
+      </div>
+    )}
+     {showModalDelete &&(
+      <div className='modal show d-block' tabIndex="-1">
+        <div className='modal-backdrop show' onClick={handleCloseModalDelete}></div>
+        <DeleteModal
+        item={selectedItem}
+        onClose={handleCloseModalDelete}
+        onConfirm={handleConfirmDelete}
         />
       </div>
     )}
