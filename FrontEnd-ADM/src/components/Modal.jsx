@@ -105,10 +105,7 @@ const Modal = (props) => {
           >
             Cadastrar
           </button>
-          <button
-            className="btn btn-outline-dark col-5"
-            onClick={props.modalOpen}
-          >
+          <button className="btn btn-outline-dark col-5" onClick={props.fechar}>
             Cancelar
           </button>
         </div>

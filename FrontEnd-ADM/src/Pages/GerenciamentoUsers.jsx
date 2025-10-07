@@ -10,7 +10,7 @@ const GerenciamentoUsers = () => {
 
   return (
     <>
-      <div className="container">
+      <div className="container py-5">
         <h3 className="text-capitalize fw-bold text-start m-0">
           Administração de usuários
         </h3>
@@ -41,7 +41,7 @@ const GerenciamentoUsers = () => {
 
           {/* Modal centralizado */}
           <div className="d-flex justify-content-center align-items-center w-100 h-100 position-fixed z-3 top-0">
-            <Modal modalOpen={() => setIsModalOpen(false)} />
+            <Modal fechar={() => setIsModalOpen(false)} />
           </div>
         </>
       )}

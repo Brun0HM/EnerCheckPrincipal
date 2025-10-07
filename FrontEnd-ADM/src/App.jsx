@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import Editar from "./components/Editar";
 
 function App() {
   const [email, setEmail] = useState("");
@@ -38,7 +39,8 @@ function App() {
 
   return (
     <>
-      <div>
+      <Editar />
+      {/* <div>
         <div className="d-flex justify-content-center align-items-center vh-100">
           <div
             className="bg-white p-4 rounded-3 border border-black border-opacity-25 shadow"
@@ -104,7 +106,7 @@ function App() {
             </form>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

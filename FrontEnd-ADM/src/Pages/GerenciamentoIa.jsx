@@ -6,7 +6,7 @@ import { ContainerLista } from "../components/ContainerLista";
 const GerenciamentoIa = () => {
   return (
     <>
-      <div className="container">
+      <div className="container py-5">
         <h3 className="text-capitalize fw-bold text-start m-0">
           Monitoramento de uso da IA
         </h3>

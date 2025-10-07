@@ -46,8 +46,14 @@ export const ComponenteLista = (props) => {
       )}
 
       <div className="d-flex flex-row gap-3 align-items-center">
-        <i className="btn bi bi-trash-fill text-danger" onClick={props.delete}></i>
-        <i className=" btn bi bi-pencil-fill text-warning" ></i>
+        <i
+          className="btn bi bi-trash-fill text-danger"
+          onClick={props.delete}
+        ></i>
+        <i
+          className=" btn bi bi-pencil-fill text-warning"
+          onClick={props.editar}
+        ></i>
         <i className=" btn bi bi-eye-fill text-info " onClick={props.view}></i>
       </div>
     </div>
