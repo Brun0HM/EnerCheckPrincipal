@@ -9,6 +9,13 @@ export const useIntersectionObserver = (options = {}) => {
     const element = elementRef.current;
     if (!element) return;
 
+    // Verifica se o browser suporta IntersectionObserver
+    if (!window.IntersectionObserver) {
+      // Fallback: marca como intersectado imediatamente se não há suporte
+      setHasIntersected(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         const isElementIntersecting = entry.isIntersecting;
@@ -28,7 +35,9 @@ export const useIntersectionObserver = (options = {}) => {
     observer.observe(element);
 
     return () => {
-      observer.unobserve(element);
+      if (observer && element) {
+        observer.unobserve(element);
+      }
     };
   }, [hasIntersected, options]);
 

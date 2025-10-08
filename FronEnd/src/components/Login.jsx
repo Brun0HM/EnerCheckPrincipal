@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import "../App.css";
+import { useNavigate } from "react-router";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [errors, setErrors] = useState({});
@@ -39,7 +42,37 @@ const Login = () => {
     // Se não há erros, prosseguir com o login
     if (Object.keys(newErrors).length === 0) {
       console.log("Login válido:", { email, senha });
-      // adicionar a lógica de autenticação
+      // Navegar para o dashboard apenas se tudo estiver válido
+      navigate("/dashboardGeral");
+    }
+  };
+
+  // Função para lidar com o clique do botão
+  const handleButtonClick = (e) => {
+    e.preventDefault();
+
+    const newErrors = {};
+
+    // Validar email
+    if (!email.trim()) {
+      newErrors.email = "Email é obrigatório";
+    } else if (!validateEmail(email)) {
+      newErrors.email = "Email inválido";
+    }
+
+    // Validar senha
+    if (!senha.trim()) {
+      newErrors.senha = "Senha é obrigatória";
+    } else if (!validatePassword(senha)) {
+      newErrors.senha = "Senha deve ter pelo menos 6 caracteres";
+    }
+
+    setErrors(newErrors);
+
+    // Se não há erros, prosseguir com o login
+    if (Object.keys(newErrors).length === 0) {
+      console.log("Login válido:", { email, senha });
+      navigate("/dashboardGeral");
     }
   };
 
@@ -142,6 +175,7 @@ const Login = () => {
               borderColor: "var(--primary)",
               color: "#ffffff",
             }}
+            onClick={handleButtonClick}
           >
             Entrar
           </button>
