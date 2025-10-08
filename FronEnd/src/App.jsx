@@ -20,12 +20,12 @@ const App = () => {
     >
       <div className="container-fluid text-center d-flex flex-column align-items-center justify-content-center">
         <div className={`mainContent`}>
-          <div className="container  text-center d-flex flex-column align-items-center justify-content-center">
-            <div>
+          <div className="container text-center d-flex flex-column align-items-center justify-content-center">
+            <ScrollAnimation animation="fadeInDown" delay={200}>
               <p className="bg-primary text-light fw-semibold p-1 rounded-2 conformidade">
                 Conformidade com NBR 5410
               </p>
-            </div>
+            </ScrollAnimation>
             <div className="container">
               <div>
                 <h1 className="fw-bold display-3">
