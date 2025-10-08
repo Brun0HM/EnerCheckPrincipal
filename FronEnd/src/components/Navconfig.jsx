@@ -92,7 +92,7 @@ const Navconfig = ({ onItemClick }) => {
         {/* Itens do menu para telas grandes */}
         <div className="bg-secondary d-none d-md-flex bg-opacity-10 rounded-3 p-1">
           <div
-            className={`d-flex gap-1 col-12 col-md-3 justify-content-center fs-6 rounded-2 align-items-center ${
+            className={`d-flex gap-1 col-12 col-md-3 justify-content-center fs-6 rounded-2 align-items-center cursor-pointer ${
               activeItem === "perfil" ? "bg-white shadow" : ""
             }`}
             onClick={() => handleItemClick("perfil")}
@@ -101,7 +101,7 @@ const Navconfig = ({ onItemClick }) => {
             <p className="my-1 user-select-none pe-3 fw-semibold">Perfil</p>
           </div>
           <div
-            className={`d-flex gap-1 col-12 col-md-3 justify-content-center fs-6 rounded-2 align-items-center ${
+            className={`d-flex gap-1 col-12 col-md-3 justify-content-center fs-6 rounded-2 align-items-center cursor-pointer ${
               activeItem === "seguranca" ? "bg-white shadow" : ""
             }`}
             onClick={() => handleItemClick("seguranca")}
@@ -110,7 +110,7 @@ const Navconfig = ({ onItemClick }) => {
             <p className="my-1 user-select-none pe-3 fw-semibold">Segurança</p>
           </div>
           <div
-            className={`d-flex gap-1 col-12 col-md-3 justify-content-center fs-6 rounded-2 align-items-center ${
+            className={`d-flex gap-1 col-12 col-md-3 justify-content-center fs-6 rounded-2 align-items-center cursor-pointer ${
               activeItem === "notificacoes" ? "bg-white shadow" : ""
             }`}
             onClick={() => handleItemClick("notificacoes")}
@@ -121,7 +121,7 @@ const Navconfig = ({ onItemClick }) => {
             </p>
           </div>
           <div
-            className={`d-flex gap-1 col-12 col-md-3 justify-content-center fs-6 rounded-2 align-items-center ${
+            className={`d-flex gap-1 col-12 col-md-3 justify-content-center fs-6 rounded-2 align-items-center cursor-pointer ${
               activeItem === "assinatura" ? "bg-white shadow" : ""
             }`}
             onClick={() => handleItemClick("assinatura")}

@@ -14,11 +14,11 @@ const Header = () => {
         <div className="my-2">
           <div className="row align-items-center">
             {/* Logo e título - adaptado ao tema */}
-            <div className="col-6 col-lg-auto" onClick={() => navigate("/")}>
-              <a
-                className="d-flex align-items-center ms-3 ms-lg-5 text-decoration-none"
-                href="/*"
-              >
+            <div
+              className="col-6 col-lg-auto"
+              onClick={() => navigate("/dashboardGeral")}
+            >
+              <a className="d-flex align-items-center ms-3 ms-lg-5 text-decoration-none cursor-pointer">
                 <div
                   className="btn text-light fw-bold"
                   style={{ backgroundColor: "var(--primary)" }}
@@ -59,30 +59,36 @@ const Header = () => {
                   }`}
                   id="navbarSupportedContent"
                 >
-                  <ul className="navbar-nav flex-column flex-lg-row ms-auto">
+                  <ul className="navbar-nav flex-column flex-lg-row ms-auto cursor-pointer">
                     {/* Links de navegação - adaptados ao tema */}
-                    <li className="nav-item">
+                    <li
+                      className="nav-item"
+                      onClick={() => navigate("/dashboardGeral")}
+                    >
                       <a
                         className="text-decoration-none mx-3 nav-link"
-                        href="/dashboardGeral"
                         style={{ color: "var(--text)" }}
                       >
                         DashBoard geral
                       </a>
                     </li>
-                    <li className="nav-item">
+                    <li
+                      className="nav-item"
+                      onClick={() => navigate("/dashboardProjeto")}
+                    >
                       <a
                         className="text-decoration-none mx-3 nav-link"
-                        href="/dashboardProjeto"
                         style={{ color: "var(--text)" }}
                       >
                         DashBoard Projetos
                       </a>
                     </li>
-                    <li className="nav-item">
+                    <li
+                      className="nav-item"
+                      onClick={() => navigate("/configuracoes")}
+                    >
                       <a
                         className="text-decoration-none mx-3 nav-link"
-                        href="/configuracoes"
                         style={{ color: "var(--text)" }}
                       >
                         Configurações
@@ -100,7 +106,7 @@ const Header = () => {
                           height: "40px",
                         }}
                         title={`Mudar para tema ${
-                          theme ===  "light" ? "escuro" : "claro"
+                          theme === "light" ? "escuro" : "claro"
                         }`}
                       >
                         {theme === "light" ? (
