@@ -3,11 +3,13 @@ import usuarios from '../apis/usuarios'
 import { ComponenteLista } from './ComponenteLista'
 import VisualizarLista from './VisualizarLista';
 import DeleteModal from './DeleteModal';
+import Editar from "./Editar";
 
 export const ListaUsers = ({ paginatedData}) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModalView, setShowModalView] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
+  const [showModalEdit, setShowModalEdit] = useState(false);
   
   // Usar dados paginados se fornecidos, senão usar todos os dados
   const dataToRender = paginatedData || usuarios;
@@ -28,6 +30,11 @@ export const ListaUsers = ({ paginatedData}) => {
     setSelectedItem(item);
     setShowModalDelete(true);
   }
+  
+  const handleEdit = (item) => {
+    setSelectedItem(item);
+    setShowModalEdit(true);
+  };
 
   const handleConfirmDelete = (itemId) => {
     console.log(`Excluindo item com ID: ${itemId}`);
@@ -49,6 +56,7 @@ export const ListaUsers = ({ paginatedData}) => {
             t3info={item.planos[0]?.nome}
             view={()=> handleView(item)}
             delete={()=> handleDelete(item)}
+            editar={() => handleEdit(item)}
           />
         ))}
       </div>
@@ -73,6 +81,17 @@ export const ListaUsers = ({ paginatedData}) => {
           />
         </div>
       )}
+       {showModalEdit && (
+           <>
+             {/* Fundo escuro */}
+             <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75"></div>
+   
+             {/* Modal centralizado */}
+             <div className="d-flex justify-content-center align-items-center w-100 h-100 position-fixed z-3 top-0 end-0">
+               <Editar fechar={() => setShowModalEdit(false)} />
+             </div>
+           </>
+         )}
     </>
   )
 }

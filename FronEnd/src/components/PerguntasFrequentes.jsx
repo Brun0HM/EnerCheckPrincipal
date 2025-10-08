@@ -1,15 +1,4 @@
 import React from "react";
-
-/**
- * Componente PerguntasFrequentes - Card de FAQ com suporte a tema escuro/claro
- *
- * Utiliza variáveis CSS customizadas para se adaptar ao tema selecionado,
- * garantindo que o fundo do card e cores dos textos mudem conforme o tema.
- *
- * @param {Object} props - Propriedades do componente
- * @param {string} props.title - Título da pergunta
- * @param {string} props.descricao - Resposta/descrição da pergunta
- */
 const PerguntasFrequentes = ({ title, descricao }) => {
   return (
     <div className="d-flex flex-column align-items-center justify-content-center">

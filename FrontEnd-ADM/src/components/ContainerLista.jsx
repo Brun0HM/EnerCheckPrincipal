@@ -78,7 +78,7 @@ const ContainerLista = (props) => {
           <p className="small">{props.desc}</p>
         </div>
         {props.ModalOpen && (
-          <button className="btn btn-dark py-1 px-3 rounded-3">
+          <button className={`btn btn-dark py-1 px-3 rounded-3 ${props.sumiu}`}>
             <div
               className="d-flex flex-row align-items-center"
               onClick={props.ModalOpen}

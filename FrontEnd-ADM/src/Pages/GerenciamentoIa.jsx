@@ -1,9 +1,7 @@
-import React from 'react'
-import Search from '../components/Search'
-import ListaProjetos from '../components/ListaProjetos'
-import { ContainerLista } from '../components/ContainerLista'
-
-
+import React from "react";
+import Search from "../components/Search";
+import ListaProjetos from "../components/ListaProjetos";
+import { ContainerLista } from "../components/ContainerLista";
 
 const GerenciamentoIa = () => {
   return (
@@ -27,4 +25,4 @@ const GerenciamentoIa = () => {
   )
 }
 
-export default GerenciamentoIa
+export default GerenciamentoIa;

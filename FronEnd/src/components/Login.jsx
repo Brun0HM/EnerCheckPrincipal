@@ -39,7 +39,7 @@ const Login = () => {
     // Se não há erros, prosseguir com o login
     if (Object.keys(newErrors).length === 0) {
       console.log("Login válido:", { email, senha });
-      // Aqui você pode adicionar a lógica de autenticação
+      // adicionar a lógica de autenticação
     }
   };
 

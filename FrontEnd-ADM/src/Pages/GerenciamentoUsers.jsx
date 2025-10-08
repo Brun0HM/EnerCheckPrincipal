@@ -43,7 +43,7 @@ const GerenciamentoUsers = () => {
 
           {/* Modal centralizado */}
           <div className="d-flex justify-content-center align-items-center w-100 h-100 position-fixed z-3 top-0">
-            <Modal modalOpen={() => setIsModalOpen(false)} />
+            <Modal fechar={() => setIsModalOpen(false)} />
           </div>
         </>
       )}

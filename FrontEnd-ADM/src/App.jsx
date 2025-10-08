@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import Editar from "./components/Editar";
 
 function App() {
   const [email, setEmail] = useState("");

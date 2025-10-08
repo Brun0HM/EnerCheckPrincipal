@@ -1,13 +1,6 @@
 import React from "react";
 import { CardStatusProjetoDashboard } from "../components/CardStatusProjetoDashboard";
 import { ProjetosRecentes } from "../components/ProjetosRecentes";
-
-/**
- * Página Dashboard Geral - Adaptada para tema escuro/claro
- *
- * Dashboard principal com cards de status, projetos recentes e ações rápidas.
- * Todos os elementos se adaptam automaticamente ao tema selecionado.
- */
 const DashboardGeral = () => {
   return (
     <div

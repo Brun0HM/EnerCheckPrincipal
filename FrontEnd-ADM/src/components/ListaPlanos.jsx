@@ -3,11 +3,13 @@ import planos from "../apis/planos";
 import { ComponenteLista } from "./ComponenteLista";
 import VisualizarLista from "./VisualizarLista";
 import DeleteModal from "./DeleteModal";
+import Editar from "./Editar";
 
 export const ListaPlanos = ({paginatedData}) => {
    const [selectedItem, setSelectedItem] = useState(null);
     const [showModalView, setShowModalView] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
+    const [showModalEdit, setShowModalEdit] = useState(false);
 
        // Usar dados paginados se fornecidos, senão usar todos os dados
        const dataToRender = paginatedData || planos;
@@ -27,7 +29,11 @@ export const ListaPlanos = ({paginatedData}) => {
     const handleDelete = (item) => {
       setSelectedItem(item);
       setShowModalDelete(true);
-    }
+    };
+    const handleEdit = (item) => {
+      setSelectedItem(item);
+      setShowModalEdit(true);
+    };
   
     const handleConfirmDelete = (itemId) => {
       console.log(`Excluindo item com ID: ${itemId}`);
@@ -50,7 +56,8 @@ export const ListaPlanos = ({paginatedData}) => {
           topic3={"Ativo?"}
           t3info={item.ativo ? "Sim" : "Não"}
           view={()=> handleView(item)}
-          delete={()=> handleDelete(item)}
+          delete={() => handleDelete(item)}
+          editar={() => handleEdit(item)}
         />
       ))}
     </div>
@@ -62,17 +69,31 @@ export const ListaPlanos = ({paginatedData}) => {
         onClose={handleCloseModalView}
         />
       </div>
-    )}
-     {showModalDelete &&(
-      <div className='modal show d-block' tabIndex="-1">
-        <div className='modal-backdrop show' onClick={handleCloseModalDelete}></div>
-        <DeleteModal
-        item={selectedItem}
-        onClose={handleCloseModalDelete}
-        onConfirm={handleConfirmDelete}
-        />
-      </div>
-    )}
+     )}
+      {showModalDelete && (
+        <div className="modal show d-block" tabIndex="-1">
+          <div
+            className="modal-backdrop show"
+            onClick={handleCloseModalDelete}
+          ></div>
+          <DeleteModal
+            item={selectedItem}
+            onClose={handleCloseModalDelete}
+            onConfirm={handleConfirmDelete}
+          />
+        </div>
+      )}
+      {showModalEdit && (
+        <>
+          {/* Fundo escuro */}
+          <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75"></div>
+
+          {/* Modal centralizado */}
+          <div className="d-flex justify-content-center align-items-center w-100 h-100 position-fixed z-3 top-0 end-0">
+            <Editar fechar={() => setShowModalEdit(false)} />
+          </div>
+        </>
+      )}
     </>
   );
 };

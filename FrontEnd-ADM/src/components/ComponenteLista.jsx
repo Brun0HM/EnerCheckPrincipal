@@ -8,8 +8,10 @@ export const ComponenteLista = (props) => {
         <p className="m-0 small">{props.desc}</p>
       </div>
 
-                {props.topic1 && (
-        <div className={`d-flex flex-column gap-0 align-items-center ${props.display1}`} >
+      {props.topic1 && (
+        <div
+          className={`d-flex flex-column gap-0 align-items-center ${props.display1}`}
+        >
           <p className="m-0 fw-medium fs-5 text-primary">{props.topic1}</p>
           <p className="fw-semibold m-0">{props.t1info}</p>
         </div>
@@ -44,11 +46,16 @@ export const ComponenteLista = (props) => {
       )}
 
       <div className="d-flex flex-row gap-3 align-items-center">
-        <i className="btn bi bi-trash-fill text-danger" onClick={props.delete}></i>
-        <i className=" btn bi bi-pencil-fill text-warning" ></i>
+        <i
+          className="btn bi bi-trash-fill text-danger"
+          onClick={props.delete}
+        ></i>
+        <i
+          className=" btn bi bi-pencil-fill text-warning"
+          onClick={props.editar}
+        ></i>
         <i className=" btn bi bi-eye-fill text-info " onClick={props.view}></i>
       </div>
-                
-            </div>
-  )
-}
+    </div>
+  );
+};
