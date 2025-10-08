@@ -93,7 +93,7 @@ const Header = () => {
                     <li className="nav-item">
                       <button
                         className="btn mx-3 my-1 btn-theme-secondary"
-                        onClick={() => navigate("/login")}
+                        onClick={() => navigate("/login")} // Chama a função de fade in e redirecionamento
                         style={{
                           backgroundColor: "var(--button-secondary)",
                           borderColor: "var(--card-border)",
