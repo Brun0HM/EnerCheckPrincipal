@@ -15,12 +15,12 @@ const Layout = () => {
   const location = useLocation();
 
   // Rotas onde o Header e Footer não devem aparecer
-  const hideNavbarRoutes = ["/login", "/cadastro"];
+  const hideNavbarRoutes = ["/login", "/cadastro", "/teste"];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
   return (
     <>
-      {/* {!shouldHideNavbar && <Header />} */}
+      {!shouldHideNavbar && <Header />}
       <Routes>
         <Route path="/*" element={<App />} />
         <Route path="/dashboardProjeto" element={<DashboardProjeto />}></Route>
@@ -31,7 +31,7 @@ const Layout = () => {
         <Route path="/tema" element={<Tema />} />
         <Route path="/teste" element={<ResumoPedido />} />
       </Routes>
-      {/* {!shouldHideNavbar && <Footer />} */}
+      {!shouldHideNavbar && <Footer />}
     </>
   );
 };
