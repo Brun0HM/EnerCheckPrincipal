@@ -58,8 +58,8 @@ const TiposPlanos = (props) => {
           <div
             className="d-flex flex-column gap-2 justify-content-start"
             style={{
-              minHeight: "200px",
-              maxHeight: "200px",
+              minHeight: "225px",
+              maxHeight: "225px",
               overflow: "hidden",
             }}
           >
