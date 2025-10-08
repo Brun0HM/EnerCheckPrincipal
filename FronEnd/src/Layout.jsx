@@ -9,6 +9,7 @@ import DashBoardGeral from "./pages/DashboardGeral";
 import Planos from "./pages/Planos";
 import Tema from "./pages/TesteTheme";
 import Footer from "./components/Footer";
+import FinalizarEscolhaAssinatura from "./pages/FinalizarEscolhaAssinatura.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -28,6 +29,7 @@ const Layout = () => {
         <Route path="/dashboardGeral" element={<DashBoardGeral />} />
         <Route path="/planos" element={<Planos />} />
         <Route path="/tema" element={<Tema />} />
+        <Route path="/comecarAssinatura" element={<FinalizarEscolhaAssinatura />} />
       </Routes>
       {!shouldHideNavbar && <Footer />}
     </>
