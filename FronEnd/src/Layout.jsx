@@ -9,17 +9,28 @@ import DashBoardGeral from "./pages/DashboardGeral";
 import Planos from "./pages/Planos";
 import Tema from "./pages/TesteTheme";
 import Footer from "./components/Footer";
+import DashboardNavbar from "./components/DashboardNavbar";
 
 const Layout = () => {
   const location = useLocation();
 
   // Rotas onde o Header e Footer não devem aparecer
-  const hideNavbarRoutes = ["/login", "/cadastro"];
+  const hideNavbarRoutes = [
+    "/login",
+    "/cadastro",
+    "/dashboardProjeto",
+    "/dashboardGeral",
+  ];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
+
+  // Rotas onde a Dashboard Navbar deve aparecer
+  const dashboardRoutes = ["/dashboardGeral", "/dashboardProjeto"];
+  const shouldShowDashboardNavbar = dashboardRoutes.includes(location.pathname);
 
   return (
     <>
       {!shouldHideNavbar && <Header />}
+      {shouldShowDashboardNavbar && <DashboardNavbar />}
       <Routes>
         <Route path="/*" element={<App />} />
         <Route path="/dashboardProjeto" element={<DashboardProjeto />}></Route>
