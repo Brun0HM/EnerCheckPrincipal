@@ -32,3 +32,11 @@ body {
 #uploadContainer {
   border: dashed;
 }
+.hover {
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.hover:hover {
+  transform: scale(1.2);
+}
