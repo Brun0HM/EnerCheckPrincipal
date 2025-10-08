@@ -42,7 +42,7 @@ const Perfil = () => {
             />
           </div>
         </div>
-        <button className="btn btn-primary col-12 mt-5 fw-bold">
+        <button className="btn btn-primary col-12 mt-5 fw-semibold">
           Salvas Alterações
         </button>
       </div>
