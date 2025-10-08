@@ -42,7 +42,7 @@ const Layout = () => {
         <Route path="/planos" element={<Planos />} />
         <Route path="/tema" element={<Tema />} />
         <Route path="/teste" element={<ResumoPedido />} />
-        <Route path="/uploadProjeto" element={<UploadProjeto />}></Route>
+        <Route path="/uploadProjeto" element={<UploadProjeto />} />
       </Routes>
       {!shouldHideNavbar && <Footer />}
     </>
