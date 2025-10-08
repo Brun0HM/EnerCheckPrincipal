@@ -13,10 +13,12 @@ const [analise, setAnalise] = useState([])
   const tipo = localStorage.getItem("Formato");
 
   useEffect(() => {
+
+
     setAnalise(analiseData);
     console.log(analise);
 
-  }, [])
+  },[analise])
  
 
 

@@ -79,7 +79,7 @@ export const analisarPlanta = async (imageBase64, mimeType) => {
         
         const jsonText = response.text.trim();
         const parsedJson = JSON.parse(jsonText);
-        console.log( "Resposta da API: " + parsedJson);
+        console.log( "Resposta da API: ", parsedJson);
         
 
         if (!parsedJson.analiseCategorizada || !Array.isArray(parsedJson.analiseCategorizada)) {
