@@ -1,41 +1,60 @@
 import React from "react";
-
 const TiposPlanos = (props) => {
   return (
     <div className="d-flex flex-column align-items-center justify-content-center h-100">
       <div
-        className="card m-3 d-flex flex-column h-100"
+        className="card m-3 d-flex flex-column h-100 theme-card"
         style={{
           width: "20rem",
           minHeight: "550px",
           maxHeight: "550px",
+          // Uso das variáveis CSS para tema dinâmico
+          backgroundColor: "var(--card-bg)",
+          borderColor: "var(--card-border)",
+          color: "var(--text)",
         }}
       >
-        {/* Ícone */}
+        {/* Ícone do plano */}
         <div className="mt-4 text-center">
           <i
-            className={`${props.icon} text-primary p-2 ps-3 pe-3 rounded zulzinho fs-5`}
+            className={`${props.icon} p-2 ps-3 pe-3 rounded zulzinho fs-5`}
+            style={{
+              color: "var(--primary)",
+              backgroundColor: "var(--bg)",
+            }}
           ></i>
         </div>
 
-        {/* Conteúdo do card */}
+        {/* Conteúdo principal do card */}
         <div className="card-body text-center d-flex flex-column justify-content-between flex-grow-1">
-          {/* Header do plano */}
+          {/* Cabeçalho do plano */}
           <div>
-            <h5 className="card-title fw-bold">{props.title}</h5>
+            <h5 className="card-title fw-bold" style={{ color: "var(--text)" }}>
+              {props.title}
+            </h5>
             <p
-              className="card-text text-secondary"
-              style={{ minHeight: "2.5rem" }}
+              className="card-text"
+              style={{
+                minHeight: "2.5rem",
+                color: "var(--text-secondary)",
+              }}
             >
               {props.desgracao}
             </p>
             <div className="mb-3">
-              <h2 className="fw-bold">{props.preco}</h2>
-              <span className="text-secondary fw-semibold">/mês</span>
+              <h2 className="fw-bold" style={{ color: "var(--text)" }}>
+                {props.preco}
+              </h2>
+              <span
+                className="fw-semibold"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                /mês
+              </span>
             </div>
           </div>
 
-          {/* Lista de itens com altura fixa */}
+          {/* Lista de benefícios com altura fixa */}
           <div
             className="d-flex flex-column gap-2 justify-content-start"
             style={{
@@ -49,15 +68,29 @@ const TiposPlanos = (props) => {
                 key={index}
                 className="d-flex gap-2 align-items-center justify-content-start"
               >
-                <i className="bi bi-check-circle text-primary flex-shrink-0"></i>
-                <span className="text-dark text-start">{item}</span>
+                {/* Ícone de check com cor do tema */}
+                <i
+                  className="bi bi-check-circle flex-shrink-0"
+                  style={{ color: "var(--primary)" }}
+                ></i>
+                {/* Texto do item com cor do tema */}
+                <span className="text-start" style={{ color: "var(--text)" }}>
+                  {item}
+                </span>
               </div>
             ))}
           </div>
 
-          {/* Botão sempre no final */}
+          {/* Botão de ação - sempre no final */}
           <div className="mt-3">
-            <button className="btn btn-dark w-75">
+            <button
+              className="btn w-75"
+              style={{
+                backgroundColor: "var(--primary)",
+                borderColor: "var(--primary)",
+                color: "#ffffff",
+              }}
+            >
               Escolher {props.title}
             </button>
           </div>

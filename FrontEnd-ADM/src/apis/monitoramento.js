@@ -5,7 +5,7 @@ const projetos = [
         id: "#231",
         tipoConta: "Pro",
         data:"2024-01-15 14:30",
-        statusProjeto:"Concluido"
+        statusProjeto:"Concluído"
     },
         {
         email: "joao@exemplo.com",
@@ -21,7 +21,7 @@ const projetos = [
         id: "#123",
         tipoConta: "Empresas",
         data:"2024-01-15 14:25",
-        statusProjeto:"concluido"
+        statusProjeto:"Concluído"
     },
     {
         email: "pedro@exemplo.com",
@@ -29,7 +29,7 @@ const projetos = [
         id: "#342",
         tipoConta: "Pro",
         data:"2024-01-15 14:25",
-        statusProjeto:"erro"
+        statusProjeto:"Erro"
     },
     {
         email: "joana@exemplo.com",
@@ -37,7 +37,7 @@ const projetos = [
         id: "#121",
         tipoConta: "Básico",
         data:"2024-01-14 14:28",
-        statusProjeto:"concluido"
+        statusProjeto:"Concluído"
     },
     {
         email: "ruan@exemplo.com",
@@ -45,7 +45,7 @@ const projetos = [
         id: "#333",
         tipoConta: "Empresas",
         data:"2024-01-13 18:30",
-        statusProjeto:"concluido"
+        statusProjeto:"Concluído"
     }
 ]
 export default projetos;

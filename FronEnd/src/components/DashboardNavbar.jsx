@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import "../styles/main.scss";
-import { useTheme } from "../hooks/useTheme"; 
+import { useTheme } from "../hooks/useTheme";
 import { useNavigate } from "react-router";
 
 const Header = () => {
   const [MenuOpen, setMenuOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme(); 
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   return (
@@ -64,59 +64,30 @@ const Header = () => {
                     <li className="nav-item">
                       <a
                         className="text-decoration-none mx-3 nav-link"
-                        href="#recursos"
+                        href="/dashboardGeral"
                         style={{ color: "var(--text)" }}
                       >
-                        Recursos
+                        DashBoard geral
                       </a>
                     </li>
                     <li className="nav-item">
                       <a
                         className="text-decoration-none mx-3 nav-link"
-                        href="#funciona"
+                        href="/dashboardProjeto"
                         style={{ color: "var(--text)" }}
                       >
-                        Como Funciona
+                        DashBoard Projetos
                       </a>
                     </li>
                     <li className="nav-item">
                       <a
                         className="text-decoration-none mx-3 nav-link"
-                        href="#depoimentos"
+                        href="/configuracoes"
                         style={{ color: "var(--text)" }}
                       >
-                        Depoimentos
+                        Configurações
                       </a>
                     </li>
-
-                    {/* Botões de ação - adaptados ao tema */}
-                    <li className="nav-item">
-                      <button
-                        className="btn mx-3 my-1 btn-theme-secondary"
-                        onClick={() => navigate("/login")}
-                        style={{
-                          backgroundColor: "var(--button-secondary)",
-                          borderColor: "var(--card-border)",
-                          color: "var(--button-secondary-text)",
-                        }}
-                      >
-                        Entrar
-                      </button>
-                    </li>
-                    <li className="nav-item">
-                      <button
-                        className="btn mx-3 my-1"
-                        onClick={() => navigate("/planos")}
-                        style={{
-                          backgroundColor: "var(--primary)",
-                          borderColor: "var(--primary)",
-                          color: "#ffffff",
-                        }}
-                      >
-                        Experimente Grátis!
-                      </button>
-                    </li>
-
                     {/* Botão de alternância de tema */}
                     <li className="nav-item d-flex align-items-center mx-3">
                       <button
@@ -129,7 +100,7 @@ const Header = () => {
                           height: "40px",
                         }}
                         title={`Mudar para tema ${
-                          theme === "light" ? "escuro" : "claro"
+                          theme ===  "light" ? "escuro" : "claro"
                         }`}
                       >
                         {theme === "light" ? (

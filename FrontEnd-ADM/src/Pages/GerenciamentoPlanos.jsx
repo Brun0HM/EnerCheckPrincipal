@@ -1,21 +1,19 @@
-import React from 'react'
-import { TabelaGeral } from '../components/TabelaGeral'
-import { ContainerLista } from '../components/ContainerLista'
-import { ListaPlanos } from '../components/ListaPlanos'
-import planos from '../apis/planos'
-
+import React from "react";
+import { TabelaGeral } from "../components/TabelaGeral";
+import { ContainerLista } from "../components/ContainerLista";
+import { ListaPlanos } from "../components/ListaPlanos";
+import planos from "../apis/planos";
 
 const GerenciamentoPlanos = () => {
-
-    const faturamentoTotal = planos.reduce(( valorAnt, plano ) => {
-        return valorAnt + (plano.preco * plano.totalUsuarios)
-    }, 0)
+  const faturamentoTotal = planos.reduce((valorAnt, plano) => {
+    return valorAnt + plano.preco * plano.totalUsuarios;
+  }, 0);
   return (
-    <div className='container py-5'>
+    <div className='container py-5 mt-2 pt-2 mb-3 pb-3'>
         <h3 className='text-capitalize fw-bold text-start m-0'>Administração de planos</h3>
         <p className='fs-6 fw-light'>Ler, criar, editar e excluir cadastro de planos</p>
 
-    <div className='d-flex flex-column gap-3'>
+    <div className='d-flex flex-column gap-3 overflow-hidden'>
     <TabelaGeral
     topic1={"Cadastros Totais"}
     t1info={planos.length}
@@ -32,10 +30,9 @@ const GerenciamentoPlanos = () => {
     lista={<ListaPlanos />}
     />
 
-
+  </div>
     </div>
-    </div>
-  )
-}
+  );
+};
 
-export default GerenciamentoPlanos
+export default GerenciamentoPlanos;

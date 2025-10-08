@@ -15,7 +15,7 @@ const usuarios = [
     email: "thiagomazzi@gmail.com",
     dataCriacao: "06-06-2007",
     crea: "12345678",
-    "planos": [
+    planos: [
       {
         nome: "Plano Pro",
       },
@@ -63,6 +63,39 @@ const usuarios = [
     planos: [
       {
         nome: "Plano Básico",
+      },
+    ],
+  },
+  {
+    usuarioNome: "Antony Leandro Vieira",
+    email: "antonyfortnite@gmail.com",
+    dataCriacao: "22-9-2025",
+    crea: "12345678",
+    planos: [
+      {
+        nome: "Plano Pro",
+      },
+    ],
+  },
+  {
+    usuarioNome: "Daniel Hilario Mazzi",
+    email: "danielHilarioMazzi@gmail.com",
+    dataCriacao: "14-07-1975",
+    crea: "12345678",
+    planos: [
+      {
+        nome: "Plano Pro",
+      },
+    ],
+  },
+  {
+    usuarioNome: "Cibele Souza Ramos",
+    email: "cibitxt@gmail.com",
+    dataCriacao: "26-12-1974",
+    crea: "12345678",
+    planos: [
+      {
+        nome: "Plano Pro",
       },
     ],
   },

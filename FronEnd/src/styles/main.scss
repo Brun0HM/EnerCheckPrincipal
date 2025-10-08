@@ -1,14 +1,109 @@
-@import "variables";                // suas variáveis
-@import "bootstrap/scss/bootstrap"; // bootstrap com variáveis aplicadas
+@import "variables";      
+@import "bootstrap/scss/bootstrap"; 
 
+/* ===== ESTILOS PARA HEADER ===== */
 .headerBlur {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 0 0 15px 15px;
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-  }
-  
-  .mainContent {
+}
+
+/* Header no tema escuro - ajusta a transparência */
+[data-theme="dark"] .headerBlur {
+    background-color: rgba(19, 19, 19, 0.8);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== ESTILOS PARA CONTEÚDO PRINCIPAL ===== */
+.mainContent {
     padding-top: 120px;
-  }
+}
+
+/* ===== CLASSES AUXILIARES PARA TEMA ===== */
+
+/* Classe para cards que devem se adaptar ao tema */
+.theme-card {
+    background-color: var(--card-bg) !important;
+    border-color: var(--card-border) !important;
+    color: var(--text) !important;
+    transition: all 0.3s ease;
+}
+
+/* Classe para inputs que devem se adaptar ao tema */
+.theme-input {
+    background-color: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
+    color: var(--text) !important;
+    transition: all 0.3s ease;
+}
+
+/* Placeholder dos inputs no tema escuro */
+[data-theme="dark"] .theme-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
+/* Focus nos inputs - mantém a cor primária */
+.theme-input:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25) !important;
+}
+
+/* ===== BOTÕES COM TEMA ===== */
+
+/* Botão secundário que se adapta ao tema */
+.btn-theme-secondary {
+    background-color: var(--button-secondary) !important;
+    border-color: var(--card-border) !important;
+    color: var(--button-secondary-text) !important;
+    transition: all 0.3s ease;
+}
+
+.btn-theme-secondary:hover {
+    background-color: var(--card-border) !important;
+    color: var(--text) !important;
+}
+
+/* ===== TRANSIÇÕES SUAVES PARA MUDANÇA DE TEMA ===== */
+* {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+
+/* Cards Bootstrap no tema escuro */
+[data-theme="dark"] .card {
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+    color: var(--text);
+}
+
+/* Form controls Bootstrap no tema escuro */
+[data-theme="dark"] .form-control {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--text);
+}
+
+[data-theme="dark"] .form-control:focus {
+    background-color: var(--input-bg);
+    border-color: var(--primary);
+    color: var(--text);
+}
+
+/* Checkboxes no tema escuro */
+[data-theme="dark"] .form-check-input {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+}
+
+[data-theme="dark"] .form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Labels no tema escuro */
+[data-theme="dark"] .form-check-label {
+    color: var(--text);
+}
