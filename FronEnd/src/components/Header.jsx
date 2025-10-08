@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import "../styles/main.scss";
-import { useTheme } from "../hooks/useTheme"; 
+import { useTheme } from "../hooks/useTheme";
 import { useNavigate } from "react-router";
 
 const Header = () => {
   const [MenuOpen, setMenuOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme(); 
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   return (
@@ -15,10 +15,7 @@ const Header = () => {
           <div className="row align-items-center">
             {/* Logo e título - adaptado ao tema */}
             <div className="col-6 col-lg-auto" onClick={() => navigate("/")}>
-              <a
-                className="d-flex align-items-center ms-3 ms-lg-5 text-decoration-none"
-                href="/*"
-              >
+              <a className="d-flex align-items-center ms-3 ms-lg-5 text-decoration-none">
                 <div
                   className="btn text-light fw-bold"
                   style={{ backgroundColor: "var(--primary)" }}
