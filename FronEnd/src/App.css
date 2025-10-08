@@ -1,3 +1,7 @@
+:root {
+  --bs-body-bg: #121212 !important;
+}
+
 body {
   margin: 0 !important;
   padding: 0 !important;
@@ -35,6 +39,15 @@ body::-webkit-scrollbar {
 #uploadContainer {
   border: dashed;
 }
+.hover {
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.hover:hover {
+  transform: scale(1.2);
+}
+
 
 .cursor-pointer {
   cursor: pointer;
