@@ -4,6 +4,7 @@ import GerenciamentoPlanos from './Pages/GerenciamentoPlanos.jsx';
 import GerenciamentoIa from './Pages/GerenciamentoIa.jsx';
 import OffCanva from "./components/OffCanva.jsx";
 import { Route, Routes, useLocation } from "react-router";
+import { Header } from './components/Header.jsx';
 
 const AppWrapper = () => {
 const location = useLocation();
@@ -11,7 +12,12 @@ const showOffCanva = ['/users', '/planos', '/projetos'].includes(location.pathna
 
 return (
   <>
-    {showOffCanva && <OffCanva />}
+    {showOffCanva &&  (
+        <>
+          <OffCanva />
+          <Header />
+        </>
+      )}
     <Routes>  
       <Route path="/*" element={<App />} />
       <Route path='/users' element={<GerenciamentoUsers />} />

@@ -9,6 +9,7 @@ import DashBoardGeral from "./pages/DashboardGeral";
 import Planos from "./pages/Planos";
 import Tema from "./pages/TesteTheme";
 import Footer from "./components/Footer";
+import ResumoPedido from "./components/ResumoPedido.jsx";
 import DashboardNavbar from "./components/DashboardNavbar";
 
 const Layout = () => {
@@ -39,6 +40,7 @@ const Layout = () => {
         <Route path="/dashboardGeral" element={<DashBoardGeral />} />
         <Route path="/planos" element={<Planos />} />
         <Route path="/tema" element={<Tema />} />
+        <Route path="/teste" element={<ResumoPedido />} />
       </Routes>
       {!shouldHideNavbar && <Footer />}
     </>
