@@ -7,6 +7,7 @@ import pesso1 from "./assets/FotoPerfilPessoa01.png";
 import pesso2 from "./assets/FotoPerfilPessoa02.png";
 import pesso3 from "./assets/FotoPerfilPessoa03.png";
 import { useNavigate } from "react-router";
+import ScrollAnimation from "./components/ScrollAnimation";
 
 const App = () => {
   const navigate = useNavigate();
@@ -171,7 +172,7 @@ const App = () => {
                 <div className="row justify-content-center">
                   <div className="col-12 col-md-4 mb-3">
                     <Depoimentos
-                      foto={pesso1}   
+                      foto={pesso1}
                       user="Maria Rodriguez"
                       depoimento="O EnerCheck revolucionou nossa empresa. Reduzimos o tempo de análise de projetos em 80% e aumentamos significativamente a qualidade."
                       profissa="Engenheira Elétrica"
