@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import "../styles/main.scss";
-import { useTheme } from "../hooks/useTheme"; 
+import { useTheme } from "../hooks/useTheme";
 import { useNavigate } from "react-router";
 
 const Header = () => {
   const [MenuOpen, setMenuOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme(); 
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   return (
@@ -16,8 +16,8 @@ const Header = () => {
             {/* Logo e título - adaptado ao tema */}
             <div className="col-6 col-lg-auto" onClick={() => navigate("/")}>
               <a
-                className="d-flex align-items-center ms-3 ms-lg-5 text-decoration-none"
-                href="/*"
+                className="d-flex align-items-center ms-3 ms-lg-5 text-decoration-none cursor-pointer"
+                href="#inicio"
               >
                 <div
                   className="btn text-light fw-bold"
@@ -93,7 +93,7 @@ const Header = () => {
                     <li className="nav-item">
                       <button
                         className="btn mx-3 my-1 btn-theme-secondary"
-                        onClick={() => navigate("/login")}
+                        onClick={() => navigate("/login")} // Chama a função de fade in e redirecionamento
                         style={{
                           backgroundColor: "var(--button-secondary)",
                           borderColor: "var(--card-border)",

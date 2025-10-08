@@ -2,7 +2,27 @@ import React, { useEffect, useState } from "react";
 import { InfoGeralContainer } from "../components/InfoGeralContainer";
 import { ContainerChecagem } from "../components/ContainerChecagem";
 
+
 const DashboardProjeto = () => {
+
+const [analise, setAnalise] = useState([])
+
+
+  const analiseData = localStorage.getItem("Analise");
+  const imagem = localStorage.getItem("Imagem");
+  const tipo = localStorage.getItem("Formato");
+
+  useEffect(() => {
+
+
+    setAnalise(analiseData);
+    console.log(analise);
+
+  },[analise])
+ 
+
+
+
   const [comentarioGeral, setComentarioGeral] = useState("");
   const [comentConform, setComentConform] = useState("");
   const [comentInstalacao, setComentInstalacao] = useState("");
@@ -23,7 +43,7 @@ const DashboardProjeto = () => {
       setComentarioGeral("Excelente conformidade");
     }
     if (pontuacaoGeral <= 20) {
-      setComentarioGeral("Erros críticos a serem revisados");
+      setComentarioGeral("Sei lá erro crítico porra");
     }
   };
 

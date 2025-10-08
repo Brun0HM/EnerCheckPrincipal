@@ -11,6 +11,8 @@ import Tema from "./pages/TesteTheme";
 import Footer from "./components/Footer";
 import FinalizarEscolhaAssinatura from "./pages/FinalizarEscolhaAssinatura.jsx";
 import DashboardNavbar from "./components/DashboardNavbar";
+import UploadProjeto from "./pages/UploadProjeto.jsx";
+import Configurações from "./pages/Configurações.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -21,11 +23,16 @@ const Layout = () => {
     "/cadastro",
     "/dashboardProjeto",
     "/dashboardGeral",
+    "/configuracoes",
   ];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
   // Rotas onde a Dashboard Navbar deve aparecer
-  const dashboardRoutes = ["/dashboardGeral", "/dashboardProjeto"];
+  const dashboardRoutes = [
+    "/dashboardGeral",
+    "/dashboardProjeto",
+    "/configuracoes",
+  ];
   const shouldShowDashboardNavbar = dashboardRoutes.includes(location.pathname);
 
   return (
@@ -41,6 +48,8 @@ const Layout = () => {
         <Route path="/planos" element={<Planos />} />
         <Route path="/tema" element={<Tema />} />
         <Route path="/comecarAssinatura" element={<FinalizarEscolhaAssinatura />} />
+        <Route path="/uploadProjeto" element={<UploadProjeto />} />
+        <Route path="/configuracoes" element={<Configurações />} />
       </Routes>
       {!shouldHideNavbar && <Footer />}
     </>
