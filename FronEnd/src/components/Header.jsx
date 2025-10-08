@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import "../styles/main.scss";
-import { useTheme } from "../hooks/useTheme"; // <-- importa o hook
+import { useTheme } from "../hooks/useTheme"; 
 import { useNavigate } from "react-router";
 
 const Header = () => {
   const [MenuOpen, setMenuOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme(); // <-- usa o hook
+  const { theme, toggleTheme } = useTheme(); 
   const navigate = useNavigate();
 
   return (
@@ -117,7 +117,7 @@ const Header = () => {
                       </button>
                     </li>
 
-                    {/* Botão de alternância de tema - melhorado */}
+                    {/* Botão de alternância de tema */}
                     <li className="nav-item d-flex align-items-center mx-3">
                       <button
                         className="btn btn-outline rounded-circle d-flex align-items-center justify-content-center"

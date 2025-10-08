@@ -1,17 +1,4 @@
 import React from "react";
-
-/**
- * Componente Depoimentos - Card de depoimento/testemunho com tema
- *
- * Exibe depoimentos de clientes com avaliação em estrelas, texto do depoimento,
- * foto do usuário, nome e profissão. Totalmente adaptado ao sistema de tema.
- *
- * @param {Object} props - Propriedades do componente
- * @param {string} props.depoimento - Texto do depoimento/testemunho
- * @param {string} props.foto - URL da foto do usuário
- * @param {string} props.user - Nome do usuário
- * @param {string} props.profissa - Profissão do usuário
- */
 const Depoimentos = (props) => {
   return (
     <div>
@@ -105,21 +92,21 @@ const Depoimentos = (props) => {
               <div className="ms-3 text-start d-flex flex-column justify-content-center">
                 {/* Nome do usuário */}
                 <span
-                  className="card-title fs-5 fw-bold mb-1"
-                  style={{ color: "var(--text)" }}
+                  className="card-title fs-5 fw-bold"
+                  style={{ color: "var(--text)", marginBottom: "-5px" }}
                 >
                   {props.user}
                 </span>
-                {/* Profissão - CORRIGIDO para aparecer no tema escuro */}
-                <p
-                  className="fs-6 mb-0"
+                {/* Profissão */}
+                <span
+                  className="fs-6"
                   style={{
                     color: "var(--text-secondary)",
                     fontWeight: "500",
                   }}
                 >
                   {props.profissa}
-                </p>
+                </span>
               </div>
             </div>
           </div>

@@ -1,10 +1,7 @@
 import React from "react";
 import Cadastro from "../components/Cadastro";
-import { useTheme } from "../hooks/useTheme";
 
 const Cadastrar = () => {
-  const { theme } = useTheme();
-
   return (
     <div
       className="d-flex flex-column justify-content-center align-items-center vh-100"
@@ -16,9 +13,6 @@ const Cadastrar = () => {
         paddingTop: "30rem",
       }}
     >
-      {/* Espaçamento superior */}
-      <div className="mt-5"></div>
-
       {/* Cabeçalho da página */}
       <div className="mb-3 mt-5 text-center">
         <div className="mb-2 d-flex justify-content-center align-items-center gap-2">

@@ -1,20 +1,10 @@
 import React from "react";
 import Login from "../components/Login";
 import { useNavigate } from "react-router";
-import { useTheme } from "../hooks/useTheme";
 
-/**
- * Página de Login - Adaptada para tema escuro/claro
- *
- * Aplica o sistema de temas em todos os elementos da página:
- * - Background da página
- * - Textos e cores
- * - Botões de redes sociais
- * - Elementos decorativos (divisórias, etc.)
- */
 const Logar = () => {
   const navigate = useNavigate();
-  const { theme } = useTheme();
+
 
   return (
     <div

@@ -1,18 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import "../App.css";
-
-/**
- * Componente Cadastro - Formulário de registro com validações completas
- *
- * Sistema completo de validação de formulário com:
- * - Validação de campos obrigatórios
- * - Validação de formato de email
- * - Validação de força da senha
- * - Confirmação de senha
- * - Validação de termos obrigatórios
- * - Feedback visual de erros
- */
 const Cadastro = () => {
   const navigate = useNavigate();
 
@@ -34,17 +22,15 @@ const Cadastro = () => {
   // Estado para controlar se o formulário foi submetido
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  /**
-   * Valida o formato do email
-   */
+  // Valida o formato do email
+
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  /**
-   * Valida a força da senha
-   */
+  // Valida a força da senha
+
   const validatePassword = (password) => {
     const minLength = password.length >= 8;
     const hasUpperCase = /[A-Z]/.test(password);
