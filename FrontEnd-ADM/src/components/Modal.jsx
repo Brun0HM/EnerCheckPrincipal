@@ -93,6 +93,8 @@ const Modal = (props) => {
             </option>
             <option value="Plano Básico">Plano Básico</option>
             <option value="Plano Pro">Plano Pro</option>
+            <option value="Plano Pro">Plano Empresarial</option>
+            <option value="Plano Pro">Plano Inicial</option>
           </select>
         </div>
         <div className="col-10 d-flex justify-content-between mt-3">
@@ -103,10 +105,7 @@ const Modal = (props) => {
           >
             Cadastrar
           </button>
-          <button
-            className="btn btn-outline-dark col-5"
-            onClick={props.modalOpen}
-          >
+          <button className="btn btn-outline-dark col-5" onClick={props.fechar}>
             Cancelar
           </button>
         </div>

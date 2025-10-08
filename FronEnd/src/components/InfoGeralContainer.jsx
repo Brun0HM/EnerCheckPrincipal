@@ -1,27 +1,13 @@
 import React from "react";
-
-/**
- * Componente InfoGeralContainer - Card de pontuação com tema
- *
- * Exibe pontuações de diferentes aspectos do projeto com barra de progresso
- * e comentários contextuais. Totalmente adaptado ao sistema de tema.
- *
- * @param {Object} props - Propriedades do componente
- * @param {string} props.topico - Título da métrica
- * @param {string} props.iconeTopico - Classe do ícone Bootstrap
- * @param {string} props.corNumero - Classe Bootstrap de cor (primary, success, danger, warning)
- * @param {number} props.pontuacaoGeral - Pontuação percentual (0-100)
- * @param {string} props.comentario - Comentário descritivo
- */
 export const InfoGeralContainer = (props) => {
   /**
    * Define a cor da barra de progresso baseada na pontuação
    */
   const getProgressColor = (pontuacao) => {
-    if (pontuacao >= 90) return "#22c55e"; // Verde
-    if (pontuacao >= 70) return "#eab308"; // Amarelo
-    if (pontuacao >= 50) return "#f97316"; // Laranja
-    return "#ef4444"; // Vermelho
+    if (pontuacao >= 90) return "#22c55e";
+    if (pontuacao >= 70) return "#eab308";
+    if (pontuacao >= 50) return "#f97316";
+    return "#ef4444";
   };
 
   /**

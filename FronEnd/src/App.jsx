@@ -237,7 +237,7 @@ const App = () => {
                     className="col-12 col-md-4 mb-3 card-animation"
                   >
                     <Depoimentos
-                      foto={pesso1}
+                      foto={pesso1}   
                       user="Maria Rodriguez"
                       depoimento="O EnerCheck revolucionou nossa empresa. Reduzimos o tempo de análise de projetos em 80% e aumentamos significativamente a qualidade."
                       profissa="Engenheira Elétrica"

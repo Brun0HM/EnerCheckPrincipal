@@ -1,16 +1,4 @@
 import React from "react";
-
-/**
- * Componente Motivos - Card de motivação/razões com suporte a tema escuro/claro
- *
- * Adaptado para usar variáveis CSS customizadas que se ajustam automaticamente
- * ao tema selecionado pelo usuário (claro ou escuro).
- *
- * @param {Object} props - Propriedades do componente
- * @param {string} props.icon - Classe do ícone Bootstrap
- * @param {string} props.title - Título do motivo/razão
- * @param {string} props.description - Descrição detalhada
- */
 const Motivos = (props) => {
   return (
     <div>

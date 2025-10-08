@@ -1,17 +1,4 @@
 import React from "react";
-
-/**
- * Componente ContainerCircuito - Item individual de verificação
- *
- * Exibe o resultado de uma verificação específica de circuito com
- * ícone de status, nome e descrição do resultado.
- *
- * @param {Object} props - Propriedades do componente
- * @param {string} props.icone - Classe do ícone Bootstrap (sem 'bi')
- * @param {string} props.estado - Classe de cor Bootstrap (text-success, text-danger)
- * @param {string} props.topico - Nome/título do circuito
- * @param {string} props.result - Descrição do resultado da verificação
- */
 const ContainerCircuito = (props) => {
   /**
    * Define a cor do ícone baseada no estado

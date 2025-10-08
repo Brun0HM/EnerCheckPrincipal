@@ -1,54 +1,105 @@
-import React, { useState } from 'react'
-import monitoramento from '../apis/monitoramento'
-import { ComponenteLista } from './ComponenteLista';
-import VisualizarLista from './VisualizarLista';
+import React, { useState } from "react";
+import monitoramento from "../apis/monitoramento";
+import { ComponenteLista } from "./ComponenteLista";
+import VisualizarLista from "./VisualizarLista";
+import DeleteModal from "./DeleteModal";
+import Editar from "./Editar";
 
 const ListaProjetos = () => {
   const [selectedItem, setSelectedItem] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showModalView, setShowModalView] = useState(false);
+  const [showModalDelete, setShowModalDelete] = useState(false);
+  const [showModalEdit, setShowModalEdit] = useState(false);
 
-  const handleView = (item)=>{
+  const handleView = (item) => {
     setSelectedItem(item);
-    setShowModal(true);
-  }
-  const handleCloseModal = ()=>{
+    setShowModalView(true);
+  };
+  const handleCloseModalView = () => {
     setSelectedItem(null);
-    setShowModal(false);
-  }
+    setShowModalView(false);
+  };
+  const handleCloseModalDelete = () => {
+    setSelectedItem(null);
+    setShowModalDelete(false);
+  };
+  const handleCloseModalEdit = () => {
+    setShowModalEdit(false); // Fecha o modal de edição
+    setSelectedItem(null); // Limpa o item selecionado
+  };
+  const handleDelete = (item) => {
+    setSelectedItem(item);
+    setShowModalDelete(true);
+  };
+  const handleEdit = (item) => {
+    setSelectedItem(item);
+    setShowModalEdit(true);
+  };
+
+  const handleConfirmDelete = (itemId) => {
+    console.log(`Excluindo item com ID: ${itemId}`);
+  };
   return (
     <>
- <div
-      className="d-flex flex-column gap-2 overflow-y-auto rounded-4"
-      style={{ maxHeight: "500px" }}
-    >
-      {monitoramento.map((item) => (
-        <ComponenteLista
-          key={item.id}
-          nome={item.email}
-          display1={"d-lg-block d-none"}
-          topic1={"Tipo Projeto"}
-          t1info={item.tipoProjeto}
-          topic2={"Tipo Conta"}
-          t2info={item.tipoConta}
-          topic3={"Data"}
-          t3info={item.data}
-          topic4={"Status"}
-          t4info={item.statusProjeto}
-          view={()=> handleView(item)}
-        />
-      ))}
-    </div>
-    {showModal &&(
-      <div className='modal show d-block' tabIndex="-1">
-        <div className='modal-backdrop show' onClick={handleCloseModal}></div>
-        <VisualizarLista
-        item={selectedItem}
-        onClose={handleCloseModal}
-        />
+      <div
+        className="d-flex flex-column gap-2 overflow-y-auto rounded-4"
+        style={{ maxHeight: "500px" }}
+      >
+        {monitoramento.map((item) => (
+          <ComponenteLista
+            key={item.id}
+            nome={item.email}
+            display1={"d-lg-block d-none"}
+            topic1={"Tipo Projeto"}
+            t1info={item.tipoProjeto}
+            topic2={"Tipo Conta"}
+            t2info={item.tipoConta}
+            topic3={"Data"}
+            t3info={item.data}
+            topic4={"Status"}
+            t4info={item.statusProjeto}
+            view={() => handleView(item)}
+            delete={() => handleDelete(item)}
+            sumiu={item.sumiu}
+            editar={() => handleEdit(item)}
+          />
+        ))}
       </div>
-    )}
+      {showModalView && (
+        <div className="modal show d-block" tabIndex="-1">
+          <div
+            className="modal-backdrop show"
+            onClick={handleCloseModalView}
+          ></div>
+          <VisualizarLista item={selectedItem} onClose={handleCloseModalView} />
+        </div>
+      )}
+      {showModalDelete && (
+        <div className="modal show d-block" tabIndex="-1">
+          <div
+            className="modal-backdrop show"
+            onClick={handleCloseModalDelete}
+          ></div>
+          <DeleteModal
+            item={selectedItem}
+            onClose={handleCloseModalDelete}
+            onConfirm={handleConfirmDelete}
+          />
+        </div>
+      )}
+      {showModalEdit && (
+        <>
+          {/* Fundo escuro */}
+          <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75"></div>
+
+          {/* Modal centralizado */}
+          <div className="d-flex justify-content-center align-items-center w-100 h-100 position-fixed z-3 top-0 end-0">
+            <Editar fechar={() => setShowModalEdit(false)} />
+          </div>
+        </>
+      )}
     </>
   );
 };
 
-export default ListaProjetos
+export default ListaProjetos;

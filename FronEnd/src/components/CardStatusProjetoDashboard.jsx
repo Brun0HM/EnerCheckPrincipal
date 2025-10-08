@@ -1,17 +1,4 @@
 import React from "react";
-
-/**
- * Componente CardStatusProjetoDashboard - Card de estatísticas com tema
- *
- * Exibe métricas do dashboard (projetos totais, aprovados, etc.) com
- * suporte completo ao sistema de tema escuro/claro.
- *
- * @param {Object} props - Propriedades do componente
- * @param {string} props.status - Título da estatística
- * @param {string} props.iconeStatus - Classe do ícone Bootstrap
- * @param {string} props.num - Número/valor da estatística
- * @param {string} props.desc - Descrição adicional
- */
 export const CardStatusProjetoDashboard = (props) => {
   return (
     <div

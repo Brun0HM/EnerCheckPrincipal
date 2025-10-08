@@ -1,5 +1,4 @@
 import React from "react";
-import usuarios from '../apis/usuarios'
 
 export const TabelaGeral = (props) => {
   return (
