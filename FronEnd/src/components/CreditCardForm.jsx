@@ -34,45 +34,47 @@ const CreditCardForm = (props) => {
             placeholder="0000 0000 0000 0000"
           />
         </div>
-        <div className='d-flex gap-2 align-items-center'>
-        <div className='flex-grow-1 position-relative'>
-        <p className="fw-bold mb-0 mt-2 text-start">Validade</p>
-          <input
-            className="form-control bg-light text-dark border-1 border-secondary rounded-2 "
-            style={{ color: "var(--text)" }}
-            type="month"
-            name="validadeCard"
-            id="#validadeCard"
-            placeholder="MM/AAAA"
-            min={new Date().toISOString().slice(0, 7)} // Define o mês atual como mínimo
-            onChange={(e) => {
-              const selectedDate = new Date(e.target.value + '-01'); // Adiciona dia para criar data válida
-              const currentDate = new Date();
-              currentDate.setDate(1); // Define para o primeiro dia do mês atual
-              
-              if (selectedDate < currentDate) {
-                alert('A validade do cartão não pode ser anterior à data atual');
-                e.target.value = ''; // Limpa o campo
-                return;
-              }
-              
-              const [year, month] = e.target.value.split('-');
-              console.log(`${month}/${year}`);
-            }}
-          />
-            </div>
-            <div className='flex-grow-1 position-relative'>
-            <p className="fw-bold mb-0 mt-2 text-start">Número do cartão</p>
-          <input
-            className="form-control bg-light text-dark border-1 border-secondary rounded-2 "
-            style={{ color: "var(--text)" }}
-            type="number"
-            name="cvvCard"
-            id="#cvvCard"
-            placeholder="123"
-          />
-            </div>
-            </div>
+        <div className='d-flex flex-column flex-md-row gap-2 align-items-center'>
+  <div className='col-12 col-md-6 position-relative'>
+    <p className="fw-bold mb-0 mt-2 text-start">Validade</p>
+    <input
+      className="form-control bg-light text-dark border-1 border-secondary rounded-2 "
+      style={{ color: "var(--text)" }}
+      type="month"
+      name="validadeCard"
+      id="#validadeCard"
+      placeholder="MM/AAAA"
+      min={new Date().toISOString().slice(0, 7)}
+      onChange={(e) => {
+        const selectedDate = new Date(e.target.value + '-01');
+        const currentDate = new Date();
+        currentDate.setDate(1);
+        
+        if (selectedDate < currentDate) {
+          alert('A validade do cartão não pode ser anterior à data atual');
+          e.target.value = '';
+          return;
+        }
+        
+        const [year, month] = e.target.value.split('-');
+        console.log(`${month}/${year}`);
+      }}
+    />
+  </div>
+  
+  <div className='col-12 col-md-6 position-relative'>
+    <p className="fw-bold mb-0 mt-2 text-start">CVV</p>
+    <input
+      className="form-control bg-light text-dark border-1 border-secondary rounded-2 "
+      style={{ color: "var(--text)" }}
+      type="number"
+      name="cvvCard"
+      id="#cvvCard"
+      placeholder="123"
+      maxLength="4"
+    />
+  </div>
+</div>
             <div className="flex-grow-1 position-relative">
           <p className="fw-bold mb-0 mt-2 text-start">CPF do titular</p>
           <input
@@ -137,7 +139,12 @@ const CreditCardForm = (props) => {
 </div>
 </div>
 <div>
-  <button className="btn btn-dark text-light rounded-2 w-100">Confirmar Pagamento</button>
+  <button className="btn btn-dark text-light rounded-2 w-100"
+  style={{
+    backgroundColor: "var(--button-primary-bg)",
+    border: "none"
+  }}
+  >Confirmar Pagamento</button>
 </div>
 <div className="mt-3 mb-3">
   <span className="small text-start ms-0">Ao confirmar você concorda com nossos <a href="" className="text-decoration-none">Termos de Serviço</a> e <a href="" className="text-decoration-none">Políticas de Privacidade</a></span>

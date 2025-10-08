@@ -5,7 +5,7 @@ const MetodoPagamento = (props) => {
     <div className='mt-3'>
 
     <div
-      className="d-flex flex-row justify-content-start align-items-start border border-2 border-dark border-opacity-10 p-1 rounded-2 ms-2 btn"
+      className="d-flex flex-row justify-content-start align-items-start border border-2  border-opacity-10 p-1 rounded-2 ms-2 btn"
       style={{
         // Aplicação das variáveis CSS para tema dinâmico
         backgroundColor: "var(--card-bg)",

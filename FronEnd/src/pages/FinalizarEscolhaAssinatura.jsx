@@ -3,6 +3,8 @@ import ResumoPedido from '../components/ResumoPedido'
 import MetodoPagamento from '../components/MetodoPagamento'
 import { useState } from 'react';
 import CreditCardForm from '../components/CreditCardForm';
+import Pix from '../components/Pix';
+import Boleto from '../components/Boleto';
 
 
 const FinalizarEscolhaAssinatura = () => {
@@ -28,7 +30,7 @@ const FinalizarEscolhaAssinatura = () => {
   return (
     <div
     style={{
-      backgroundColor: "var(--background)",
+      backgroundColor: "var(--bg)",
       color: "var(--text)",
       minHeight: "100vh",
       paddingBottom: "2rem",
@@ -51,7 +53,11 @@ const FinalizarEscolhaAssinatura = () => {
           </div>
 
           <div className='w-100 d-flex flex-column flex-lg-row gap-4 align-items-stretch px-2 px-lg-3'>
-            <div className="border border-2 border-dark border-opacity-10 shadow d-flex flex-column rounded-4 px-3 py-3 col-12 col-lg-7">
+            <div className="border border-2 border-opacity-10 shadow d-flex flex-column rounded-4 px-3 py-3 col-12 col-lg-7"
+            style={{
+              backgroundColor: "var(--card-bg)",
+              borderColor: "var(--card-border)",
+            }}>
               <div className="d-flex justify-content-between align-items-center ">
                 <div>
                   <p className="m-0 fw-bold fs-5 text-start ms-3">Informações de Pagamento</p>
@@ -92,11 +98,29 @@ const FinalizarEscolhaAssinatura = () => {
         </div>
         </>
        )}
+          {activePix &&(
+        <>
+        <div>
+          <Pix/>
+        </div>
+        </>
+       )}
+          {activeBoleto &&(
+        <>
+        <div>
+          <Boleto/>
+        </div>
+        </>
+       )}
             </div>
             
-            <div className="col-12 col-lg-3 p-4 border border-3 rounded-4 shadow h-100">
-              <ResumoPedido />
-            </div>
+            <div className="col-12 col-lg-3 p-4 border border-3 rounded-4 shadow h-100"
+       style={{
+         backgroundColor: "var(--card-bg)",
+         borderColor: "var(--card-border)",
+       }}>
+    <ResumoPedido />
+  </div>
           </div>
         </div>
       </div>

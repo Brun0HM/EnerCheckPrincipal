@@ -31,6 +31,9 @@ $dark-card-border: #3a3a3a;
   --input-border: #{$light-card-border};
   --button-secondary: #f8f9fa;
   --button-secondary-text: #{$light-text};
+    // Botão principal customizado (preto no light, azul no dark)
+    --button-primary-bg: #000000;
+
 }
 
 /* Tema escuro - sobrescreve as variáveis quando data-theme="dark" */
@@ -48,4 +51,7 @@ $dark-card-border: #3a3a3a;
   --input-border: #{$dark-card-border};
   --button-secondary: #{$dark-card-bg};
   --button-secondary-text: #{$dark-text};
+
+   // Botão principal customizado (azul no dark theme)
+   --button-primary-bg: #{$dark-primary};
 }
