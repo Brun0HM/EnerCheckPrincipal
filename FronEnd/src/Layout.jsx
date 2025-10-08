@@ -10,6 +10,7 @@ import Planos from "./pages/Planos";
 import Tema from "./pages/TesteTheme";
 import Footer from "./components/Footer";
 import ResumoPedido from "./components/ResumoPedido.jsx";
+import Teste from "./pages/Teste.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -29,7 +30,7 @@ const Layout = () => {
         <Route path="/dashboardGeral" element={<DashBoardGeral />} />
         <Route path="/planos" element={<Planos />} />
         <Route path="/tema" element={<Tema />} />
-        <Route path="/teste" element={<ResumoPedido />} />
+        <Route path="/teste" element={<Teste />} />
       </Routes>
       {!shouldHideNavbar && <Footer />}
     </>
