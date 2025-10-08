@@ -2,10 +2,29 @@ import React from 'react'
 import ResumoPedido from '../components/ResumoPedido'
 import MetodoPagamento from '../components/MetodoPagamento'
 import { useState } from 'react';
+import CreditCardForm from '../components/CreditCardForm';
 
 
 const FinalizarEscolhaAssinatura = () => {
-      const [activePage, setActivePage] = useState("/");
+      const [activeCard, setActiveCard] = useState(false);
+      const [activeBoleto, setActiveBoleto] = useState(false);
+      const [activePix, setActivePix] = useState(false);
+
+      const handleActiveCard = () =>{
+        setActiveCard(true);
+        setActiveBoleto(false);
+        setActivePix(false);
+      }
+      const handleActiveBoleto = () =>{
+        setActiveBoleto(true);
+        setActiveCard(false);
+        setActivePix(false);
+      }
+      const handleActivePix = () =>{
+        setActivePix(true);
+        setActiveBoleto(false);
+        setActiveCard(false);
+      }
   return (
     <div
     style={{
@@ -45,21 +64,34 @@ const FinalizarEscolhaAssinatura = () => {
         icon="bi bi-credit-card"  
           titulo="Cartão de Crédito"
           exemplo="Elo, Visa, Mastercard"
+          onClick={handleActiveCard}
+          display={activeCard?'d-block': 'd-none'}
           />
              <MetodoPagamento
         icon="bi bi-phone"  
           titulo="PIX"
           exemplo="Pagamento Instantâneo"
+          onClick={handleActivePix}
+          display={activePix?'d-block': 'd-none'}
           />
               <MetodoPagamento
         icon="bi bi-file-earmark-text"  
           titulo="Boleto Bancário"
           exemplo="Vencimento em três dias úteis"
+          onClick={handleActiveBoleto}
+          display={activeBoleto?'d-block': 'd-none'}
           />
      <hr className='fs-2'    style={{
       color: "var(--text)"
     }}/>
        </div>
+       {activeCard &&(
+        <>
+        <div>
+          <CreditCardForm/>
+        </div>
+        </>
+       )}
             </div>
             
             <div className="col-12 col-lg-3 p-4 border border-3 rounded-4 shadow h-100">
