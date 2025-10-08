@@ -1,16 +1,5 @@
 import React from "react";
 import ContainerCircuito from "./ContainerCircuito";
-
-/**
- * Componente ContainerChecagem - Seção de análise de circuitos
- *
- * Agrupa múltiplos circuitos por categoria com cabeçalho temático
- * e lista de verificações detalhadas.
- *
- * @param {Object} props - Propriedades do componente
- * @param {string} props.categoria - Nome da categoria de circuitos
- * @param {string} props.descricao - Descrição da categoria
- */
 export const ContainerChecagem = (props) => {
   return (
     <div

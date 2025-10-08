@@ -1,5 +1,5 @@
-@import "variables";                // Importa variáveis customizadas do tema
-@import "bootstrap/scss/bootstrap"; // Bootstrap com variáveis aplicadas
+@import "variables";      
+@import "bootstrap/scss/bootstrap"; 
 
 /* ===== ESTILOS PARA HEADER ===== */
 .headerBlur {
@@ -71,7 +71,6 @@
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
-/* ===== CORREÇÕES PARA BOOTSTRAP NO TEMA ESCURO ===== */
 
 /* Cards Bootstrap no tema escuro */
 [data-theme="dark"] .card {

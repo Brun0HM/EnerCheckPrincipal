@@ -1,0 +1,205 @@
+/* Scroll Animation Styles */
+
+.scroll-hidden {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease-out;
+}
+
+.scroll-animate {
+  opacity: 1;
+  transform: translateY(0);
+  animation-fill-mode: both;
+}
+
+/* Animações de entrada */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes rotateIn {
+  from {
+    opacity: 0;
+    transform: rotate(-180deg) scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+/* Classes de animação */
+.fadeInUp {
+  animation-name: fadeInUp;
+}
+
+.fadeInDown {
+  animation-name: fadeInDown;
+}
+
+.fadeInLeft {
+  animation-name: fadeInLeft;
+}
+
+.fadeInRight {
+  animation-name: fadeInRight;
+}
+
+.scaleIn {
+  animation-name: scaleIn;
+}
+
+.slideInUp {
+  animation-name: slideInUp;
+}
+
+.bounceIn {
+  animation-name: bounceIn;
+}
+
+.rotateIn {
+  animation-name: rotateIn;
+}
+
+/* Animações especiais para elementos específicos */
+.hero-title {
+  animation-duration: 0.8s;
+  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hero-subtitle {
+  animation-duration: 0.8s;
+  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.card-animation {
+  animation-duration: 0.6s;
+  animation-timing-function: ease-out;
+}
+
+.button-animation {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Animações em hover para melhorar a interatividade */
+.scroll-animate.card-animation:hover {
+  transform: translateY(-5px);
+  transition: transform 0.3s ease;
+}
+
+.scroll-animate.button-animation:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .scroll-hidden {
+    transform: translateY(20px);
+  }
+
+  @keyframes fadeInUp {
+    from {
+      transform: translateY(40px);
+    }
+  }
+
+  @keyframes fadeInDown {
+    from {
+      transform: translateY(-40px);
+    }
+  }
+
+  @keyframes fadeInLeft {
+    from {
+      transform: translateX(-40px);
+    }
+  }
+
+  @keyframes fadeInRight {
+    from {
+      transform: translateX(40px);
+    }
+  }
+}

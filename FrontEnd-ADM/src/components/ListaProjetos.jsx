@@ -5,13 +5,16 @@ import VisualizarLista from "./VisualizarLista";
 import DeleteModal from "./DeleteModal";
 import Editar from "./Editar";
 
-const ListaProjetos = () => {
+const ListaProjetos = ({ paginatedData}) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModalView, setShowModalView] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
 
-  const handleView = (item) => {
+    // Usar dados paginados se fornecidos, senão usar todos os dados
+    const dataToRender = paginatedData || monitoramento;
+
+  const handleView = (item)=>{
     setSelectedItem(item);
     setShowModalView(true);
   };
@@ -23,10 +26,7 @@ const ListaProjetos = () => {
     setSelectedItem(null);
     setShowModalDelete(false);
   };
-  const handleCloseModalEdit = () => {
-    setShowModalEdit(false); // Fecha o modal de edição
-    setSelectedItem(null); // Limpa o item selecionado
-  };
+
   const handleDelete = (item) => {
     setSelectedItem(item);
     setShowModalDelete(true);
@@ -41,38 +41,38 @@ const ListaProjetos = () => {
   };
   return (
     <>
-      <div
-        className="d-flex flex-column gap-2 overflow-y-auto rounded-4"
-        style={{ maxHeight: "500px" }}
-      >
-        {monitoramento.map((item) => (
-          <ComponenteLista
-            key={item.id}
-            nome={item.email}
-            display1={"d-lg-block d-none"}
-            topic1={"Tipo Projeto"}
-            t1info={item.tipoProjeto}
-            topic2={"Tipo Conta"}
-            t2info={item.tipoConta}
-            topic3={"Data"}
-            t3info={item.data}
-            topic4={"Status"}
-            t4info={item.statusProjeto}
-            view={() => handleView(item)}
-            delete={() => handleDelete(item)}
-            sumiu={item.sumiu}
-            editar={() => handleEdit(item)}
-          />
-        ))}
+ <div
+      className="d-flex flex-column gap-2 rounded-4"
+      style={{ maxHeight: "500px" }}
+    >
+      {dataToRender.map((item) => (
+        <ComponenteLista
+          key={item.id}
+          nome={item.email}
+          display1={"d-lg-block d-none"}
+          topic1={"Tipo Projeto"}
+          t1info={item.tipoProjeto}
+          topic2={"Tipo Conta"}
+          t2info={item.tipoConta}
+          topic3={"Data"}
+          t3info={item.data}
+          topic4={"Status"}
+          t4info={item.statusProjeto}
+          view={()=> handleView(item)}
+          delete={()=> handleDelete(item)}
+          sumiu={item.sumiu}
+          editar={() => handleEdit(item)}
+        />
+      ))}
+    </div>
+    {showModalView &&(
+      <div className='modal show d-block' tabIndex="-1">
+        <div className='modal-backdrop show' onClick={handleCloseModalView}></div>
+        <VisualizarLista
+        item={selectedItem}
+        onClose={handleCloseModalView}
+        />
       </div>
-      {showModalView && (
-        <div className="modal show d-block" tabIndex="-1">
-          <div
-            className="modal-backdrop show"
-            onClick={handleCloseModalView}
-          ></div>
-          <VisualizarLista item={selectedItem} onClose={handleCloseModalView} />
-        </div>
       )}
       {showModalDelete && (
         <div className="modal show d-block" tabIndex="-1">
@@ -101,5 +101,6 @@ const ListaProjetos = () => {
     </>
   );
 };
+
 
 export default ListaProjetos;

@@ -1,18 +1,4 @@
 import React from "react";
-
-/**
- * Componente TiposPlanos - Card de planos com suporte a tema escuro/claro
- *
- * Utiliza variáveis CSS customizadas (--card-bg, --text, --text-secondary)
- * que se adaptam automaticamente ao tema selecionado pelo usuário.
- *
- * @param {Object} props - Propriedades do componente
- * @param {string} props.icon - Classe do ícone Bootstrap
- * @param {string} props.title - Título do plano
- * @param {string} props.desgracao - Descrição do plano
- * @param {string} props.preco - Preço do plano
- * @param {Array} props.itens - Lista de benefícios do plano
- */
 const TiposPlanos = (props) => {
   return (
     <div className="d-flex flex-column align-items-center justify-content-center h-100">

@@ -1,16 +1,4 @@
 import React from "react";
-
-/**
- * Componente ProjetosRecentes - Item de projeto com tema
- *
- * Exibe informações de um projeto recente com nome, data e status.
- * Inclui badge de status e suporte completo ao tema escuro/claro.
- *
- * @param {Object} props - Propriedades do componente
- * @param {string} props.nomeProjeto - Nome do projeto
- * @param {string} props.tempoProjeto - Tempo desde a última atualização
- * @param {string} props.statusProjeto - Status atual do projeto
- */
 export const ProjetosRecentes = (props) => {
   /**
    * Define a cor do badge baseada no status
@@ -60,7 +48,7 @@ export const ProjetosRecentes = (props) => {
     <div
       className="d-flex align-items-center justify-content-between p-3 rounded-4 border mt-3 theme-card"
       style={{
-        backgroundColor: "var(--input-bg)", // Cor ligeiramente diferente do card pai
+        backgroundColor: "var(--input-bg)",
         borderColor: "var(--input-border)",
         color: "var(--text)",
         transition: "all 0.3s ease",

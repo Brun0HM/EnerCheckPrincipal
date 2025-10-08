@@ -2,12 +2,6 @@ import React, { useEffect, useState } from "react";
 import { InfoGeralContainer } from "../components/InfoGeralContainer";
 import { ContainerChecagem } from "../components/ContainerChecagem";
 
-/**
- * Dashboard de Projeto - Tela de análise detalhada de projeto elétrico
- *
- * Exibe pontuações, análises de conformidade e checagem de circuitos.
- * Design centralizado e responsivo com suporte completo a temas.
- */
 const DashboardProjeto = () => {
   const [comentarioGeral, setComentarioGeral] = useState("");
   const [comentConform, setComentConform] = useState("");
