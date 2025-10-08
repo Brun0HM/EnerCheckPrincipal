@@ -6,18 +6,22 @@ import { ContainerChecagem } from "../components/ContainerChecagem";
 const DashboardProjeto = () => {
 
 const [analise, setAnalise] = useState([])
+const [carregando, setCarregando] = useState(false)
 
+const imagem = localStorage.getItem("Imagem");
+const tipo = localStorage.getItem("Formato");
 
+useEffect(() => {
+  
   const analiseData = localStorage.getItem("Analise");
-  const imagem = localStorage.getItem("Imagem");
-  const tipo = localStorage.getItem("Formato");
+  
+  if(analiseData){
+    setAnalise(JSON.parse(analiseData))
 
-  useEffect(() => {
-
-
-    setAnalise(analiseData);
-    console.log(analise);
-
+  }
+  
+  // console.log("Dados: ", analise)
+  
   },[analise])
  
 
@@ -28,7 +32,7 @@ const [analise, setAnalise] = useState([])
   const [comentInstalacao, setComentInstalacao] = useState("");
 
   // Pontuações dos diferentes aspectos do projeto
-  const pontuacaoGeral = 10;
+  const [pontuacaoGeral, setPontuacaoGeral] = useState()
   const pontuacaoConformidade = 90;
   const pontuacaoInstalacao = 50;
 
@@ -61,7 +65,6 @@ const [analise, setAnalise] = useState([])
       setComentInstalacao("Erros críticos a serem revisados");
     }
   };
-
   const trocarComentConform = () => {
     if (pontuacaoConformidade <= 50) {
       setComentConform("Razoável, ajustes necessários");
@@ -99,7 +102,8 @@ const [analise, setAnalise] = useState([])
         paddingBottom: "2rem",
       }}
     >
-      <div className="container-fluid px-3 px-md-4">
+
+  <div className="container-fluid px-3 px-md-4">
         <div className="row justify-content-center">
           <div className="col-12 col-xxl-10">
             {/* Cabeçalho da página */}
@@ -117,33 +121,19 @@ const [analise, setAnalise] = useState([])
 
             {/* Seção de pontuações - Layout responsivo */}
             <div className="row g-3 mb-4">
+          
               <div className="col-12 col-md-4">
-                <InfoGeralContainer
-                  topico={"Pontuação Geral"}
-                  iconeTopico={"bi-speedometer2"}
-                  corNumero={"danger"}
-                  pontuacaoGeral={pontuacaoGeral}
-                  comentario={comentarioGeral}
-                />
-              </div>
-              <div className="col-12 col-md-4">
-                <InfoGeralContainer
-                  topico={"Conformidade NBR"}
-                  iconeTopico={"bi-shield-check"}
-                  corNumero={"success"}
-                  pontuacaoGeral={pontuacaoConformidade}
-                  comentario={comentConform}
-                />
-              </div>
-              <div className="col-12 col-md-4">
-                <InfoGeralContainer
-                  topico={"Instalação"}
-                  iconeTopico={"bi-tools"}
-                  corNumero={"warning"}
-                  pontuacaoGeral={pontuacaoInstalacao}
-                  comentario={comentInstalacao}
-                />
-              </div>
+              <InfoGeralContainer
+                topico={"Pontuação Geral"}
+                iconeTopico={"bi-speedometer2"}
+                corNumero={"danger"}
+                pontuacaoGeral={analise.analiseCategorizada[0].percentualConformidade}
+                comentario={comentarioGeral}
+              />
+          </div>
+            
+
+              
             </div>
 
             {/* Seção de análise detalhada */}
@@ -152,7 +142,7 @@ const [analise, setAnalise] = useState([])
                 <ContainerChecagem
                   categoria={"Circuitos de Força"}
                   descricao={"Análise dos circuitos de força e dimensionamento"}
-                />
+                  />
               </div>
               <div className="col-12 col-lg-6">
                 <ContainerChecagem
@@ -206,6 +196,7 @@ const [analise, setAnalise] = useState([])
           </div>
         </div>
       </div>
+  
     </div>
   );
 };
