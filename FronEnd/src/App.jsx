@@ -19,7 +19,7 @@ const App = () => {
         minHeight: "100vh",
       }}
     >
-      <div className="container-fluid text-center d-flex flex-column align-items-center justify-content-center">
+      <div className="container-fluid text-center d-flex flex-column align-items-center justify-content-center" id="inicio">
         <div className={`mainContent`}>
           <div className="container text-center d-flex flex-column align-items-center justify-content-center">
             <ScrollAnimation animation="fadeInDown" delay={200}>

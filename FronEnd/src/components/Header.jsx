@@ -15,7 +15,10 @@ const Header = () => {
           <div className="row align-items-center">
             {/* Logo e título - adaptado ao tema */}
             <div className="col-6 col-lg-auto" onClick={() => navigate("/")}>
-              <a className="d-flex align-items-center ms-3 ms-lg-5 text-decoration-none">
+              <a
+                className="d-flex align-items-center ms-3 ms-lg-5 text-decoration-none cursor-pointer"
+                href="#inicio"
+              >
                 <div
                   className="btn text-light fw-bold"
                   style={{ backgroundColor: "var(--primary)" }}
