@@ -11,6 +11,7 @@ import Tema from "./pages/TesteTheme";
 import Footer from "./components/Footer";
 import ResumoPedido from "./components/ResumoPedido.jsx";
 import Teste from "./pages/Teste.jsx";
+import Configurações from "./pages/Configurações.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -31,6 +32,7 @@ const Layout = () => {
         <Route path="/planos" element={<Planos />} />
         <Route path="/tema" element={<Tema />} />
         <Route path="/teste" element={<Teste />} />
+        <Route path="/configurações" element={<Configurações />} />
       </Routes>
       {!shouldHideNavbar && <Footer />}
     </>

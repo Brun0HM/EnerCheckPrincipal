@@ -2,7 +2,7 @@ import React from "react";
 
 const Segurança = () => {
   return (
-    <div className=" col-11 col-md-6 shadow border-2 border rounded-3 p-4">
+    <div className=" col-11 col-md-8 shadow border-2 border rounded-3 p-4 pb-5 mb-5">
       <div>
         <h5 className="fw-bold">Alterar Senha</h5>
         <p>Mantenha sua conta segura com uma senha forte</p>

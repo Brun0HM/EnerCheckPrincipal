@@ -2,7 +2,7 @@ import React from "react";
 
 const Assinaturas = () => {
   return (
-    <div className=" col-11 col-md-6 shadow border-2 border rounded-4 px-4 py-3 ">
+    <div className=" col-11 col-md-8 shadow border-2 border rounded-4 px-4 py-3 pb-5 mb-5 ">
       <div>
         <h5 className="fw-bold">Plano Atual</h5>
         <p>Gerencie sua assinatura e método de pagamento</p>
@@ -24,11 +24,11 @@ const Assinaturas = () => {
 
         <p className="mt-3">Próxima cobrança: 15 de Fevereiro, 2025</p>
 
-        <div className="d-flex justify-content-between col-12">
-          <button className="btn btn-primary fw-semibold col-4">
+        <div className="d-flex flex-column flex-md-row justify-content-between col-12">
+          <button className="btn mb-3 mb-md-0 btn-primary fw-semibold col-12 col-md-4">
             Alterar Plano
           </button>
-          <button className="btn btn-outline-danger fw-semibold col-4 ">
+          <button className="btn btn-outline-danger fw-semibold col-12 col-md-4 ">
             Cancelar Assinatura
           </button>
         </div>

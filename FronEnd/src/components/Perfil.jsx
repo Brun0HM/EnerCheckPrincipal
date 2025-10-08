@@ -3,7 +3,7 @@ import React from "react";
 const Perfil = () => {
   return (
     <>
-      <div className=" col-11 col-md-6 shadow border-2 border rounded-3 p-4">
+      <div className=" col-11 col-md-8 shadow border-2 border rounded-3 p-4 pb-5 mb-5">
         <div>
           <h5 className="fw-bold">Informações Pessoais</h5>
           <p>Atualize suas informações de perfil</p>

@@ -5,9 +5,10 @@ import Perfil from "../components/Perfil";
 import Segurança from "../components/Segurança";
 import Notificacoes from "../components/Notificacoes";
 import Assinaturas from "../components/Assinaturas";
+import Configurações from "./Configurações";
 
 const Teste = () => {
-  return <Assinaturas />;
+  return <Configurações />;
 };
 
 export default Teste;
