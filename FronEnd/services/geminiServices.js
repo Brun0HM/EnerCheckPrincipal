@@ -1,11 +1,13 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { systemInstruction } from "../src/hooks/instrucoes";
-const GEMINI_API_KEY = import.meta.env.VITE_REACT_APP_GEMINI_API_KEY;
 
+// The API key must be obtained exclusively from the environment variable `process.env.API_KEY`.
+const API_KEY = process.env.API_KEY;
 
-const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY})
+if (!API_KEY) {
+  throw new Error("API_KEY environment variable not set");
+}
 
-
+const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 const analysisSchema = {
     type: Type.OBJECT,
@@ -57,7 +59,32 @@ const analysisSchema = {
 };
 
 
-export const analisarPlanta = async (imageBase64, mimeType) => {
+const systemInstruction = `Você é um engenheiro eletricista especialista em normas técnicas brasileiras, focado na ABNT NBR 5410. Sua tarefa é analisar a planta baixa elétrica fornecida e avaliar sua conformidade, estruturando a resposta em categorias com percentuais de conformidade.
+
+Analise a planta e divida sua avaliação nas seguintes categorias:
+1.  **Condutores e Circuitos:**
+    *   Verifique a bitola dos fios para iluminação (mín. 1,5 mm²), TUGs (mín. 2,5 mm²) e TUEs.
+    *   Verifique a separação de circuitos de iluminação e tomadas.
+    *   Verifique se equipamentos de alta potência (>10A) têm circuitos dedicados (TUEs).
+2.  **Pontos de Utilização:**
+    *   Verifique a quantidade e o posicionamento de TUGs em salas/quartos (1 a cada 5m de perímetro) e cozinhas/áreas de serviço (1 a cada 3,5m).
+    *   Verifique a altura dos pontos de tomada (baixas, médias, altas), se indicado.
+3.  **Proteção e Segurança:**
+    *   Identifique a presença de disjuntores para cada circuito.
+    *   Verifique a indicação de Dispositivos DR para áreas molhadas.
+    *   Verifique a presença do condutor de proteção (terra) em todos os pontos.
+4.  **Simbologia e Documentação:**
+    *   Avalie se a simbologia está consistente com os padrões da ABNT.
+    *   Verifique se há um quadro de cargas ou legendas claras.
+
+Para CADA categoria, você deve:
+a) Calcular um 'percentualConformidade' (0 a 100) baseado em quantos sub-itens daquela categoria foram atendidos.
+b) Criar uma lista de 'conformidades' com os pontos que estão corretos.
+c) Criar uma lista de 'naoConformidadesOuVerificar' com os pontos que estão incorretos ou não puderam ser verificados.
+
+Formate sua resposta estritamente como um objeto JSON seguindo o schema fornecido. Se uma informação não estiver visível, inclua-a na lista 'naoConformidadesOuVerificar'.`;
+
+export const analyzeElectricalPlan = async (imageBase64, mimeType) => {
     try {
         const imagePart = {
             inlineData: {
@@ -79,8 +106,6 @@ export const analisarPlanta = async (imageBase64, mimeType) => {
         
         const jsonText = response.text.trim();
         const parsedJson = JSON.parse(jsonText);
-        console.log( "Resposta da API: " + parsedJson);
-        
 
         if (!parsedJson.analiseCategorizada || !Array.isArray(parsedJson.analiseCategorizada)) {
             throw new Error("Invalid JSON structure received from API.");
