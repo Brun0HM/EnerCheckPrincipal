@@ -1,3 +1,7 @@
+:root {
+  --bs-body-bg: #121212 !important;
+}
+
 body {
   margin: 0 !important;
   padding: 0 !important;
@@ -24,7 +28,6 @@ body {
 .fundo {
   background-color: #f8f8f8 !important;
 }
-
 
 #uploadContainer {
   border: dashed;

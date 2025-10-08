@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 
 /**
  * Hook customizado para gerenciamento de tema (claro/escuro)
@@ -39,9 +39,10 @@ export const useTheme = () => {
   const [theme, setTheme] = useState(getInitialTheme());
 
   /**
-   * Aplica o tema no documento e persiste no localStorage
+   * UseLayoutEffect executa antes da pintura da tela
+   * Isso reduz o flash visual
    */
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Remove atributo anterior para evitar conflitos
     document.documentElement.removeAttribute("data-theme");
 

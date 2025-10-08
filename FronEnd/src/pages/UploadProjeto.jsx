@@ -4,7 +4,7 @@ import { analisarPlanta } from "../../services/enerCheckIa";
 import { useNavigate } from "react-router";
 
 const UploadProjeto = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [erro, setErro] = useState();
   const [carregando, setCarregando] = useState(false);
@@ -23,8 +23,6 @@ const UploadProjeto = () => {
       reader.onerror = (error) => reject(error);
     });
 
-
-
   const handleAnalisePlanta = async (imagem, tipo) => {
     setCarregando(true);
     setErro("");
@@ -32,18 +30,15 @@ const UploadProjeto = () => {
     try {
       const response = await analisarPlanta(imagem, tipo);
       setResposta(response);
-      localStorage.setItem("Analise", resposta)
+      localStorage.setItem("Analise", resposta);
     } catch (error) {
-
       setErro("Houve um erro ao analisar a planta: " + error);
       console.log(erro);
-
     } finally {
       setCarregando(false);
-      
     }
   };
-  
+
   const handleFileChange = async (e) => {
     const arquivo = e.target.files[0];
     const data = await fileToBase64(arquivo);
@@ -64,59 +59,69 @@ const UploadProjeto = () => {
     }
     setDataArquivo(imagem.split(",")[1]);
   };
-  
-    useEffect(() => {
-  
-      console.log("Array na página de upload: ", resposta)
-      console.log(localStorage.getItem("Analise"))
-      console.log("Tipo de Imagem Inserida: ", tipo)
-  
-  
-    }, [resposta, tipo])
-  
+
+  useEffect(() => {
+    console.log("Array na página de upload: ", resposta);
+    console.log(localStorage.getItem("Analise"));
+    console.log("Tipo de Imagem Inserida: ", tipo);
+  }, [resposta, tipo]);
+
   return (
-    <div className="container p-5 my-5 d-flex flex-column justify-content-center align-items-center gap-2">
-      
-      {}
-      <p className="fs-2 fw-bold">Nova Análise - EnerCheckAI</p>
-      <div
-        id="uploadContainer"
-        className="container border-1 rounded-2 text-dark d-flex justify-content-center align-items-center flex-column gap-3 py-3"
-      >
-        <p className="display-6">Inisira o arquivo de sua planta aqui</p>
-        <span className="small text-secondary">
-          Formatos suportados: jpg,jpeg,xml,pdf
-        </span>
-        <i className="bi bi-cloud-upload fs-1"></i>
-        <input type="file" className="col-3" onChange={handleFileChange} />
-
-      </div>
-      <button
-        onClick={() => handleAnalisePlanta(dataArquivo, tipo)}
-        className="btn btn-primary fw-bold "
-        disabled={carregando}
-      >
-        { !carregando ? "Analisar Planta" : "Carregando análise..."}
-      </button>
-
-      {carregando && <div className=" spinner-grow text-primary"></div>}
-
-
-      {erro == "" ? (
-        <div className={`border border-success bg-success-subtle ${ carregando && "d-none" } bg-opacity-50 text-success px-3 py-2 rounded-2`}>
-          {carregando && "Caarregando Informações..."}
+    <div
+      style={{
+        background: "var(--bg)",
+        color: "var(--text)",
+        minHeight: "100vh",
+      }}
+    >
+      <div className="container p-5 my-5 d-flex flex-column justify-content-center align-items-center gap-2">
+        {}
+        <p className="fs-2 fw-bold"></p>
+        <div
+          id="uploadContainer"
+          className="container border-1 rounded-2 d-flex justify-content-center align-items-center flex-column gap-3 py-3"
+        >
+          <p className="display-6 fw-bold" style={{ marginBottom: "-10px" }}>
+            Inisira o arquivo de sua planta aqui
+          </p>
+          <span className="small">Formatos suportados: jpg,jpeg,xml,pdf</span>
+          <i className="bi bi-cloud-upload fs-1"></i>
+          <input type="file" onChange={handleFileChange} />
         </div>
-      ) : (
-        <div className={` border border-danger bg-danger-subtle ${ !erro  && "d-none" } bg-opacity-50 text-danger px-3 py-2 rounded-2`}>
-          {erro && "Ops! Houve um erro! verifique as informações e tente novamente"}
+        <button
+          onClick={() => handleAnalisePlanta(dataArquivo, tipo)}
+          className="btn btn-outline-primary "
+          disabled={carregando}
+        >
+          {!carregando ? "Analisar Planta" : "Carregando análise..."}
+        </button>
+        {carregando && <div className=" spinner-grow text-primary"></div>}
+        {erro == "" ? (
+          <div
+            className={`border border-success bg-success-subtle ${
+              carregando && "d-none"
+            } bg-opacity-50 text-success px-3 py-2 rounded-2`}
+          >
+            {carregando && "Caarregando Informações..."}
+          </div>
+        ) : (
+          <div
+            className={` border border-danger bg-danger-subtle ${
+              !erro && "d-none"
+            } bg-opacity-50 text-danger px-3 py-2 rounded-2`}
+          >
+            {erro &&
+              "Ops! Houve um erro! verifique as informações e tente novamente"}
+          </div>
+        )}
+        <div className="d-flex flex-column align-items-center">
+          <p>Prévia:</p>
+          <img
+            className="img-fluid col-3"
+            src={imagem || "https://placehold.co/500x500"}
+          />
         </div>
-      )}
-
-      <div className="d-flex flex-column align-items-center">
-        <p>Prévia:</p>
-        <img className="img-fluid col-3" src={imagem || "https://placehold.co/500x500"} />
-      </div>
-      {/* <div className="d-flex flex-column align-items-center mt-5">
+        {/* <div className="d-flex flex-column align-items-center mt-5">
         <p>Testando a IA!</p>
         <p>Faça uma pergunta aleatória pra eu ver se tá pegando aqui</p>
 
@@ -134,7 +139,7 @@ const UploadProjeto = () => {
           </p>
         ) : (
           <div className=" border rounded-3 px-3 border-danger bg-danger-subtle bg-opacity-50 text-danger my-3">
-            {erro}
+          {erro}
           </div>
         )}
 
@@ -150,6 +155,7 @@ const UploadProjeto = () => {
           {!carregando ? "Fazer pergunta" : "gerando resposta..."}
         </button>
       </div> */}
+      </div>
     </div>
   );
 };
