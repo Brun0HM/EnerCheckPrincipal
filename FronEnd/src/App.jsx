@@ -257,13 +257,13 @@ const App = () => {
                 </ScrollAnimation>
 
                 <ScrollAnimation animation="bounceIn" delay={300}>
-                  <div className="pb-5">
-                    <button className="btn btn-primary fw-semibold">
+                  <div className="pb-5  d-flex flex-column flex-md-row justify-content-center">
+                    <button className="btn btn-primary fw-semibold mb-4 mb-md-0 col-12 col-md-3">
                       <span onClick={() => navigate("/cadastro")}>
                         Comece Gratuitamente
                       </span>
                     </button>
-                    <button className="btn btn-outline-primary fw-semibold ms-3">
+                    <button className="btn btn-outline-primary fw-semibold ms-0 ms-md-3 col-12 col-md-3">
                       <a
                         className="text-decoration-none"
                         href="https://wa.me/5514997912841"
