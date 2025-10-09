@@ -19,7 +19,10 @@ const App = () => {
         minHeight: "100vh",
       }}
     >
-      <div className="container-fluid text-center d-flex flex-column align-items-center justify-content-center" id="inicio">
+      <div
+        className="container-fluid text-center d-flex flex-column align-items-center justify-content-center"
+        id="inicio"
+      >
         <div className={`mainContent`}>
           <div className="container text-center d-flex flex-column align-items-center justify-content-center">
             <ScrollAnimation animation="fadeInDown" delay={200}>
@@ -262,7 +265,7 @@ const App = () => {
                     </button>
                     <button className="btn btn-outline-primary fw-semibold ms-3">
                       <a
-                        className="text-decoration-none text-white"
+                        className="text-decoration-none"
                         href="https://wa.me/5514997912841"
                         target="_blank"
                         rel="noopener noreferrer"
