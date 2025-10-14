@@ -52,7 +52,7 @@ const App = () => {
               <ScrollAnimation animation="fadeInUp" delay={700}>
                 <div className="d-flex gap-3 justify-content-center">
                   <button className="btn btn-primary fw-semibold">
-                    <span onClick={() => navigate("/planos")}>
+                    <span onClick={() => navigate("/cadastro")}>
                       Experimente Agora
                     </span>
                   </button>

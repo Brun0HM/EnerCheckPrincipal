@@ -106,7 +106,7 @@ const Header = () => {
                     <li className="nav-item">
                       <button
                         className="btn mx-3 my-1"
-                        onClick={() => navigate("/planos")}
+                        onClick={() => navigate("/cadastro")}
                         style={{
                           backgroundColor: "var(--primary)",
                           borderColor: "var(--primary)",

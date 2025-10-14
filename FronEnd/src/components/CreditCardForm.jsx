@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router";
 
 const CreditCardForm = (props) => {
+  const navigate = useNavigate();
   return (
     <div className={`container ${props.display}`}>
       <div className="ms-1 align-items-start">
@@ -144,6 +146,10 @@ const CreditCardForm = (props) => {
     backgroundColor: "var(--button-primary-bg)",
     border: "none"
   }}
+  onClick={()=>(
+    alert('Pago com sucesso'),
+navigate('/login')
+  )}
   >Confirmar Pagamento</button>
 </div>
 <div className="mt-3 mb-3">

@@ -1,6 +1,8 @@
 import React from 'react'
+import { useNavigate } from 'react-router';
 
 const Boleto = (props) => {
+  const navigate = useNavigate();
   return (
     <div className={`container ${props.display}`}>
        <div
@@ -69,6 +71,10 @@ style={{
     backgroundColor: "var(--button-primary-bg)",
     border: "none"
   }}
+  onClick={()=>(
+    alert('Pago com sucesso'),
+navigate('/login')
+  )}
 >Gerar Boleto</button>
 </div>
 <div className="mt-3 mb-3">

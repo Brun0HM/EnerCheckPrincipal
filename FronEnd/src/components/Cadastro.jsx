@@ -164,8 +164,8 @@ const Cadastro = () => {
       console.log("Cadastro válido:", formData);
       // Aqui você pode adicionar a lógica de cadastro (API call)
       alert("Cadastro realizado com sucesso!");
-      navigate("/login");
-    }
+      navigate("/planos");
+    } 
   };
 
   return (
@@ -427,10 +427,11 @@ const Cadastro = () => {
                 handleInputChange("aceitaTermos", e.target.checked)
               }
               style={{
-                backgroundColor: "var(--input-bg)",
+                backgroundColor: formData.aceitaTermos ? "var(--primary)" : "var(--input-bg)",
                 borderColor: errors.aceitaTermos
                   ? "#dc3545"
-                  : "var(--input-border)",
+                  : (formData.aceitaTermos ? "var(--primary)" : "var(--input-border)"),
+                  color: "var(--text)", 
               }}
             />
             <label
@@ -469,8 +470,9 @@ const Cadastro = () => {
                 handleInputChange("receberAtualizacoes", e.target.checked)
               }
               style={{
-                backgroundColor: "var(--input-bg)",
-                borderColor: "var(--input-border)",
+                backgroundColor: formData.receberAtualizacoes ? "var(--primary)" : "var(--input-bg)",
+                borderColor: formData.receberAtualizacoes ? "var(--primary)" : "var(--input-border)",
+                color: "var(--text)",
               }}
             />
             <label
