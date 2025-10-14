@@ -3,20 +3,21 @@ import usuarios from '../apis/usuarios';
 import planos from '../apis/planos';
 import monitoramento from '../apis/monitoramento';
 
-
 const ContainerLista = (props) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3; // 3 itens por página conforme solicitado
+  const itemsPerPage = 3;
 
-  // Extrair os itens de forma mais robusta
+  // Extrair os itens considerando filtros
   const allItems = useMemo(() => {
     if (React.isValidElement(props.lista)) {
-      // Se props.lista é um elemento React válido, vamos renderizá-lo e extrair os dados
-      // Para isso, precisamos acessar o componente e seus dados diretamente
-      
-      // Verificar se é um dos componentes conhecidos
       const componentType = props.lista.type;
       
+      // Se há dados filtrados nas props do componente, use eles
+      if (props.lista.props && props.lista.props.filteredData && props.lista.props.filteredData !== null) {
+        return props.lista.props.filteredData;
+      }
+      
+      // Senão, use os dados originais baseado no tipo
       if (componentType && componentType.name === 'ListaUsers') {
         return usuarios;
       } else if (componentType && componentType.name === 'ListaPlanos') {
@@ -27,6 +28,11 @@ const ContainerLista = (props) => {
     }
     return [];
   }, [props.lista]);
+
+  // Resetar para página 1 quando os dados mudarem
+  useMemo(() => {
+    setCurrentPage(1);
+  }, [allItems]);
 
   // Cálculos de paginação
   const totalItems = allItems.length;
@@ -44,6 +50,8 @@ const ContainerLista = (props) => {
     setCurrentPage(prev => Math.min(prev + 1, totalPages));
   };
 
+ 
+
   // Renderizar o componente de lista com os itens paginados
   const renderPaginatedList = () => {
     if (React.isValidElement(props.lista)) {
@@ -52,17 +60,20 @@ const ContainerLista = (props) => {
       if (componentType && componentType.name === 'ListaUsers') {
         return React.cloneElement(props.lista, { 
           paginatedData: currentItems,
-          showModals: false // Para evitar conflitos com modais
+          showModals: false,
+          filteredData: null
         });
       } else if (componentType && componentType.name === 'ListaPlanos') {
         return React.cloneElement(props.lista, { 
           paginatedData: currentItems,
-          showModals: false
+          showModals: false,
+          filteredData: null
         });
       } else if (componentType && componentType.name === 'ListaProjetos') {
         return React.cloneElement(props.lista, { 
           paginatedData: currentItems,
-          showModals: false
+          showModals: false,
+          filteredData: null
         });
       }
     }
@@ -125,11 +136,6 @@ const ContainerLista = (props) => {
           </div>
         )}
       </div>
-
- 
-     
-        
-      
     </div>
   );
 };
