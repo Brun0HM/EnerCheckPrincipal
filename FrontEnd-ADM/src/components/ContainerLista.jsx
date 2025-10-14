@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import usuarios from '../apis/usuarios';
 import planos from '../apis/planos';
 import monitoramento from '../apis/monitoramento';
@@ -11,10 +11,11 @@ const ContainerLista = (props) => {
   const allItems = useMemo(() => {
     if (React.isValidElement(props.lista)) {
       const componentType = props.lista.type;
+      const componentProps = props.lista.props || {};
       
       // Se há dados filtrados nas props do componente, use eles
-      if (props.lista.props && props.lista.props.filteredData && props.lista.props.filteredData !== null) {
-        return props.lista.props.filteredData;
+      if (componentProps.filteredData && componentProps.filteredData !== null) {
+        return componentProps.filteredData;
       }
       
       // Senão, use os dados originais baseado no tipo
@@ -30,7 +31,7 @@ const ContainerLista = (props) => {
   }, [props.lista]);
 
   // Resetar para página 1 quando os dados mudarem
-  useMemo(() => {
+  useEffect(() => {
     setCurrentPage(1);
   }, [allItems]);
 
