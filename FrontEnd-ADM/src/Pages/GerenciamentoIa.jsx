@@ -29,8 +29,8 @@ const GerenciamentoIa = () => {
     } else if (activeFilter.type === 'dateSort') {
       // Ordenar por data
       data.sort((a, b) => {
-        const dateA = parseDate(a.data);
-        const dateB = parseDate(b.data);
+        const dateA = parseDate(a.dataInicio);
+        const dateB = parseDate(b.dataInicio);
         
         if (activeFilter.value === 'recent') {
           return dateB - dateA; // Mais recente primeiro

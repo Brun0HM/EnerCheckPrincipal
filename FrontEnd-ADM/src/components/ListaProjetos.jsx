@@ -50,14 +50,15 @@ const ListaProjetos = ({ paginatedData, filteredData}) => {
         {dataToRender.map((item) => (
           <ComponenteLista
             key={item.id}
-            nome={item.email}
+            nome={item.nome}
+            desc={item.email}
             display1={"d-lg-block d-none"}
             topic1={"Tipo Projeto"}
             t1info={item.tipoProjeto}
             topic2={"Tipo Conta"}
             t2info={item.tipoConta}
-            topic3={"Data"}
-            t3info={item.data}
+            topic3={"Data Início"}
+            t3info={item.dataInicio}
             topic4={"Status"}
             t4info={item.statusProjeto}
             view={() => handleView(item)}

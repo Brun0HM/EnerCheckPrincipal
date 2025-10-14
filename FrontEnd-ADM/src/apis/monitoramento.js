@@ -1,51 +1,59 @@
 const projetos = [
     {
+        nome: "Projeto Residencial Vila Nova",
         email: "maria@exemplo.com",
         tipoProjeto: "Projeto Residencial",
         id: "#231",
         tipoConta: "Pro",
-        data:"2024-01-15 14:30",
-        statusProjeto:"Concluído"
+        dataInicio: "28-12-2023 13:30",
+        dataFim: "15-01-2024 14:30",
+        statusProjeto: "Concluído",
+        descricao: "projeto elétrico Residencial Vila Nova",
     },
-        {
+    {
+        nome: "ProjetoComercial EnerCheck Jaketa",
         email: "joao@exemplo.com",
         tipoProjeto: "Projeto Comercial",
         id: "#323",
         tipoConta: "Básico",
-        data:"2024-01-15 14:25",
-        statusProjeto:"Processando"
+        dataInicio: "15-01-2024 14:25",
+        dataFim: "Não concluído",
+        statusProjeto: "Processando",
+        descricao: "projeto elétrico Jaketa",
     },
     {
+        nome: "Projeto Industrial PlastBras EnerCheck",
         email: "ana@exemplo.com",
         tipoProjeto: "Projeto Industrial",
         id: "#123",
         tipoConta: "Empresas",
-        data:"2024-01-15 14:25",
-        statusProjeto:"Concluído"
+        dataInicio: "28-12-2023 07:30",
+        dataFim: "05-01-2024 16:45",
+        statusProjeto: "Concluído",
+        descricao: "projeto elétrico industrial PlastBras",
     },
     {
-        email: "pedro@exemplo.com",
+        nome: "Projeto Residencial Centro",
+        email: "carlos@exemplo.com",
         tipoProjeto: "Projeto Residencial",
-        id: "#342",
+        id: "#456",
         tipoConta: "Pro",
-        data:"2024-01-15 14:25",
-        statusProjeto:"Erro"
+        dataInicio: "10-01-2024 09:15",
+        dataFim: "Não concluído",
+        statusProjeto: "Erro",
+        descricao: "projeto elétrico residencial centro da cidade",
     },
     {
-        email: "joana@exemplo.com",
+        nome: "Projeto Comercial Shopping",
+        email: "lucia@exemplo.com",
         tipoProjeto: "Projeto Comercial",
-        id: "#121",
-        tipoConta: "Básico",
-        data:"2024-01-14 14:28",
-        statusProjeto:"Concluído"
-    },
-    {
-        email: "ruan@exemplo.com",
-        tipoProjeto: "Projeto Industrial",
-        id: "#333",
+        id: "#789",
         tipoConta: "Empresas",
-        data:"2024-01-13 18:30",
-        statusProjeto:"Concluído"
+        dataInicio: "20-01-2024 11:00",
+        dataFim: "Não concluído",
+        statusProjeto: "Processando",
+        descricao: "projeto elétrico para shopping center",
     }
-]
+];
+
 export default projetos;
