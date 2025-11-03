@@ -6,6 +6,7 @@ import "./styles/main.scss";
 import pesso1 from "./assets/FotoPerfilPessoa01.png";
 import pesso2 from "./assets/FotoPerfilPessoa02.png";
 import pesso3 from "./assets/FotoPerfilPessoa03.png";
+import Print from "./assets/Print.png";
 import { useNavigate } from "react-router";
 import ScrollAnimation from "./components/ScrollAnimation";
 
@@ -65,11 +66,7 @@ const App = () => {
 
             <ScrollAnimation animation="scaleIn" delay={900}>
               <div>
-                <img
-                  src="https://placehold.co/900x900"
-                  alt="Hero Image"
-                  className="img-fluid mt-5"
-                />
+                <img src={Print} alt="Hero Image" className="img-fluid mt-5" />
               </div>
             </ScrollAnimation>
             <span className="mb-5" id="recursos"></span>
