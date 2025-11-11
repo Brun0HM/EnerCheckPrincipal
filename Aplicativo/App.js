@@ -15,6 +15,7 @@ import ProjetoScreen from "./screens/ProjetoScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Ionicons } from '@expo/vector-icons';
+import LoginScreen from "./screens/LoginScreen";
 
 
 //Ativa otimizações de telas nativas
@@ -61,6 +62,15 @@ export default function App() {
             options={{
               tabBarIcon: ({ color, size }) => (
                 <Ionicons name="settings-outline" size={size} color={color} />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="grid-outline" size={size} color={color} />
               ),
             }}
           />
