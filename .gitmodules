@@ -1,0 +1,3 @@
+[submodule "EnercheckAPI"]
+	path = EnercheckAPI
+	url = https://github.com/Brun0HM/EnercheckAPI.git
