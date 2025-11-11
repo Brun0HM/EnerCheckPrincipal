@@ -1,6 +1,7 @@
 import React from "react";
 const DataAtual = new Date();
 const AnoAtual = DataAtual.getUTCFullYear();
+import LogoClara from "../assets/LogoBigdark.svg";
 
 const Footer = () => {
   return (
@@ -9,10 +10,13 @@ const Footer = () => {
         <div className="row ">
           <div className="col col-12 col-md-3 mb-1 mb-md-4">
             <div className="d-flex align-items-center mb-1 mb-md-3">
-              <div className="btn btn-primary text-light fw-bold">
-                <i className="bi bi-lightning-charge"></i>
-              </div>
-              <h4 className="text-light fw-bolder fs-3 ms-2 mb-0">Enercheck</h4>
+              <img
+                src={LogoClara}
+                width={200}
+                height={200}
+                alt="Logo"
+                className="logo"
+              />
             </div>
             <p className="text-light fw-light fs-6">
               Verificação automatizada de projetos elétricos com inteligência

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "../styles/main.scss";
 import { useTheme } from "../hooks/useTheme";
 import { useNavigate } from "react-router";
+import LogoEscura from "../assets/LogoGrandeEscura.svg";
+import LogoClara from "../assets/LogoGrandeClara.svg";
 
 const Header = () => {
   const [MenuOpen, setMenuOpen] = useState(false);
@@ -19,18 +21,13 @@ const Header = () => {
                 className="d-flex align-items-center ms-3 ms-lg-5 text-decoration-none cursor-pointer"
                 href="#inicio"
               >
-                <div
-                  className="btn text-light fw-bold"
-                  style={{ backgroundColor: "var(--primary)" }}
-                >
-                  <i className="bi bi-lightning-charge"></i>
-                </div>
-                <h4
-                  className="fw-bolder fs-3 ms-2 mb-0"
-                  style={{ color: "var(--text)" }}
-                >
-                  Enercheck
-                </h4>
+                <img
+                  src={theme === "light" ? LogoEscura : LogoClara}
+                  width={70}
+                  height={70}
+                  alt="Logo"
+                  className="logo"
+                />
               </a>
             </div>
 
