@@ -4,20 +4,17 @@ import {
   View, 
   Text, 
   StyleSheet,
-  useColorScheme,
   Pressable
-  // Image, // Comentado temporariamente até implementar upload de imagem
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { InfoGeralContainer } from '../components/InfoGeralContainer';
 import { ContainerChecagem } from '../components/ContainerChecagem';
+import { useTheme } from '../contexts/ThemeContext'; // Mudança aqui
 
 export default function ProjetoScreen() {
+  const { theme, isManualTheme, isLoaded } = useTheme(); // Usando ThemeContext
   const [analise, setAnalise] = useState('');
-  // const [imagem, setImagem] = useState(null); // Comentado temporariamente
-  // const [tipo, setTipo] = useState(''); // Comentado temporariamente
-  const colorScheme = useColorScheme();
 
   // Estados para comentários (baseado no DashboardProjeto.jsx original)
   const [comentarioGeral, setComentarioGeral] = useState("");
@@ -29,33 +26,29 @@ export default function ProjetoScreen() {
   const pontuacaoConformidade = 90;
   const pontuacaoInstalacao = 50;
 
-  // Temas baseados nas variáveis CSS da versão web
-  const themes = {
-    light: {
-      bg: '#ffffff',
-      text: '#131313',
-      textSecondary: '#606060',
-      primary: '#0D6EFD',
-      cardBg: '#ffffff',
-      cardBorder: '#e0e0e0',
-      inputBg: '#f8f9fa',
-      inputBorder: '#ced4da',
-    },
-    dark: {
-      bg: '#131313',
-      text: '#ffffff',
-      textSecondary: '#b8bcc8',
-      primary: '#0D6EFD',
-      cardBg: '#2a2a2a',
-      cardBorder: '#3a3a3a',
-      inputBg: '#2d2d2d',
-      inputBorder: '#555555',
-    }
+  console.log('📱 ProjetoScreen renderizada - tema:', theme);
+
+  if (!isLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Carregando tema...</Text>
+      </View>
+    );
+  }
+
+  // Cores diretas baseadas no tema - mesmas do GeralScreen para consistência
+  const currentTheme = {
+    bg: theme === 'light' ? '#ffffff' : '#131313',
+    text: theme === 'light' ? '#131313' : '#ffffff',
+    textSecondary: theme === 'light' ? '#606060' : '#b8bcc8',
+    primary: '#0D6EFD',
+    cardBg: theme === 'light' ? '#ffffff' : '#2a2a2a',
+    cardBorder: theme === 'light' ? '#e0e0e0' : '#3a3a3a',
+    inputBg: theme === 'light' ? '#f8f9fa' : '#2d2d2d',
+    inputBorder: theme === 'light' ? '#ced4da' : '#555555',
   };
 
-  const theme = themes[colorScheme] || themes.light;
-
-  // Funções para trocar comentários baseado nas pontuações (do DashboardProjeto.jsx original)
+  // Funções para trocar comentários baseado nas pontuações
   const trocarComentario = () => {
     if (pontuacaoGeral <= 20) {
       setComentarioGeral("Erros críticos a serem revisados");
@@ -93,7 +86,7 @@ export default function ProjetoScreen() {
   };
 
   useEffect(() => {
-    // Carregar dados salvos no AsyncStorage (equivalente ao localStorage)
+    // Carregar dados salvos no AsyncStorage
     loadStoredData();
     
     // Definir comentários baseados nas pontuações
@@ -118,13 +111,7 @@ export default function ProjetoScreen() {
   const loadStoredData = async () => {
     try {
       const analiseData = await AsyncStorage.getItem("Analise");
-      // const imagemData = await AsyncStorage.getItem("Imagem"); // Comentado temporariamente
-      // const tipoData = await AsyncStorage.getItem("Formato"); // Comentado temporariamente
-
       if (analiseData) setAnalise(analiseData);
-      // if (imagemData) setImagem(imagemData); // Comentado temporariamente
-      // if (tipoData) setTipo(tipoData); // Comentado temporariamente
-
       console.log('Dados carregados:', { analiseData });
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
@@ -132,17 +119,17 @@ export default function ProjetoScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.bg }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: currentTheme.bg }]}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Cabeçalho */}
         <View style={styles.header}>
-          <Text style={[styles.title, { color: theme.text }]}>Dashboard do Projeto</Text>
-          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
+          <Text style={[styles.title, { color: currentTheme.text }]}>Dashboard do Projeto</Text>
+          <Text style={[styles.subtitle, { color: currentTheme.textSecondary }]}>
             Análise detalhada de conformidade e instalação elétrica
           </Text>
         </View>
 
-        {/* Seção de Informações Gerais (baseado no layout original) */}
+        {/* Seção de Informações Gerais */}
         <View style={styles.infoSection}>
           <View style={styles.infoRow}>
             <InfoGeralContainer
@@ -151,7 +138,7 @@ export default function ProjetoScreen() {
               pontuacaoGeral={pontuacaoGeral}
               corNumero="danger"
               comentario={comentarioGeral}
-              theme={theme}
+              theme={currentTheme}
             />
           </View>
 
@@ -162,7 +149,7 @@ export default function ProjetoScreen() {
               pontuacaoGeral={pontuacaoConformidade}
               corNumero="success"
               comentario={comentConform}
-              theme={theme}
+              theme={currentTheme}
             />
           </View>
 
@@ -173,51 +160,30 @@ export default function ProjetoScreen() {
               pontuacaoGeral={pontuacaoInstalacao}
               corNumero="warning"
               comentario={comentInstalacao}
-              theme={theme}
+              theme={currentTheme}
             />
           </View>
         </View>
-
-        {/* Comentado temporariamente - Imagem do projeto
-        {imagem && (
-          <View style={[styles.imageContainer, { 
-            backgroundColor: theme.cardBg, 
-            borderColor: theme.cardBorder 
-          }]}>
-            <Text style={[styles.imageTitle, { color: theme.text }]}>
-              Projeto Analisado
-            </Text>
-            <Image 
-              source={{ uri: imagem }} 
-              style={styles.projectImage}
-              resizeMode="contain"
-            />
-            <Text style={[styles.imageFormat, { color: theme.textSecondary }]}>
-              Formato: {tipo || 'Não especificado'}
-            </Text>
-          </View>
-        )}
-        */}
 
         {/* Análise Detalhada */}
         <ContainerChecagem
           categoria="Circuitos de Força"
           descricao="Análise dos circuitos de força e dimensionamento"
-          theme={theme}
+          theme={currentTheme}
         />
 
         <ContainerChecagem
           categoria="Proteção e Segurança"
           descricao="Verificação de dispositivos de proteção (DR, disjuntores)"
-          theme={theme}
+          theme={currentTheme}
         />
 
         {/* Card de Ações Disponíveis */}
         <View style={[styles.actionCard, { 
-          backgroundColor: theme.cardBg, 
-          borderColor: theme.cardBorder 
+          backgroundColor: currentTheme.cardBg, 
+          borderColor: currentTheme.cardBorder 
         }]}>
-          <Text style={[styles.actionTitle, { color: theme.text }]}>
+          <Text style={[styles.actionTitle, { color: currentTheme.text }]}>
             Ações Disponíveis
           </Text>
           
@@ -226,7 +192,7 @@ export default function ProjetoScreen() {
               style={({ pressed }) => [
                 styles.primaryButton,
                 { 
-                  backgroundColor: theme.primary,
+                  backgroundColor: currentTheme.primary,
                   opacity: pressed ? 0.8 : 1 
                 }
               ]}
@@ -239,13 +205,13 @@ export default function ProjetoScreen() {
               style={({ pressed }) => [
                 styles.secondaryButton,
                 { 
-                  borderColor: theme.primary,
+                  borderColor: currentTheme.primary,
                   opacity: pressed ? 0.8 : 1 
                 }
               ]}
               onPress={() => alert('Reprocessando projeto...')}
             >
-              <Text style={[styles.secondaryButtonText, { color: theme.primary }]}>
+              <Text style={[styles.secondaryButtonText, { color: currentTheme.primary }]}>
                 🔄 Reprocessar
               </Text>
             </Pressable>
@@ -255,17 +221,29 @@ export default function ProjetoScreen() {
         {/* Debug: Mostrar dados da análise se existir */}
         {analise && (
           <View style={[styles.debugContainer, { 
-            backgroundColor: theme.cardBg, 
-            borderColor: theme.cardBorder 
+            backgroundColor: currentTheme.cardBg, 
+            borderColor: currentTheme.cardBorder 
           }]}>
-            <Text style={[styles.debugTitle, { color: theme.text }]}>
+            <Text style={[styles.debugTitle, { color: currentTheme.text }]}>
               Dados da Análise:
             </Text>
-            <Text style={[styles.debugText, { color: theme.textSecondary }]}>
+            <Text style={[styles.debugText, { color: currentTheme.textSecondary }]}>
               {typeof analise === 'string' ? analise.substring(0, 200) + '...' : 'Dados carregados'}
             </Text>
           </View>
         )}
+
+        {/* Debug: Status do tema */}
+        <View style={[styles.debugContainer, { 
+          backgroundColor: currentTheme.cardBg, 
+          borderColor: currentTheme.cardBorder,
+          marginTop: 12 
+        }]}>
+          <Text style={[styles.debugText, { color: currentTheme.textSecondary }]}>
+            Tema: {theme} {theme === 'light' ? '☀️' : '🌙'} 
+            {isManualTheme ? ' (Manual)' : ' (Sistema)'}
+          </Text>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -277,6 +255,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 20,
+    paddingBottom: 100, // Espaço para tab bar flutuante
   },
   header: {
     marginBottom: 24,
@@ -290,16 +269,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
   },
-
-  // Seção de Informações Gerais
   infoSection: {
     marginBottom: 24,
   },
   infoRow: {
     marginBottom: 16,
   },
-
-  // Card de Ações
   actionCard: {
     padding: 20,
     borderRadius: 16,
@@ -342,8 +317,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-
-  // Debug Container
   debugContainer: {
     padding: 16,
     borderRadius: 12,
@@ -359,33 +332,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
   },
-
-  /* Comentado temporariamente - Estilos da imagem
-  imageContainer: {
-    padding: 20,
-    borderRadius: 16,
-    borderWidth: 1,
-    marginBottom: 24,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  imageTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  projectImage: {
-    width: '100%',
-    height: 200,
-    borderRadius: 12,
-    marginBottom: 12,
-  },
-  imageFormat: {
-    fontSize: 14,
-  },
-  */
 });
