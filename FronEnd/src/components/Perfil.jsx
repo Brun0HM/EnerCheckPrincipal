@@ -12,33 +12,53 @@ const Perfil = () => {
           <div>
             <span className="fw-semibold">Nome Completo</span>
             <input
+              style={{
+                backgroundColor: "var(--input-bg)",
+                borderColor: "var(--input-border)",
+                color: "var(--text)",
+              }}
               placeholder="Seu nome completo"
               type="text"
-              className="form-control"
+              className="form-control theme-input"
             />
           </div>
           <div>
             <span className="fw-semibold">Email</span>
             <input
+              style={{
+                backgroundColor: "var(--input-bg)",
+                borderColor: "var(--input-border)",
+                color: "var(--text)",
+              }}
               placeholder="seu@email.com"
               type="text"
-              className="form-control"
+              className="form-control theme-input"
             />
           </div>
           <div>
             <span className="fw-semibold">Empresa</span>
             <input
+              style={{
+                backgroundColor: "var(--input-bg)",
+                borderColor: "var(--input-border)",
+                color: "var(--text)",
+              }}
               placeholder="Nome da Empresa"
               type="text"
-              className="form-control"
+              className="form-control theme-input"
             />
           </div>
           <div>
             <span className="fw-semibold">Telefone</span>
             <input
+              style={{
+                backgroundColor: "var(--input-bg)",
+                borderColor: "var(--input-border)",
+                color: "var(--text)",
+              }}
               placeholder="(00)00000-0000"
               type="tel"
-              className="form-control"
+              className="form-control theme-input"
             />
           </div>
         </div>
