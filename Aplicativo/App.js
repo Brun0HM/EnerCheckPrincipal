@@ -10,8 +10,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { enableScreens } from "react-native-screens";
 
 // Importa as telas
-import HomeScreen from "./screens/HomeScreen";
-import ProfileScreen from "./screens/ProfileScreen";
+import GeralScreen from "./screens/GeralScreen";
+import ProjetoScreen from "./screens/ProjetoScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Ionicons } from '@expo/vector-icons';
@@ -39,7 +39,7 @@ export default function App() {
         >
           <Tab.Screen
             name="Geral"
-            component={HomeScreen}
+            component={GeralScreen}
             options={{
               tabBarIcon: ({ color, size }) => (
                 <Ionicons name="grid-outline" size={size} color={color} />
@@ -48,7 +48,7 @@ export default function App() {
           />
           <Tab.Screen
             name="Projetos"
-            component={ProfileScreen}
+            component={ProjetoScreen}
             options={{
               tabBarIcon: ({ color, size }) => (
                 <Ionicons name="folder-open-outline" size={size} color={color} />
