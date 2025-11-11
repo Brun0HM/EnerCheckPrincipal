@@ -24,3 +24,4 @@ const handleAnalyze = async () => {
     } finally {
         setIsLoading(false);
     }
+

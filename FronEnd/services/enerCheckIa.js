@@ -5,8 +5,6 @@ const GEMINI_API_KEY = import.meta.env.VITE_REACT_APP_GEMINI_API_KEY;
 
 const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY})
 
-
-
 const analysisSchema = {
     type: Type.OBJECT,
     properties: {

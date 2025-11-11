@@ -11,10 +11,7 @@ const UploadProjeto = () => {
 
   const [nome, setNome] = useState();
 
-  const [erro, setErro] = useState();
-  const [carregando, setCarregando] = useState(false);
   const [dataArquivo, setDataArquivo] = useState(null);
-  const [resposta, setResposta] = useState([]);
   const [tipo, setTipo] = useState("");
 
   const imagem = localStorage.getItem("Imagem");
@@ -28,22 +25,14 @@ const UploadProjeto = () => {
       reader.onerror = (error) => reject(error);
     });
 
-  const handleAnalisePlanta = async (imagem, tipo) => {
-    setCarregando(true);
-    setErro("");
-
-    try {
-      const response = await analisarPlanta(imagem, tipo);
-      localStorage.setItem("Analise", JSON.stringify(response));
-      setResposta(response);
-      navigate("/dashboardProjeto")
-    } catch (error) {
-      setErro("Houve um erro ao analisar a planta: " + error);
-      console.log(erro);
-    } finally {
-      setCarregando(false);
-    }
-  };
+  const handleData = async (data, formato) => {
+    localStorage.setItem("imagem", data)
+    localStorage.setItem("tipo", formato)
+    console.log("Data recebida!")
+    console.log("Formato do arquivo recebido: ", tipo)
+    
+    navigate("/dashboardProjeto")
+  }
 
   const handleFileChange = async (e) => {
     const arquivo = e.target.files[0];
@@ -55,23 +44,19 @@ const UploadProjeto = () => {
       data.startsWith("data:image/jpeg")
     ) {
       setTipo("image/jpeg");
-      localStorage.setItem("Formato", tipo);
     } else if (data.startsWith("data:application/pdf")) {
-      setTipo("application/pdf");
-      localStorage.setItem("Formato", tipo);
+      setTipo("pdf");
     } else if (data.startsWith("data:image/png")) {
       setTipo("image/png");
-      localStorage.setItem("Formato", tipo);
     }
     setDataArquivo(imagem.split(",")[1]);
   };
 
+
   useEffect(() => {
-    console.log("Array na página de upload: ", resposta);
-    console.log(localStorage.getItem("Analise"));
-    console.log("Tipo de Imagem Inserida: ", tipo);
     console.log("Imagem inserida: ", dataArquivo, " Nome: ", nome);
-  }, [resposta, tipo, dataArquivo, nome]);
+    console.log("Tipo de Imagem Inserida: ", tipo);
+  }, [tipo, dataArquivo, nome]);
 
   return (
     <div
@@ -108,35 +93,11 @@ const UploadProjeto = () => {
           {/* <input type="file" className="col-9" onChange={handleFileChange} /> */}
         </div>
         <button
-          onClick={() => handleAnalisePlanta(dataArquivo, tipo)}
+          onClick={() => handleData(dataArquivo, tipo)}
           className="btn btn-primary fw-bold "
-          disabled={carregando}
         >
-          {!carregando ? "Analisar Planta" : "Carregando análise..."}
+        Enviar Arquivo
         </button>
-
-        {carregando && <div className=" spinner-grow text-primary"></div>}
-
-        {erro == "" ? (
-          <div
-            className={`border border-success bg-success-subtle ${
-              carregando && "d-none"
-            } bg-opacity-50 text-success-emphasis px-3 py-2 rounded-2`}
-          >
-            {carregando
-              ? "Caarregando Informações..."
-              : "Informações carregadas!"}
-          </div>
-        ) : (
-          <div
-            className={` border border-danger bg-danger-subtle ${
-              !erro && "d-none"
-            } bg-opacity-50 text-danger-emphasis px-3 py-2 rounded-2`}
-          >
-            {erro &&
-              "Ops! Houve um erro! verifique as informações e tente novamente"}
-          </div>
-        )}
 
         {/* <div className="d-flex flex-column align-items-center mt-5">
         <p>Testando a IA!</p>
@@ -177,7 +138,7 @@ const UploadProjeto = () => {
         <span>Prévia: </span>
         <img
           className="img-fluid col-3 mt-3 mb-5"
-          src={"https://placehold.co/1000x500"}
+          src={ imagem || "https://placehold.co/1000x500"  }
         />
       </div>
     </div>
