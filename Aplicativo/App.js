@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Pressable, StyleSheet, Text } from 'react-native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from '@react-navigation/stack'; 
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { enableScreens } from "react-native-screens";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -10,12 +11,15 @@ import { Ionicons } from '@expo/vector-icons';
 import GeralScreen from "./screens/GeralScreen";
 import ProjetoScreen from "./screens/ProjetoScreen";
 import SettingsScreen from "./screens/SettingsScreen";
+import PlanosScreen from "./screens/PlanosScreen";
+import FinalizarEscolhaAssinaturaScreen from "./screens/FinalizarEscolhaAssinaturaScreen";
 
 // Importa o Context Provider
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 
 enableScreens();
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator(); 
 
 // Temas customizados
 const lightTheme = {
@@ -73,6 +77,62 @@ const ThemeToggleButton = ({ colors }) => {
         </View>
       )}
     </View>
+  );
+};
+
+// Stack Navigator para Settings (inclui SettingsScreen e PlanosScreen)
+const SettingsStack = () => {
+  const { theme } = useTheme();
+  const navigationTheme = theme === 'light' ? lightTheme : darkTheme;
+
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: navigationTheme.colors.card,
+          borderBottomColor: navigationTheme.colors.border,
+          elevation: 3,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 4,
+        },
+        headerTitleStyle: {
+          color: navigationTheme.colors.text,
+          fontWeight: 'bold',
+          fontSize: 18,
+        },
+        headerTintColor: navigationTheme.colors.text,
+        headerRight: () => (
+          <ThemeToggleButton colors={navigationTheme.colors} />
+        ),
+      }}
+    >
+      <Stack.Screen 
+        name="SettingsMain" 
+        component={SettingsScreen}
+        options={{ 
+          title: 'Configurações',
+          headerShown: false // Vai usar o header do Tab
+        }}
+      />
+      <Stack.Screen 
+        name="Planos" 
+        component={PlanosScreen}
+        options={{ 
+          title: 'Planos',
+          headerShown: true // Mostra header próprio
+        }}
+      />
+      <Stack.Screen 
+  name="FinalizarEscolhaAssinatura" 
+  component={FinalizarEscolhaAssinaturaScreen}
+  options={{ 
+    title: 'Finalizar Assinatura',
+    headerShown: true 
+  }}
+/>
+    </Stack.Navigator>
   );
 };
 
@@ -159,7 +219,13 @@ const AppNavigator = () => {
       >
         <Tab.Screen name="Geral" component={GeralScreen} />
         <Tab.Screen name="Projetos" component={ProjetoScreen} />
-        <Tab.Screen name="Configurações" component={SettingsScreen} />
+        <Tab.Screen 
+          name="Configurações" 
+          component={SettingsStack} 
+          options={{
+            headerShown: false // O Stack vai gerenciar o header
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
