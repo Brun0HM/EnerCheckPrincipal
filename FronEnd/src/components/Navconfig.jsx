@@ -46,7 +46,7 @@ const Navconfig = ({ onItemClick }) => {
           <div className="bg-secondary d-flex flex-column bg-opacity-10 rounded-3 p-1 d-md-none">
             <div
               className={`d-flex gap-1 col-12 justify-content-center fs-6 rounded-2 align-items-center ${
-                activeItem === "perfil" ? "bg-white shadow" : ""
+                activeItem === "perfil" ? "" : ""
               }`}
               onClick={() => handleItemClick("perfil")}
             >
@@ -55,7 +55,7 @@ const Navconfig = ({ onItemClick }) => {
             </div>
             <div
               className={`d-flex gap-1 col-12 justify-content-center fs-6 rounded-2 align-items-center ${
-                activeItem === "seguranca" ? "bg-white shadow" : ""
+                activeItem === "seguranca" ? "" : ""
               }`}
               onClick={() => handleItemClick("seguranca")}
             >
@@ -66,7 +66,7 @@ const Navconfig = ({ onItemClick }) => {
             </div>
             <div
               className={`d-flex gap-1 col-12 justify-content-center fs-6 rounded-2 align-items-center ${
-                activeItem === "notificacoes" ? "bg-white shadow" : ""
+                activeItem === "notificacoes" ? "" : ""
               }`}
               onClick={() => handleItemClick("notificacoes")}
             >
@@ -77,7 +77,7 @@ const Navconfig = ({ onItemClick }) => {
             </div>
             <div
               className={`d-flex gap-1 col-12 justify-content-center fs-6 rounded-2 align-items-center ${
-                activeItem === "assinatura" ? "bg-white shadow" : ""
+                activeItem === "assinatura" ? "" : ""
               }`}
               onClick={() => handleItemClick("assinatura")}
             >
@@ -93,7 +93,7 @@ const Navconfig = ({ onItemClick }) => {
         <div className="bg-secondary d-none d-md-flex bg-opacity-10 rounded-3 p-1">
           <div
             className={`d-flex gap-1 col-12 col-md-3 justify-content-center fs-6 rounded-2 align-items-center cursor-pointer ${
-              activeItem === "perfil" ? "bg-white shadow" : ""
+              activeItem === "perfil" ? "" : ""
             }`}
             onClick={() => handleItemClick("perfil")}
           >
@@ -102,7 +102,7 @@ const Navconfig = ({ onItemClick }) => {
           </div>
           <div
             className={`d-flex gap-1 col-12 col-md-3 justify-content-center fs-6 rounded-2 align-items-center cursor-pointer ${
-              activeItem === "seguranca" ? "bg-white shadow" : ""
+              activeItem === "seguranca" ? " shadow" : ""
             }`}
             onClick={() => handleItemClick("seguranca")}
           >
@@ -111,7 +111,7 @@ const Navconfig = ({ onItemClick }) => {
           </div>
           <div
             className={`d-flex gap-1 col-12 col-md-3 justify-content-center fs-6 rounded-2 align-items-center cursor-pointer ${
-              activeItem === "notificacoes" ? "bg-white shadow" : ""
+              activeItem === "notificacoes" ? " shadow" : ""
             }`}
             onClick={() => handleItemClick("notificacoes")}
           >
@@ -122,7 +122,7 @@ const Navconfig = ({ onItemClick }) => {
           </div>
           <div
             className={`d-flex gap-1 col-12 col-md-3 justify-content-center fs-6 rounded-2 align-items-center cursor-pointer ${
-              activeItem === "assinatura" ? "bg-white shadow" : ""
+              activeItem === "assinatura" ? " shadow" : ""
             }`}
             onClick={() => handleItemClick("assinatura")}
           >

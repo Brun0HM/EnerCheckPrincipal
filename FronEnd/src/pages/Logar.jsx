@@ -1,9 +1,13 @@
 import React from "react";
 import Login from "../components/Login";
 import { useNavigate } from "react-router";
+import { useTheme } from "../hooks/useTheme"; // Importando o hook
+import LogoClara from "../assets/LogoEsticadaBranca.png";
+import LogoEscura from "../assets/LogoEsticadaPreta.png";
 
 const Logar = () => {
   const navigate = useNavigate();
+  const { theme } = useTheme(); // Usando o hook para obter o tema
 
   return (
     <div
@@ -17,21 +21,12 @@ const Logar = () => {
       {/* Cabeçalho da página */}
       <div className="mb-3 text-center">
         <div className="mb-3 d-flex justify-content-center align-items-center gap-2">
-          {/* Logo/ícone placeholder */}
-          <div
-            className="rounded-circle d-flex align-items-center justify-content-center"
-            style={{
-              width: "40px",
-              height: "40px",
-              backgroundColor: "var(--primary)",
-              color: "#ffffff",
-            }}
-          >
-            <i className="bi bi-lightning-charge"></i>
-          </div>
-          <h3 className="fw-bold m-0" style={{ color: "var(--text)" }}>
-            EnerCheck
-          </h3>
+          <img
+            src={theme === "light" ? LogoEscura : LogoClara}
+            alt=""
+            className="img-fluid"
+            width={300}
+          />
         </div>
         <p className="fs-5" style={{ color: "var(--text-secondary)" }}>
           Faça seu login em sua conta
