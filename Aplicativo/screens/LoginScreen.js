@@ -157,7 +157,8 @@ export default function LoginScreen({ navigation }) {
           <Text style={[styles.footerText, { color: theme.textSecondary }]}>
             Não tem uma conta?
           </Text>
-          <Pressable onPress={() => Alert.alert('Cadastro', 'Função em desenvolvimento')}>
+          <Pressable onPress={() => navigation?.navigate?.('Registrar')}
+                    style={styles.loginLinkContainer}>
             <Text style={[styles.footerLink, { color: theme.primary }]}> Criar conta</Text>
           </Pressable>
         </View>
@@ -177,14 +178,17 @@ const styles = StyleSheet.create({
   },
   header: {
     marginBottom: 24,
+    alignItems: 'center', 
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 8,
+    textAlign: 'center', 
   },
   subtitle: {
     fontSize: 16,
+    textAlign: 'center', 
   },
   card: {
     padding: 20,
@@ -261,12 +265,15 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center', 
   },
   footerText: {
     fontSize: 14,
+    textAlign: 'center',
   },
   footerLink: {
     fontSize: 14,
     fontWeight: '600',
+    textAlign: 'center',
   },
 });
