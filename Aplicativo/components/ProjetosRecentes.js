@@ -1,65 +1,22 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export const ProjetosRecentes = ({ nomeProjeto, tempoProjeto, statusProjeto, theme }) => {
-  /**
-   * Define a cor do badge baseada no status
-   */
-  const getBadgeStyle = (status) => {
-    const baseStyle = {
-      paddingVertical: 8,
-      paddingHorizontal: 16,
-      borderRadius: 8,
-      borderWidth: 1,
-    };
-
-    switch (status.toLowerCase()) {
-      case "aprovado":
-        return {
-          ...baseStyle,
-          backgroundColor: "rgba(34, 197, 94, 0.2)",
-          borderColor: "rgba(34, 197, 94, 0.3)",
-        };
-      case "pendente":
-        return {
-          ...baseStyle,
-          backgroundColor: "rgba(251, 191, 36, 0.2)",
-          borderColor: "rgba(251, 191, 36, 0.3)",
-        };
-      case "rejeitado":
-        return {
-          ...baseStyle,
-          backgroundColor: "rgba(239, 68, 68, 0.2)",
-          borderColor: "rgba(239, 68, 68, 0.3)",
-        };
-      default:
-        return {
-          ...baseStyle,
-          backgroundColor: theme.inputBg,
-          borderColor: theme.inputBorder,
-        };
-    }
-  };
-
-  const getBadgeTextColor = (status) => {
-    switch (status.toLowerCase()) {
-      case "aprovado":
-        return "#16a34a";
-      case "pendente":
-        return "#d97706";
-      case "rejeitado":
-        return "#dc2626";
+const ProjetosRecentes = ({ nomeProjeto, tempoProjeto, statusProjeto, theme }) => {
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Aprovado':
+        return '#28a745';
+      case 'Pendente':
+        return '#ffc107';
+      case 'Reprovado':
+        return '#dc3545';
       default:
         return theme.textSecondary;
     }
   };
 
   return (
-    <View style={[styles.container, { 
-      backgroundColor: theme.inputBg, 
-      borderColor: theme.inputBorder 
-    }]}>
-      {/* Informações do projeto */}
+    <View style={[styles.container, { borderColor: theme.cardBorder }]}>
       <View style={styles.projectInfo}>
         <Text style={[styles.projectName, { color: theme.text }]}>
           {nomeProjeto}
@@ -68,10 +25,13 @@ export const ProjetosRecentes = ({ nomeProjeto, tempoProjeto, statusProjeto, the
           {tempoProjeto}
         </Text>
       </View>
-
-      {/* Badge de status */}
-      <View style={getBadgeStyle(statusProjeto)}>
-        <Text style={[styles.badgeText, { color: getBadgeTextColor(statusProjeto) }]}>
+      
+      <View style={[styles.statusBadge, { 
+        backgroundColor: getStatusColor(statusProjeto) + '20' 
+      }]}>
+        <Text style={[styles.statusText, { 
+          color: getStatusColor(statusProjeto) 
+        }]}>
           {statusProjeto}
         </Text>
       </View>
@@ -82,26 +42,31 @@ export const ProjetosRecentes = ({ nomeProjeto, tempoProjeto, statusProjeto, the
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 16,
-    borderRadius: 16,
-    borderWidth: 1,
-    marginTop: 12,
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
   },
   projectInfo: {
     flex: 1,
   },
   projectName: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
     marginBottom: 4,
   },
   projectTime: {
-    fontSize: 12,
-  },
-  badgeText: {
     fontSize: 14,
-    fontWeight: '500',
+  },
+  statusBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  statusText: {
+    fontSize: 12,
+    fontWeight: '600',
   },
 });
+
+export default ProjetosRecentes;
