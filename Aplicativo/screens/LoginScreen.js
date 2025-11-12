@@ -10,7 +10,7 @@ import {
   Alert
 } from 'react-native';
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ navigation, setIsAuthenticated }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -45,7 +45,9 @@ export default function LoginScreen({ navigation }) {
   const handleLogin = () => {
     if (username === 'admin' && password === '1234') {
       Alert.alert('Sucesso', `Login bem-sucedido!${rememberMe ? ' (Lembrar ativado)' : ''}`);
-      setIsAuthenticated(true);
+      if (setIsAuthenticated) {
+        setIsAuthenticated(true);
+      }
     } else {
       Alert.alert('Erro', 'Usuário ou senha incorretos.');
     }

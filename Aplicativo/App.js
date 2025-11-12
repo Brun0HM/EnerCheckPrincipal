@@ -159,11 +159,10 @@ const AuthStack = ({ setIsAuthenticated }) => {
           title: 'Escolha seu Plano'
         }}
       />
-        <Stack.Screen name="FinalizarEscolhaAssinatura">
+      <Stack.Screen name="FinalizarEscolhaAssinatura">
         {(props) => <FinalizarEscolhaAssinaturaScreen {...props} setIsAuthenticated={setIsAuthenticated} />}
       </Stack.Screen>
     </Stack.Navigator>
-    
   );
 };
 
