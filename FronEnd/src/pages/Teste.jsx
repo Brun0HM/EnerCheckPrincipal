@@ -11,14 +11,14 @@ const Teste = () => {
 
   // função que busca os usuarios na api
   async function getUsers() {
-    const usersFromApi = await api.get("https://localhost:7257/api/Usuarios");
+    const usersFromApi = await api.get("/api/Usuarios");
 
     setUsers(usersFromApi.data);
   }
   // Função que cria usuarios na API
   async function createUsers(event) {
     event.preventDefault(); // Impede o recarregamento da página
-    await api.post("https://localhost:7257/register", {
+    await api.post("/register", {
       email: inputEmail.current.value,
       password: inputSenha.current.value,
     });
@@ -27,7 +27,7 @@ const Teste = () => {
   }
   // Função que deleta usuarios na API
   async function deleteUser(id) {
-    await api.delete(`https://localhost:7257/api/Usuarios/${id}`);
+    await api.delete(`/api/Usuarios/${id}`);
     getUsers(); // Atualiza a lista de usuários após a exclusão
   }
 
