@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, useNavigation } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native'; // Import separado
 import ResumoPedido from '../components/ResumoPedido';
 import MetodoPagamento from '../components/MetodoPagamento';
 import CreditCardForm from '../components/CreditCardForm';
@@ -32,6 +33,7 @@ export default function FinalizarEscolhaAssinaturaScreen() {
     ]
   };
 
+  
   const [activeCard, setActiveCard] = useState(false);
   const [activeBoleto, setActiveBoleto] = useState(false);
   const [activePix, setActivePix] = useState(false);
@@ -46,6 +48,7 @@ export default function FinalizarEscolhaAssinaturaScreen() {
     );
   }
 
+  
   // Cores diretas baseadas no tema
   const currentTheme = {
     bg: theme === 'light' ? '#ffffff' : '#131313',
@@ -77,8 +80,17 @@ export default function FinalizarEscolhaAssinaturaScreen() {
   };
 
   const handlePaymentSuccess = () => {
-    // Navegar de volta ou para tela de sucesso
-    navigation.navigate('Geral');
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          { name: 'Geral' }, 
+        ],
+      })
+    );
+
+    // Opcional: Mostrar uma mensagem de sucesso
+    console.log('✅ Pagamento realizado com sucesso! Redirecionando para dashboard...');
   };
 
   return (

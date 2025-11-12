@@ -29,9 +29,15 @@ const CreditCardForm = ({ theme, onPayment }) => {
 
   const handlePayment = () => {
     Alert.alert(
-      'Pagamento Confirmado',
-      'Pago com sucesso!',
-      [{ text: 'OK', onPress: () => onPayment && onPayment() }]
+        'Pagamento Confirmado',
+        'Assinatura ativada com sucesso! Redirecionando para o dashboard...',
+        [{ 
+          text: 'OK', 
+          onPress: () => {
+            console.log('💳 Pagamento com cartão confirmado');
+            onPayment && onPayment();
+          }
+        }]
     );
   };
 

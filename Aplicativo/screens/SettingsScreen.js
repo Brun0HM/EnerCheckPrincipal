@@ -78,17 +78,6 @@ export default function SettingsScreen() {
         <View style={styles.contentContainer}>
           {renderComponent()}
         </View>
-
-        {/* Debug: Status do tema */}
-        <View style={[styles.debugContainer, { 
-          backgroundColor: currentTheme.cardBg, 
-          borderColor: currentTheme.cardBorder 
-        }]}>
-          <Text style={[styles.debugText, { color: currentTheme.textSecondary }]}>
-            Tema: {theme} {theme === 'light' ? '☀️' : '🌙'} 
-            {isManualTheme ? ' (Manual)' : ' (Sistema)'}
-          </Text>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );

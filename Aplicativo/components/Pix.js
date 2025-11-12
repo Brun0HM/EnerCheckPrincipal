@@ -5,9 +5,15 @@ import { Ionicons } from '@expo/vector-icons';
 const Pix = ({ theme, onPayment }) => {
   const handlePixPayment = () => {
     Alert.alert(
-      'QR Code Gerado',
-      'Pago com sucesso!',
-      [{ text: 'OK', onPress: () => onPayment && onPayment() }]
+        'PIX Confirmado',
+        'Assinatura ativada com sucesso! Redirecionando para o dashboard...',
+        [{ 
+          text: 'OK', 
+          onPress: () => {
+            console.log('📱 Pagamento PIX confirmado');
+            onPayment && onPayment();
+          }
+        }]
     );
   };
 

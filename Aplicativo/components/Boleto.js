@@ -3,14 +3,19 @@ import { View, Text, StyleSheet, Pressable, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const Boleto = ({ theme, onPayment }) => {
-  const handleBoletoPayment = () => {
-    Alert.alert(
-      'Boleto Gerado',
-      'Pago com sucesso!',
-      [{ text: 'OK', onPress: () => onPayment && onPayment() }]
-    );
-  };
-
+    const handleBoletoPayment = () => {
+        Alert.alert(
+          'Boleto Gerado',
+          'Boleto gerado com sucesso! Assim que o pagamento for confirmado, sua assinatura será ativada.',
+          [{ 
+            text: 'OK', 
+            onPress: () => {
+              console.log('📄 Boleto gerado');
+              onPayment && onPayment();
+            }
+          }]
+        );
+      };
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>
