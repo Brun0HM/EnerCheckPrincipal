@@ -6,16 +6,16 @@ import {
   StyleSheet 
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute, useNavigation } from '@react-navigation/native';
-import { CommonActions } from '@react-navigation/native'; // Import separado
+import { useNavigation, useRoute} from '@react-navigation/native';
 import ResumoPedido from '../components/ResumoPedido';
 import MetodoPagamento from '../components/MetodoPagamento';
 import CreditCardForm from '../components/CreditCardForm';
 import Pix from '../components/Pix';
 import Boleto from '../components/Boleto';
 import { useTheme } from '../contexts/ThemeContext';
+import { Alert } from 'react-native';
 
-export default function FinalizarEscolhaAssinaturaScreen() {
+export default function FinalizarEscolhaAssinaturaScreen({setIsAuthenticated }) {
   const { theme, isLoaded } = useTheme();
   const route = useRoute();
   const navigation = useNavigation();
@@ -80,15 +80,20 @@ export default function FinalizarEscolhaAssinaturaScreen() {
   };
 
   const handlePaymentSuccess = () => {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [
-          { name: 'Geral' }, 
-        ],
-      })
-    );
-
+Alert.alert('Sucesso!', 'Pagamento realizado com sucesso!', [
+      {
+        text: 'OK',
+        onPress: () => {
+          if (setIsAuthenticated) {
+            // Novo usuário - autentica e vai para app principal
+            setIsAuthenticated(true);
+          } else {
+            // Usuário já logado - volta para configurações
+            navigation.navigate('Geral', { screen: 'GeralMain' });
+          }
+        }
+      }
+    ]);
     // Opcional: Mostrar uma mensagem de sucesso
     console.log('✅ Pagamento realizado com sucesso! Redirecionando para dashboard...');
   };

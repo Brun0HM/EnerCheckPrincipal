@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { 
-  SafeAreaView,
   ScrollView,
   View,
   Text,
@@ -46,14 +45,14 @@ export default function LoginScreen({ navigation }) {
   const handleLogin = () => {
     if (username === 'admin' && password === '1234') {
       Alert.alert('Sucesso', `Login bem-sucedido!${rememberMe ? ' (Lembrar ativado)' : ''}`);
-      // navigation.navigate('GeralScreen');
+      setIsAuthenticated(true);
     } else {
       Alert.alert('Erro', 'Usuário ou senha incorretos.');
     }
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.bg }]}>
+    <View style={[styles.container, { backgroundColor: theme.bg }]}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Cabeçalho */}
         <View style={styles.header}>
@@ -157,13 +156,13 @@ export default function LoginScreen({ navigation }) {
           <Text style={[styles.footerText, { color: theme.textSecondary }]}>
             Não tem uma conta?
           </Text>
-          <Pressable onPress={() => navigation?.navigate?.('Registrar')}
+          <Pressable onPress={() => navigation?.navigate?.('Register')}
                     style={styles.loginLinkContainer}>
             <Text style={[styles.footerLink, { color: theme.primary }]}> Criar conta</Text>
           </Pressable>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
