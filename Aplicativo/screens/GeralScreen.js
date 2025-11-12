@@ -111,17 +111,6 @@ export default function GeralScreen() {
             theme={currentTheme}
           />
         </View>
-
-        {/* Debug: Status do tema */}
-        <View style={[styles.debugContainer, { 
-          backgroundColor: currentTheme.cardBg, 
-          borderColor: currentTheme.cardBorder 
-        }]}>
-          <Text style={[styles.debugText, { color: currentTheme.textSecondary }]}>
-            Tema: {theme} {theme === 'light' ? '☀️' : '🌙'} 
-            {isManualTheme ? ' (Manual)' : ' (Sistema)'}
-          </Text>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -177,16 +166,5 @@ const styles = StyleSheet.create({
   },
   cardSubtitle: {
     fontSize: 14,
-  },
-  debugContainer: {
-    padding: 12,
-    borderRadius: 8,
-    borderWidth: 1,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  debugText: {
-    fontSize: 14,
-    fontWeight: '500',
   },
 });

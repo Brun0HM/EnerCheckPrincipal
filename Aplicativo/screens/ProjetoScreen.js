@@ -232,18 +232,6 @@ export default function ProjetoScreen() {
             </Text>
           </View>
         )}
-
-        {/* Debug: Status do tema */}
-        <View style={[styles.debugContainer, { 
-          backgroundColor: currentTheme.cardBg, 
-          borderColor: currentTheme.cardBorder,
-          marginTop: 12 
-        }]}>
-          <Text style={[styles.debugText, { color: currentTheme.textSecondary }]}>
-            Tema: {theme} {theme === 'light' ? '☀️' : '🌙'} 
-            {isManualTheme ? ' (Manual)' : ' (Sistema)'}
-          </Text>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -316,20 +304,5 @@ const styles = StyleSheet.create({
   secondaryButtonText: {
     fontSize: 16,
     fontWeight: '600',
-  },
-  debugContainer: {
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    marginTop: 20,
-  },
-  debugTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  debugText: {
-    fontSize: 14,
-    lineHeight: 20,
   },
 });

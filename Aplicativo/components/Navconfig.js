@@ -47,7 +47,7 @@ const Navconfig = ({ onItemClick, theme }) => {
     <View style={styles.container}>
       {/* Menu para mobile com toggle */}
       <View style={[styles.mobileMenu, { backgroundColor: theme.inputBg }]}>
-        <View style={[styles.selectedItem, { backgroundColor: '#ffffff' }]}>
+        <View style={[styles.selectedItem, { backgroundColor: theme.cardBg }]}>
           <Ionicons 
             name={menuItems.find(item => item.key === activeItem)?.icon} 
             size={20} 
