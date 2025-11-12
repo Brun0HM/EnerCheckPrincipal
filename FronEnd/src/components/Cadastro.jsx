@@ -1,17 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router";
+import apiService from "../../services/api";
 import "../App.css";
 const Cadastro = () => {
+  // Criar usuarios
+  const inputNomeCompleto = useRef();
+  const inputEmail = useRef();
+  const inputEmpresa = useRef();
+  const inputSenha = useRef();
+  const inputNumeroCrea = useRef();
+
+  // Função que cria usuarios na API
+  async function handleCreateUser(event) {
+    event.preventDefault();
+    try {
+      await apiService.createUser(
+        inputEmail.current.value,
+        inputSenha.current.value,
+        inputNomeCompleto.current.value,
+        inputNumeroCrea.current.value,
+        inputEmpresa.current.value
+      );
+      inputEmail.current.value = ""; // Limpa o campo
+      inputSenha.current.value = ""; // Limpa o campo
+      inputNomeCompleto.current.value = ""; // Limpa o campo
+      inputNumeroCrea.current.value = ""; // Limpa o campo
+      inputEmpresa.current.value = ""; // Limpa o campo
+    } catch (error) {
+      console.error("Erro ao criar usuário:", error);
+    }
+  }
+
   const navigate = useNavigate();
 
   // Estados para os campos do formulário
   const [formData, setFormData] = useState({
-    nome: "",
-    sobrenome: "",
+    nomeCompleto: "",
     email: "",
     empresa: "",
     senha: "",
-    confirmarSenha: "",
+    Crea: "",
     aceitaTermos: false,
     receberAtualizacoes: false,
   });
@@ -29,6 +57,11 @@ const Cadastro = () => {
     return emailRegex.test(email);
   };
 
+  const valitadeCrea = (Crea) => {
+    const creaRegex = /^\d{6}$/;
+    return creaRegex.test(Crea);
+  };
+
   // Valida a força da senha
 
   const validatePassword = (password) => {
@@ -39,7 +72,12 @@ const Cadastro = () => {
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
     return {
-      isValid: minLength && hasUpperCase && hasLowerCase && hasNumbers,
+      isValid:
+        minLength &&
+        hasUpperCase &&
+        hasLowerCase &&
+        hasNumbers &&
+        hasSpecialChar,
       minLength,
       hasUpperCase,
       hasLowerCase,
@@ -55,17 +93,10 @@ const Cadastro = () => {
     const newErrors = {};
 
     // Validação do nome
-    if (!formData.nome.trim()) {
-      newErrors.nome = "Nome é obrigatório";
-    } else if (formData.nome.trim().length < 2) {
-      newErrors.nome = "Nome deve ter pelo menos 2 caracteres";
-    }
-
-    // Validação do sobrenome
-    if (!formData.sobrenome.trim()) {
-      newErrors.sobrenome = "Sobrenome é obrigatório";
-    } else if (formData.sobrenome.trim().length < 2) {
-      newErrors.sobrenome = "Sobrenome deve ter pelo menos 2 caracteres";
+    if (!formData.nomeCompleto.trim()) {
+      newErrors.nomeCompleto = "Nome completo é obrigatório";
+    } else if (formData.nomeCompleto.trim().length < 2) {
+      newErrors.nomeCompleto = "Nome completo deve ter pelo menos 2 caracteres";
     }
 
     // Validação do email
@@ -82,15 +113,18 @@ const Cadastro = () => {
       const passwordValidation = validatePassword(formData.senha);
       if (!passwordValidation.isValid) {
         newErrors.senha =
-          "Senha deve ter pelo menos 8 caracteres, incluindo maiúscula, minúscula e número";
+          "A senha precisa ter 8+ caracteres, maiúscula, minúscula, número e caractere especial.";
       }
     }
 
-    // Validação da confirmação de senha
-    if (!formData.confirmarSenha) {
-      newErrors.confirmarSenha = "Confirmação de senha é obrigatória";
-    } else if (formData.senha !== formData.confirmarSenha) {
-      newErrors.confirmarSenha = "Senhas não coincidem";
+    // Validação do crea
+    if (!formData.Crea) {
+      newErrors.Crea = "O CREA é obrigatório";
+    } else {
+      const creaIsValid = valitadeCrea(formData.Crea);
+      if (!creaIsValid) {
+        newErrors.Crea = "CREA inválido. Deve conter 6 dígitos.";
+      }
     }
 
     // Validação dos termos
@@ -110,18 +144,29 @@ const Cadastro = () => {
       [field]: value,
     }));
 
-    // Remove erro do campo quando o usuário começa a digitar
-    if (errors[field]) {
+    // Validação em tempo real para a senha, mas só mostra o erro se já foi submetido
+    if (field === "senha" && isSubmitted) {
+      const passwordValidation = validatePassword(value);
+      if (!passwordValidation.isValid) {
+        setErrors((prev) => ({
+          ...prev,
+          senha:
+            "A senha precisa ter 8+ caracteres, maiúscula, minúscula, número e caractere especial.",
+        }));
+      } else {
+        setErrors((prev) => {
+          const newErrors = { ...prev };
+          delete newErrors.senha;
+          return newErrors;
+        });
+      }
+    } else if (errors[field]) {
+      // Remove erro dos outros campos quando o usuário começa a digitar
       setErrors((prev) => {
         const newErrors = { ...prev };
-        delete newErrors[field]; // Remove completamente a chave do objeto
+        delete newErrors[field];
         return newErrors;
       });
-    }
-
-    // Reset do estado de submitted quando o usuário modifica campos
-    if (isSubmitted) {
-      setIsSubmitted(false);
     }
   };
 
@@ -140,11 +185,10 @@ const Cadastro = () => {
    */
   const canSubmit = () => {
     return (
-      formData.nome.trim() &&
-      formData.sobrenome.trim() &&
+      formData.nomeCompleto.trim() &&
       formData.email.trim() &&
       formData.senha &&
-      formData.confirmarSenha &&
+      formData.Crea &&
       formData.aceitaTermos &&
       !hasActiveErrors()
     );
@@ -161,11 +205,9 @@ const Cadastro = () => {
     setErrors(formErrors);
 
     if (Object.keys(formErrors).length === 0) {
-      console.log("Cadastro válido:", formData);
-      // Aqui você pode adicionar a lógica de cadastro (API call)
-      alert("Cadastro realizado com sucesso!");
-      navigate("/planos");
-    } 
+      handleCreateUser(e); // Chama a função de criar usuário
+      navigate("/login"); // Redireciona para a tela de login
+    }
   };
 
   return (
@@ -187,57 +229,35 @@ const Cadastro = () => {
             </p>
           </div>
 
-          {/* Campos Nome e Sobrenome - linha dupla */}
-          <div className="mb-3 gap-2 d-flex">
+          {/* Campo Nome Completo */}
+          <div className="mb-3">
             <div className="flex-fill">
-              <h6 style={{ color: "var(--text)" }}>Nome *</h6>
+              <h6 style={{ color: "var(--text)" }}>Nome Completo *</h6>
               <input
                 className={`w-100 form-control theme-input ${
-                  errors.nome ? "is-invalid" : ""
+                  errors.nomeCompleto ? "is-invalid" : ""
                 }`}
-                placeholder="Nome"
+                placeholder="Nome Completo"
                 type="text"
-                value={formData.nome}
-                onChange={(e) => handleInputChange("nome", e.target.value)}
+                ref={inputNomeCompleto}
+                value={formData.nomeCompleto}
+                onChange={(e) =>
+                  handleInputChange("nomeCompleto", e.target.value)
+                }
                 style={{
                   backgroundColor: "var(--input-bg)",
-                  borderColor: errors.nome ? "#dc3545" : "var(--input-border)",
-                  color: "var(--text)",
-                }}
-              />
-              {errors.nome && (
-                <div
-                  className="invalid-feedback d-block"
-                  style={{ color: "#dc3545" }}
-                >
-                  {errors.nome}
-                </div>
-              )}
-            </div>
-            <div className="flex-fill">
-              <h6 style={{ color: "var(--text)" }}>Sobrenome *</h6>
-              <input
-                className={`w-100 form-control theme-input ${
-                  errors.sobrenome ? "is-invalid" : ""
-                }`}
-                placeholder="Sobrenome"
-                type="text"
-                value={formData.sobrenome}
-                onChange={(e) => handleInputChange("sobrenome", e.target.value)}
-                style={{
-                  backgroundColor: "var(--input-bg)",
-                  borderColor: errors.sobrenome
+                  borderColor: errors.nomeCompleto
                     ? "#dc3545"
                     : "var(--input-border)",
                   color: "var(--text)",
                 }}
               />
-              {errors.sobrenome && (
+              {errors.nomeCompleto && (
                 <div
                   className="invalid-feedback d-block"
                   style={{ color: "#dc3545" }}
                 >
-                  {errors.sobrenome}
+                  {errors.nomeCompleto}
                 </div>
               )}
             </div>
@@ -254,6 +274,7 @@ const Cadastro = () => {
                 }`}
                 placeholder="meu@email.com"
                 type="email"
+                ref={inputEmail}
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
                 style={{
@@ -279,6 +300,7 @@ const Cadastro = () => {
                 className="w-100 form-control theme-input"
                 placeholder="Sua empresa"
                 type="text"
+                ref={inputEmpresa}
                 value={formData.empresa}
                 onChange={(e) => handleInputChange("empresa", e.target.value)}
                 style={{
@@ -298,6 +320,7 @@ const Cadastro = () => {
                 }`}
                 placeholder="Senha (min. 8 caracteres)"
                 type="password"
+                ref={inputSenha}
                 value={formData.senha}
                 onChange={(e) => handleInputChange("senha", e.target.value)}
                 style={{
@@ -361,6 +384,15 @@ const Cadastro = () => {
                           >
                             {validation.hasNumbers ? "✓" : "✗"} Número
                           </small>
+                          <small
+                            style={{
+                              color: validation.hasSpecialChar
+                                ? "#22c55e"
+                                : "#dc3545",
+                            }}
+                          >
+                            {validation.hasSpecialChar ? "✓" : "✗"} Especial
+                          </small>
                         </>
                       );
                     })()}
@@ -369,49 +401,33 @@ const Cadastro = () => {
               )}
             </div>
 
-            {/* Campo Confirmar Senha */}
+            {/* Campo CREA */}
             <div className="mb-3">
-              <h6 style={{ color: "var(--text)" }}>Confirmar Senha *</h6>
+              <h6 style={{ color: "var(--text)" }}>CREA *</h6>
               <input
                 className={`w-100 form-control theme-input ${
-                  errors.confirmarSenha ? "is-invalid" : ""
+                  errors.Crea ? "is-invalid" : ""
                 }`}
-                placeholder="Confirme sua senha"
-                type="password"
-                value={formData.confirmarSenha}
-                onChange={(e) =>
-                  handleInputChange("confirmarSenha", e.target.value)
-                }
+                placeholder="Apenas números"
+                type="text"
+                ref={inputNumeroCrea}
+                value={formData.Crea}
+                onChange={(e) => handleInputChange("Crea", e.target.value)}
+                maxLength={6}
+                minLength={6}
                 style={{
                   backgroundColor: "var(--input-bg)",
-                  borderColor: errors.confirmarSenha
-                    ? "#dc3545"
-                    : "var(--input-border)",
+                  borderColor: errors.Crea ? "#dc3545" : "var(--input-border)",
                   color: "var(--text)",
                 }}
               />
-              {errors.confirmarSenha && (
+              {errors.Crea && (
                 <div
                   className="invalid-feedback d-block"
                   style={{ color: "#dc3545" }}
                 >
-                  {errors.confirmarSenha}
+                  {errors.Crea}
                 </div>
-              )}
-              {/* Indicador de senha coincidente */}
-              {formData.confirmarSenha && formData.senha && (
-                <small
-                  style={{
-                    color:
-                      formData.senha === formData.confirmarSenha
-                        ? "#22c55e"
-                        : "#dc3545",
-                  }}
-                >
-                  {formData.senha === formData.confirmarSenha
-                    ? "✓ Senhas coincidem"
-                    : "✗ Senhas não coincidem"}
-                </small>
               )}
             </div>
           </div>
@@ -427,11 +443,15 @@ const Cadastro = () => {
                 handleInputChange("aceitaTermos", e.target.checked)
               }
               style={{
-                backgroundColor: formData.aceitaTermos ? "var(--primary)" : "var(--input-bg)",
+                backgroundColor: formData.aceitaTermos
+                  ? "var(--primary)"
+                  : "var(--input-bg)",
                 borderColor: errors.aceitaTermos
                   ? "#dc3545"
-                  : (formData.aceitaTermos ? "var(--primary)" : "var(--input-border)"),
-                  color: "var(--text)", 
+                  : formData.aceitaTermos
+                  ? "var(--primary)"
+                  : "var(--input-border)",
+                color: "var(--text)",
               }}
             />
             <label
@@ -470,8 +490,12 @@ const Cadastro = () => {
                 handleInputChange("receberAtualizacoes", e.target.checked)
               }
               style={{
-                backgroundColor: formData.receberAtualizacoes ? "var(--primary)" : "var(--input-bg)",
-                borderColor: formData.receberAtualizacoes ? "var(--primary)" : "var(--input-border)",
+                backgroundColor: formData.receberAtualizacoes
+                  ? "var(--primary)"
+                  : "var(--input-bg)",
+                borderColor: formData.receberAtualizacoes
+                  ? "var(--primary)"
+                  : "var(--input-border)",
                 color: "var(--text)",
               }}
             />

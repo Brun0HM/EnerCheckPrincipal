@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // URL base da sua API
-const BASE_URL = "https://192.168.1.114:7257/api";
+const BASE_URL = "https://192.168.1.114:7257";
 
 // 1. Cria a instância do Axios com a URL base
 const api = axios.create({
@@ -17,7 +17,7 @@ const api = axios.create({
  * Faz a requisição e já retorna a lista filtrada (id, nome e email).
  */
 const getUser = async () => {
-  const response = await api.get("/Usuarios");
+  const response = await api.get("/api/Usuarios");
   const listaCompleta = response.data;
 
   // Mapeia a lista para retornar id, nome e email
@@ -35,7 +35,7 @@ const getUser = async () => {
  */
 const createUser = async (email, senha, nomeCompleto, numeroCrea, empresa) => {
   // O endpoint para registro pode ser diferente, ajuste se necessário
-  return await api.post("/Usuarios", {
+  return await api.post("/api/Usuarios", {
     email: email,
     senha: senha,
     nomeCompleto: nomeCompleto,
@@ -48,7 +48,7 @@ const createUser = async (email, senha, nomeCompleto, numeroCrea, empresa) => {
  * Função para deletar um usuário.
  */
 const deleteUser = async (id) => {
-  return await api.delete(`/Usuarios/${id}`);
+  return await api.delete(`/api/Usuarios/${id}`);
 };
 
 // Exporta as funções que o componente usará

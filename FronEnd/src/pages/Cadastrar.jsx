@@ -37,7 +37,7 @@ const Cadastrar = () => {
             />
           </div>
         </div>
-        <p className="fs-5" style={{ color: "var(--text-secondary)" }}>
+        <p className="fs-5 mt-5" style={{ color: "var(--text-secondary)" }}>
           Crie uma conta
         </p>
       </div>
