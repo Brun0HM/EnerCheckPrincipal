@@ -17,7 +17,6 @@ export const ThemeProvider = ({ children }) => {
   const loadTheme = async () => {
     try {
       const savedTheme = await AsyncStorage.getItem('manualTheme');
-      console.log('📱 Tema carregado:', savedTheme);
       
       if (savedTheme) {
         setManualTheme(savedTheme);
@@ -34,12 +33,9 @@ export const ThemeProvider = ({ children }) => {
   const toggleTheme = async () => {
     try {
       const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-      console.log('🔄 Mudando de', currentTheme, 'para', newTheme);
       
       setManualTheme(newTheme);
       await AsyncStorage.setItem('manualTheme', newTheme);
-      
-      console.log('✅ Tema alterado para:', newTheme);
     } catch (error) {
       console.error('❌ Erro ao alterar tema:', error);
     }

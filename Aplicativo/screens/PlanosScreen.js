@@ -15,7 +15,7 @@ export default function PlanosScreen() {
   const { theme, isLoaded } = useTheme();
     const navigation = useNavigation();
 
-  console.log('📱 PlanosScreen renderizada - tema:', theme);
+
 
   if (!isLoaded) {
     return (

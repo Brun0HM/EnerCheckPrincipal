@@ -11,10 +11,10 @@ import { useTheme } from '../contexts/ThemeContext';
 
 export default function SettingsScreen() {
   const [activeComponent, setActiveComponent] = useState("perfil");
-  const { theme, isManualTheme, isLoaded } = useTheme();
+  const { theme, isLoaded } = useTheme();
   const navigation = useNavigation();
 
-  console.log('📱 SettingsScreen renderizada - tema:', theme);
+ 
 
   if (!isLoaded) {
     return (
@@ -53,15 +53,6 @@ export default function SettingsScreen() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: currentTheme.bg }]}>
-      {/* Header customizado para manter o tema toggle */}
-      <View style={[styles.customHeader, { 
-        backgroundColor: currentTheme.cardBg,
-        borderBottomColor: currentTheme.cardBorder 
-      }]}>
-        <Text style={[styles.headerTitle, { color: currentTheme.text }]}>
-          Configurações
-        </Text>
-      </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Subtitle */}
@@ -87,21 +78,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  customHeader: {
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    alignItems: 'center',
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
+
   scrollContent: {
     padding: 20,
     paddingBottom: 100, // Espaço para tab bar flutuante

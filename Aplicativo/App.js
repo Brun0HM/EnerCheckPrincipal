@@ -13,6 +13,7 @@ import ProjetoScreen from "./screens/ProjetoScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import PlanosScreen from "./screens/PlanosScreen";
 import FinalizarEscolhaAssinaturaScreen from "./screens/FinalizarEscolhaAssinaturaScreen";
+import UploadProjetoScreen from "./screens/UploadProjetoScreen";
 
 // Importa o Context Provider
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
@@ -108,12 +109,11 @@ const SettingsStack = () => {
         ),
       }}
     >
-      <Stack.Screen 
+     <Stack.Screen 
         name="SettingsMain" 
         component={SettingsScreen}
         options={{ 
-          title: 'Configurações',
-          headerShown: false // Vai usar o header do Tab
+          headerShown: false  // Desabilita o header do Stack para usar o do Tab
         }}
       />
       <Stack.Screen 
@@ -121,7 +121,7 @@ const SettingsStack = () => {
         component={PlanosScreen}
         options={{ 
           title: 'Planos',
-          headerShown: true // Mostra header próprio
+          headerShown: true 
         }}
       />
       <Stack.Screen 
@@ -135,12 +135,34 @@ const SettingsStack = () => {
     </Stack.Navigator>
   );
 };
+const GeralStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen 
+        name="GeralMain" 
+        component={GeralScreen}
+        options={{ 
+          headerShown: false  // Desabilita o header do Stack para usar o do Tab
+        }}
+      />
+      <Stack.Screen 
+        name="UploadProjeto" 
+        component={UploadProjetoScreen}
+        options={{ 
+          title: 'Upload Projeto',
+          headerShown: false
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 
 // Navegador principal (dentro do Provider)
 const AppNavigator = () => {
   const { theme, isLoaded } = useTheme();
 
-  console.log('🚀 AppNavigator - tema:', theme, 'carregado:', isLoaded);
+
 
   if (!isLoaded) {
     return (
@@ -217,13 +239,19 @@ const AppNavigator = () => {
           },
         })}
       >
-        <Tab.Screen name="Geral" component={GeralScreen} />
+      <Tab.Screen 
+  name="Geral" 
+  component={GeralStack}  // Era GeralScreen, agora é GeralStack
+  options={{
+    headerShown: true
+  }}
+/>
         <Tab.Screen name="Projetos" component={ProjetoScreen} />
         <Tab.Screen 
           name="Configurações" 
           component={SettingsStack} 
           options={{
-            headerShown: false // O Stack vai gerenciar o header
+            headerShown: true // O Stack vai gerenciar o header
           }}
         />
       </Tab.Navigator>

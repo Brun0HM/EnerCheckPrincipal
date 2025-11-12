@@ -10,10 +10,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { InfoGeralContainer } from '../components/InfoGeralContainer';
 import { ContainerChecagem } from '../components/ContainerChecagem';
-import { useTheme } from '../contexts/ThemeContext'; // Mudança aqui
+import { useTheme } from '../contexts/ThemeContext'; 
+import { Ionicons } from '@expo/vector-icons';
 
 export default function ProjetoScreen() {
-  const { theme, isManualTheme, isLoaded } = useTheme(); // Usando ThemeContext
+  const { theme,  isLoaded } = useTheme(); // Usando ThemeContext
   const [analise, setAnalise] = useState('');
 
   // Estados para comentários (baseado no DashboardProjeto.jsx original)
@@ -26,7 +27,7 @@ export default function ProjetoScreen() {
   const pontuacaoConformidade = 90;
   const pontuacaoInstalacao = 50;
 
-  console.log('📱 ProjetoScreen renderizada - tema:', theme);
+
 
   if (!isLoaded) {
     return (
@@ -198,7 +199,10 @@ export default function ProjetoScreen() {
               ]}
               onPress={() => alert('Baixando relatório...')}
             >
-              <Text style={styles.primaryButtonText}>📄 Baixar Relatório</Text>
+               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons name="download" size={18} color="#ffffff" style={{ marginRight: 8 }} />
+                <Text style={styles.primaryButtonText}>Baixar Relatório</Text>
+              </View>
             </Pressable>
 
             <Pressable
@@ -211,27 +215,16 @@ export default function ProjetoScreen() {
               ]}
               onPress={() => alert('Reprocessando projeto...')}
             >
-              <Text style={[styles.secondaryButtonText, { color: currentTheme.primary }]}>
-                🔄 Reprocessar
-              </Text>
+             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons name="refresh" size={18} color={currentTheme.primary} style={{ marginRight: 8 }} />
+                <Text style={[styles.secondaryButtonText, { color: currentTheme.primary }]}>
+                  Reprocessar
+                </Text>
+              </View>
             </Pressable>
           </View>
         </View>
 
-        {/* Debug: Mostrar dados da análise se existir */}
-        {analise && (
-          <View style={[styles.debugContainer, { 
-            backgroundColor: currentTheme.cardBg, 
-            borderColor: currentTheme.cardBorder 
-          }]}>
-            <Text style={[styles.debugTitle, { color: currentTheme.text }]}>
-              Dados da Análise:
-            </Text>
-            <Text style={[styles.debugText, { color: currentTheme.textSecondary }]}>
-              {typeof analise === 'string' ? analise.substring(0, 200) + '...' : 'Dados carregados'}
-            </Text>
-          </View>
-        )}
       </ScrollView>
     </SafeAreaView>
   );
