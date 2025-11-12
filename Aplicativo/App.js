@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { View, Pressable, StyleSheet, Text } from 'react-native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack'; 
-import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme, DarkTheme, getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { enableScreens } from "react-native-screens";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
 // Importa as telas
@@ -14,6 +15,8 @@ import SettingsScreen from "./screens/SettingsScreen";
 import PlanosScreen from "./screens/PlanosScreen";
 import FinalizarEscolhaAssinaturaScreen from "./screens/FinalizarEscolhaAssinaturaScreen";
 import UploadProjetoScreen from "./screens/UploadProjetoScreen";
+import LoginScreen from "./screens/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen";
 
 // Importa o Context Provider
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
@@ -86,6 +89,8 @@ const SettingsStack = () => {
   const { theme } = useTheme();
   const navigationTheme = theme === 'light' ? lightTheme : darkTheme;
 
+  
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -121,7 +126,7 @@ const SettingsStack = () => {
         component={PlanosScreen}
         options={{ 
           title: 'Planos',
-          headerShown: true 
+          headerShown: true
         }}
       />
       <Stack.Screen 
@@ -135,6 +140,32 @@ const SettingsStack = () => {
     </Stack.Navigator>
   );
 };
+
+const AuthStack = ({ setIsAuthenticated }) => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Login">
+        {(props) => <LoginScreen {...props} setIsAuthenticated={setIsAuthenticated} />}
+      </Stack.Screen>
+      <Stack.Screen 
+        name="Register" 
+        component={RegisterScreen}
+      />
+      <Stack.Screen 
+        name="Planos" 
+        component={PlanosScreen}
+        options={{ 
+          headerShown: true,
+          title: 'Escolha seu Plano'
+        }}
+      />
+      <Stack.Screen name="FinalizarEscolhaAssinatura">
+        {(props) => <FinalizarEscolhaAssinaturaScreen {...props} setIsAuthenticated={setIsAuthenticated} />}
+      </Stack.Screen>
+    </Stack.Navigator>
+  );
+};
+
 const GeralStack = () => {
   return (
     <Stack.Navigator>
@@ -159,7 +190,7 @@ const GeralStack = () => {
 
 
 // Navegador principal (dentro do Provider)
-const AppNavigator = () => {
+const AppContent = ({ isAuthenticated, setIsAuthenticated }) => {
   const { theme, isLoaded } = useTheme();
 
 
@@ -173,9 +204,14 @@ const AppNavigator = () => {
   }
 
   const navigationTheme = theme === 'light' ? lightTheme : darkTheme;
-
+  const getTabBarVisibility = (route) => {
+    const routeName = getFocusedRouteNameFromRoute(route) ?? 'SettingsMain';
+    // Esconde o header do Tab nas telas internas do Stack
+    return routeName === 'SettingsMain';
+  };
   return (
     <NavigationContainer theme={navigationTheme}>
+      {isAuthenticated ? (
       <Tab.Navigator
         screenOptions={({ route }) => ({
           headerShown: true,
@@ -250,23 +286,34 @@ const AppNavigator = () => {
         <Tab.Screen 
           name="Configurações" 
           component={SettingsStack} 
-          options={{
-            headerShown: true // O Stack vai gerenciar o header
-          }}
+          options={({ route }) => ({
+            headerShown: getTabBarVisibility(route), 
+            headerTitle: 'Configurações',
+            headerRight: () => (
+              <ThemeToggleButton colors={navigationTheme.colors} />
+            ),
+         
+          })}
         />
       </Tab.Navigator>
+       ) : (
+        <AuthStack setIsAuthenticated={setIsAuthenticated} />
+      )}
     </NavigationContainer>
   );
 };
 
 // App principal com Provider
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider>
-        <AppNavigator />
-      </ThemeProvider>
-    </GestureHandlerRootView>
+    <SafeAreaProvider>
+    <ThemeProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <AppContent isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
+      </GestureHandlerRootView>
+    </ThemeProvider>
+    </SafeAreaProvider>
   );
 }
 

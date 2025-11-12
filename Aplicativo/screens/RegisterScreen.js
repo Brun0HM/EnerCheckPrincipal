@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import {
-  SafeAreaView,
   ScrollView,
   View,
   Text,
@@ -68,7 +67,7 @@ export default function RegisterScreen({ navigation }) {
   }), [senha]);
 
   const handleRegister = () => {
-    if (!nome || !sobrenome || !email || !empresa || !senha || !confirmarSenha) {
+    if (!nome || !sobrenome || !email || !senha || !confirmarSenha) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
     }
@@ -88,10 +87,11 @@ export default function RegisterScreen({ navigation }) {
       return;
     }
     Alert.alert('Cadastro realizado!', `Bem-vindo(a), ${nome}!`);
+  navigation.navigate('Planos');
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.bg }]}>
+    <View style={[styles.container, { backgroundColor: theme.bg }]}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
           <Text style={[styles.title, { color: theme.text }]}>EnerCheck</Text>
@@ -115,7 +115,7 @@ export default function RegisterScreen({ navigation }) {
           </View>
 
           <Input label="E-mail" value={email} onChangeText={setEmail} placeholder="Digite seu e-mail" keyboardType="email-address" theme={theme} />
-          <Input label="Empresa" value={empresa} onChangeText={setEmpresa} placeholder="Digite o nome da empresa" theme={theme} />
+          <Input label="Empresa" value={empresa} onChangeText={setEmpresa} placeholder="Digite o nome da empresa(opcional)" theme={theme} />
 
           <Input label="Senha" value={senha} onChangeText={setSenha} placeholder="Digite sua senha" secureTextEntry theme={theme} />
 
@@ -153,7 +153,7 @@ export default function RegisterScreen({ navigation }) {
 
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
