@@ -38,7 +38,7 @@ export default function FinalizarEscolhaAssinaturaScreen() {
   const [activeBoleto, setActiveBoleto] = useState(false);
   const [activePix, setActivePix] = useState(false);
 
-  console.log('📱 FinalizarEscolhaAssinaturaScreen renderizada - tema:', theme);
+ 
 
   if (!isLoaded) {
     return (
