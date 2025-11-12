@@ -2,9 +2,10 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const Assinaturas = ({ theme }) => {
+const Assinaturas = ({ theme, navigation }) => {
   const handleAlterarPlano = () => {
-    alert('Navegando para alteração de plano...');
+    navigation.navigate('Planos');
+    
   };
 
   const handleCancelarAssinatura = () => {
