@@ -53,12 +53,6 @@ const Login = () => {
 
     const newErrors = {};
 
-    // Validar email
-    if (!email.trim()) {
-      newErrors.email = "Email é obrigatório";
-    } else if (!validateEmail(email)) {
-      newErrors.email = "Email inválido";
-    }
 
     // Validar senha
     if (!senha.trim()) {
@@ -77,7 +71,7 @@ const Login = () => {
   };
 
   return (
-    <di v
+    <div
       className="row col-11 col-xl-3 p-4 border border-2 rounded-4 shadow shadow-sm theme-card"
       style={{
         backgroundColor: "var(--card-bg)",
@@ -181,7 +175,7 @@ const Login = () => {
           </button>
         </div>
       </form>
-    </di>
+    </div>
   );
 };
 

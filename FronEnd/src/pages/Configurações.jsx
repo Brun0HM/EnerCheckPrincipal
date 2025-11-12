@@ -33,7 +33,7 @@ const Configurações = () => {
         }}
       >
         <div className="container">
-          <div className="d-flex flex-column  align-items-center justify-content-center pt-5 mt-5 ">
+          <div className="d-flex flex-column  align-items-center justify-content-center pt-5 mt-5">
             <Navconfig onItemClick={setActiveComponent} />{" "}
             <div className="w-100" style={{ height: 850 }}>
               <div className="mt-4 justify-content-center d-flex">

@@ -16,7 +16,7 @@ const Assinaturas = () => {
           </div>
           <span
             className="bg-primary bg-opacity-10 p-1 px-3 rounded-5 fw-semibold"
-            style={{ color: "#0004d4" }}
+            style={{ color: "var(--text)" }}
           >
             Ativo
           </span>
@@ -46,7 +46,9 @@ const Assinaturas = () => {
                 <p className="m-0">Expira em 12/2026</p>
               </div>
             </div>
-            <button className="btn btn-outline-dark fw-semibold">Editar</button>
+            <button className="btn btn-outline-primary fw-semibold">
+              Editar
+            </button>
           </div>
         </div>
       </div>
@@ -63,7 +65,7 @@ const Assinaturas = () => {
               className="px-2 py-1 rounded-5 fw-semibold"
               style={{
                 backgroundColor: "#a0f8a496",
-                color: "#008528",
+                color: "var(--text)",
                 fontSize: 12,
               }}
             >
@@ -80,7 +82,7 @@ const Assinaturas = () => {
               className="px-2 py-1 rounded-5 fw-semibold"
               style={{
                 backgroundColor: "#a0f8a496",
-                color: "#008528",
+                color: "var(--text)",
                 fontSize: 12,
               }}
             >
@@ -97,7 +99,7 @@ const Assinaturas = () => {
               className="px-2 py-1 rounded-5 fw-semibold"
               style={{
                 backgroundColor: "#a0f8a496",
-                color: "#008528",
+                color: "var(--text)",
                 fontSize: 12,
               }}
             >
