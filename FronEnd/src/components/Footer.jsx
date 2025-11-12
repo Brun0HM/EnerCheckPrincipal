@@ -1,7 +1,7 @@
 import React from "react";
 const DataAtual = new Date();
 const AnoAtual = DataAtual.getUTCFullYear();
-import LogoClara from "../assets/LogoBigdark.svg";
+import LogoClara from "../assets/LogoEsticadaBranca.png";
 
 const Footer = () => {
   return (
@@ -12,8 +12,7 @@ const Footer = () => {
             <div className="d-flex align-items-center mb-1 mb-md-3">
               <img
                 src={LogoClara}
-                width={200}
-                height={200}
+                height={90}
                 alt="Logo"
                 className="logo"
               />
