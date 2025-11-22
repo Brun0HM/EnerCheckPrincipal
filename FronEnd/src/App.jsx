@@ -6,6 +6,7 @@ import "./styles/main.scss";
 import pesso1 from "./assets/FotoPerfilPessoa01.png";
 import pesso2 from "./assets/FotoPerfilPessoa02.png";
 import pesso3 from "./assets/FotoPerfilPessoa03.png";
+import Print from "./assets/Print.png";
 import { useNavigate } from "react-router";
 import ScrollAnimation from "./components/ScrollAnimation";
 
@@ -19,7 +20,10 @@ const App = () => {
         minHeight: "100vh",
       }}
     >
-      <div className="container-fluid text-center d-flex flex-column align-items-center justify-content-center">
+      <div
+        className="container-fluid text-center d-flex flex-column align-items-center justify-content-center"
+        id="inicio"
+      >
         <div className={`mainContent`}>
           <div className="container text-center d-flex flex-column align-items-center justify-content-center">
             <ScrollAnimation animation="fadeInDown" delay={200}>
@@ -49,7 +53,7 @@ const App = () => {
               <ScrollAnimation animation="fadeInUp" delay={700}>
                 <div className="d-flex gap-3 justify-content-center">
                   <button className="btn btn-primary fw-semibold">
-                    <span onClick={() => navigate("/planos")}>
+                    <span onClick={() => navigate("/cadastro")}>
                       Experimente Agora
                     </span>
                   </button>
@@ -62,11 +66,7 @@ const App = () => {
 
             <ScrollAnimation animation="scaleIn" delay={900}>
               <div>
-                <img
-                  src="https://placehold.co/900x900"
-                  alt="Hero Image"
-                  className="img-fluid mt-5"
-                />
+                <img src={Print} alt="Hero Image" className="img-fluid mt-5" />
               </div>
             </ScrollAnimation>
             <span className="mb-5" id="recursos"></span>
@@ -254,15 +254,15 @@ const App = () => {
                 </ScrollAnimation>
 
                 <ScrollAnimation animation="bounceIn" delay={300}>
-                  <div className="pb-5">
-                    <button className="btn btn-primary fw-semibold">
+                  <div className="pb-5  d-flex flex-column flex-md-row justify-content-center">
+                    <button className="btn btn-primary fw-semibold mb-4 mb-md-0 col-12 col-md-3">
                       <span onClick={() => navigate("/cadastro")}>
                         Comece Gratuitamente
                       </span>
                     </button>
-                    <button className="btn btn-outline-primary fw-semibold ms-3">
+                    <button className="btn btn-outline-primary fw-semibold ms-0 ms-md-3 col-12 col-md-3">
                       <a
-                        className="text-decoration-none text-white"
+                        className="text-decoration-none"
                         href="https://wa.me/5514997912841"
                         target="_blank"
                         rel="noopener noreferrer"

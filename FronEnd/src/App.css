@@ -1,7 +1,18 @@
+:root {
+  --bs-body-bg: #121212 !important;
+}
+
 body {
   margin: 0 !important;
   padding: 0 !important;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
 }
 
 .conformidade {
@@ -25,7 +36,19 @@ body {
   background-color: #f8f8f8 !important;
 }
 
-
 #uploadContainer {
   border: dashed;
 }
+.hover {
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.hover:hover {
+  transform: scale(1.2);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+

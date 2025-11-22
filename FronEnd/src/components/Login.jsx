@@ -53,12 +53,6 @@ const Login = () => {
 
     const newErrors = {};
 
-    // Validar email
-    if (!email.trim()) {
-      newErrors.email = "Email é obrigatório";
-    } else if (!validateEmail(email)) {
-      newErrors.email = "Email inválido";
-    }
 
     // Validar senha
     if (!senha.trim()) {

@@ -28,9 +28,11 @@ const VisualizarLista = ({ item, onClose, title = "Visualizar" }) => {
             {item.usuarioNome && renderField("Nome", item.usuarioNome)}
             {item.nome && renderField("Nome", item.nome)}
             
+            {item.descricao && renderField("Descrição", item.descricao)}
             {item.tipoProjeto && renderField("Tipo Projeto", item.tipoProjeto)}
             {item.tipoConta && renderField("Tipo Conta", item.tipoConta)}
-            {item.data && renderField("Data", item.data)}
+            {item.dataInicio && renderField("Data Início", item.dataInicio)}
+            {item.dataFim && renderField("Data Fim", item.dataFim)}
             {item.statusProjeto && renderField("Status", item.statusProjeto)}
             
             {item.crea && renderField("CREA", item.crea)}

@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import "../styles/main.scss";
-import { useTheme } from "../hooks/useTheme"; 
+import { useTheme } from "../hooks/useTheme";
 import { useNavigate } from "react-router";
+import LogoEscura from "../assets/LogoGrandeEscura.svg";
+import LogoClara from "../assets/LogoGrandeClara.svg";
 
 const Header = () => {
   const [MenuOpen, setMenuOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme(); 
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   return (
@@ -16,21 +18,16 @@ const Header = () => {
             {/* Logo e título - adaptado ao tema */}
             <div className="col-6 col-lg-auto" onClick={() => navigate("/")}>
               <a
-                className="d-flex align-items-center ms-3 ms-lg-5 text-decoration-none"
-                href="/*"
+                className="d-flex align-items-center ms-3 ms-lg-5 text-decoration-none cursor-pointer"
+                href="#inicio"
               >
-                <div
-                  className="btn text-light fw-bold"
-                  style={{ backgroundColor: "var(--primary)" }}
-                >
-                  <i className="bi bi-lightning-charge"></i>
-                </div>
-                <h4
-                  className="fw-bolder fs-3 ms-2 mb-0"
-                  style={{ color: "var(--text)" }}
-                >
-                  Enercheck
-                </h4>
+                <img
+                  src={theme === "light" ? LogoEscura : LogoClara}
+                  width={70}
+                  height={70}
+                  alt="Logo"
+                  className="logo"
+                />
               </a>
             </div>
 
@@ -93,7 +90,7 @@ const Header = () => {
                     <li className="nav-item">
                       <button
                         className="btn mx-3 my-1 btn-theme-secondary"
-                        onClick={() => navigate("/login")}
+                        onClick={() => navigate("/login")} // Chama a função de fade in e redirecionamento
                         style={{
                           backgroundColor: "var(--button-secondary)",
                           borderColor: "var(--card-border)",
@@ -106,7 +103,7 @@ const Header = () => {
                     <li className="nav-item">
                       <button
                         className="btn mx-3 my-1"
-                        onClick={() => navigate("/planos")}
+                        onClick={() => navigate("/cadastro")}
                         style={{
                           backgroundColor: "var(--primary)",
                           borderColor: "var(--primary)",

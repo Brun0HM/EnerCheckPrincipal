@@ -3,7 +3,7 @@ import React from "react";
 const ResumoPedido = () => {
   return (
     <>
-      <div className="col-12 col-md-3 p-4 border border-3 rounded-4 shadow">
+    
         <h5 className="fw-bold">Resumo do Pedido</h5>
         <div className="Plano">
           <div className="preco fw-bold d-flex justify-content-between">
@@ -58,7 +58,6 @@ const ResumoPedido = () => {
           <h5 className="">Total</h5>
           <h4 className="fw-bold">R$00.00</h4>
         </div>
-      </div>
     </>
   );
 };

@@ -1,7 +1,9 @@
 import React from "react";
 import { CardStatusProjetoDashboard } from "../components/CardStatusProjetoDashboard";
 import { ProjetosRecentes } from "../components/ProjetosRecentes";
+import { useNavigate } from "react-router";
 const DashboardGeral = () => {
+  const navigate = useNavigate();
   return (
     <div
       style={{
@@ -118,6 +120,7 @@ const DashboardGeral = () => {
                   borderColor: "var(--primary)",
                   color: "#ffffff",
                 }}
+                onClick={() => navigate("/uploadProjeto")}
               >
                 Fazer Upload
               </button>

@@ -1,5 +1,13 @@
 import React from "react";
+import {useNavigate } from "react-router";
 const TiposPlanos = (props) => {
+  const navigate = useNavigate();
+
+
+  const handleEnviarInfo = () =>{
+    navigate("/comecarAssinatura")
+  }
+
   return (
     <div className="d-flex flex-column align-items-center justify-content-center h-100">
       <div
@@ -90,6 +98,7 @@ const TiposPlanos = (props) => {
                 borderColor: "var(--primary)",
                 color: "#ffffff",
               }}
+              onClick={handleEnviarInfo}
             >
               Escolher {props.title}
             </button>

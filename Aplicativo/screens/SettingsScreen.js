@@ -1,36 +1,109 @@
-import { StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useState } from 'react';
+import { ScrollView, View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import Navconfig from '../components/Navconfig';
+import Perfil from '../components/Perfil';
+import Seguranca from '../components/Seguranca';
+import Notificacoes from '../components/Notificacoes';
+import Assinaturas from '../components/Assinaturas';
+import { useTheme } from '../contexts/ThemeContext';
 
-export default function SettingScreen() {
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.text}>⚙️ Tela de Configurações</Text>
-      <View style={styles.espaco}>
-        <Text style={styles.butao}>Planos</Text>
-        <Text style={styles.butao}>Perfil</Text>
-        <Text style={styles.butao}>Aplicativo</Text>
+export default function SettingsScreen() {
+  const [activeComponent, setActiveComponent] = useState("perfil");
+  const { theme, isLoaded } = useTheme();
+  const navigation = useNavigation();
+
+ 
+
+  if (!isLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Carregando tema...</Text>
       </View>
+    );
+  }
+
+  // Cores diretas baseadas no tema - mesmas das outras telas
+  const currentTheme = {
+    bg: theme === 'light' ? '#ffffff' : '#131313',
+    text: theme === 'light' ? '#131313' : '#ffffff',
+    textSecondary: theme === 'light' ? '#606060' : '#b8bcc8',
+    primary: '#0D6EFD',
+    cardBg: theme === 'light' ? '#ffffff' : '#2a2a2a',
+    cardBorder: theme === 'light' ? '#e0e0e0' : '#3a3a3a',
+    inputBg: theme === 'light' ? '#f8f9fa' : '#2d2d2d',
+    inputBorder: theme === 'light' ? '#ced4da' : '#555555',
+  };
+
+  const renderComponent = () => {
+    switch (activeComponent) {
+      case "perfil":
+        return <Perfil theme={currentTheme} />;
+      case "seguranca":
+        return <Seguranca theme={currentTheme} />;
+      case "notificacoes":
+        return <Notificacoes theme={currentTheme} />;
+      case "assinatura":
+        return <Assinaturas theme={currentTheme} navigation={navigation} />;
+      default:
+        return <Perfil theme={currentTheme} />;
+    }
+  };
+
+  return (
+    <SafeAreaView style={[styles.container, { backgroundColor: currentTheme.bg }]}>
+
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {/* Subtitle */}
+        <View style={styles.header}>
+          <Text style={[styles.subtitle, { color: currentTheme.textSecondary }]}>
+            Gerencie suas preferências e configurações
+          </Text>
+        </View>
+
+        {/* Navegação */}
+        <Navconfig onItemClick={setActiveComponent} theme={currentTheme} />
+
+        {/* Componente ativo */}
+        <View style={styles.contentContainer}>
+          {renderComponent()}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
-// Estilos da tela
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center" },
-  text: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
-  butao: {
-    fontSize: 16,
-    color: "#666",
-    backgroundColor: "#DDD",
-    padding: 20,
-    borderRadius: 10,
-    width: "70%",
-    textAlign: "center",
-    minWidth: 250,
+  container: {
+    flex: 1,
   },
-  espaco: {
-    gap: 15,
-    alignItems: "center",
-    width: "100%",
+
+  scrollContent: {
+    padding: 20,
+    paddingBottom: 100, // Espaço para tab bar flutuante
+  },
+  header: {
+    marginBottom: 24,
+    alignItems: 'center',
+  },
+  subtitle: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  contentContainer: {
+    alignItems: 'center',
+    width: '100%',
+  },
+  debugContainer: {
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  debugText: {
+    fontSize: 14,
+    fontWeight: '500',
   },
 });

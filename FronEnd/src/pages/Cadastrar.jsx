@@ -1,7 +1,12 @@
 import React from "react";
 import Cadastro from "../components/Cadastro";
+import { useTheme } from "../hooks/useTheme"; // Importando o hook
+import LogoClara from "../assets/LogoEsticadaBranca.png";
+import LogoEscura from "../assets/LogoEsticadaPreta.png";
+
 
 const Cadastrar = () => {
+  const { theme } = useTheme(); // Usando o hook para obter o tema
   return (
     <div
       className="d-flex flex-column justify-content-center align-items-center vh-100"
@@ -21,15 +26,16 @@ const Cadastrar = () => {
             style={{
               width: "40px",
               height: "40px",
-              backgroundColor: "var(--primary)",
               color: "#ffffff",
             }}
           >
-            <i className="bi bi-lightning-charge"></i>
+            <img
+              src={theme === "light" ? LogoEscura : LogoClara}
+              alt=""
+              width={300}
+              className="pb-3"
+            />
           </div>
-          <h3 className="fw-bold m-0" style={{ color: "var(--text)" }}>
-            EnerCheck
-          </h3>
         </div>
         <p className="fs-5" style={{ color: "var(--text-secondary)" }}>
           Crie uma conta

@@ -43,7 +43,7 @@ const Planos = () => {
           >
             <TiposPlanos
               icon="bi bi-star"
-              title="Básco"
+              title="Básico"
               desgracao="Ideal para profissionais autônomos"
               preco="R$49"
               itens={[
