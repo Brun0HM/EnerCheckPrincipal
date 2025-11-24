@@ -97,7 +97,7 @@ EnerCheckPrincipal/
 graph LR
 A[Usuário] --> B[App React Native]
 A --> C[Site React JS]
-B --> D[API .NET Core 9.0]
+B --> D[API .NET Core 8.0]
 C --> D
 D --> E[Gemini API]
 D --> F[Banco de Dados SQL Server]
