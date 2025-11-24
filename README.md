@@ -25,7 +25,7 @@ Este repositório contém o **monorepo principal** do EnerCheck, com os seguinte
 | 🖥️ **Site Institucional** | React JS | Apresenta o produto, recursos, planos e informações gerais da EnerCheck. |
 | ⚙️ **Painel Administrativo (Dashboard)** | React JS | Área para gerenciamento de usuários, análises e relatórios de projetos. |
 | 📱 **Aplicativo Mobile** | React Native | Permite aos engenheiros realizarem análises rápidas e acessarem resultados via smartphone. |
-| 🔌 **Backend API** | ASP.NET Core 9.0 | API responsável pela autenticação, controle de usuários, comunicação com o Gemini e armazenamento de dados. (Submódulo separado) |
+| 🔌 **Backend API** | ASP.NET Core 8.0 | API responsável pela autenticação, controle de usuários, comunicação com o Gemini e armazenamento de dados. (Submódulo separado) |
 
 ---
 
@@ -69,7 +69,7 @@ A IA realiza análises automáticas que:
 - Axios  
 
 ### 🔹 Backend
-- ASP.NET Core 9.0 (C#)  
+- ASP.NET Core 8.0 (C#)  
 - Entity Framework Core  
 - SQL Server  
 - JWT Authentication  
