@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/Frontend-React%20%7C%20React%20Native-blue?style=for-the-badge"/>
-  <img src="https://img.shields.io/badge/Backend-ASP.NET%20Core%209.0-purple?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Backend-ASP.NET%20Core%208.0-purple?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/IA-Gemini-green?style=for-the-badge"/>
 </p>
 
