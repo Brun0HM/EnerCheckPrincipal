@@ -142,43 +142,44 @@ npm start
 <table align="center">
     <tr>
         <td align="center">
-            <a  href="github.com/Brun0HM">
+            <a href="https://github.com/Brun0HM" style="text-decoration: none;">
                 <img src="https://avatars.githubusercontent.com/u/160606373" width="100px;" alt="Avatar de Bruno Martins"/><br />
                 <sub><b>Bruno Martins</b></sub><br />
                 💻 Dev FullStack e Líder de projeto
             </a>
         </td>
         <td align="center">
-            <a href="URL_GITHUB_THIAGO">
+            <a href="URL_GITHUB_THIAGO" style="text-decoration: none;">
                 <img src="https://avatars.githubusercontent.com/u/158314044" width="100px;" alt="Avatar de Thiago Mazzi"/><br />
                 <sub><b>Thiago Mazzi</b></sub><br />
                 💻 Dev FullStack
             </a>
         </td>
         <td align="center">
-            <a href="URL_GITHUB_JOAQUIM">
+            <a href="URL_GITHUB_JOAQUIM" style="text-decoration: none;">
                 <img src="https://avatars.githubusercontent.com/u/158314249" width="100px;" alt="Avatar de Joaquim"/><br />
                 <sub><b>Joaquim</b></sub><br />
                 💻 Dev FullStack
             </a>
         </td>
         <td align="center">
-            <a href="URL_GITHUB_LUIZ">
+            <a href="URL_GITHUB_LUIZ" style="text-decoration: none;">
                 <img src="https://avatars.githubusercontent.com/u/158313981" width="100px;" alt="Avatar de Luiz Ghilherme"/><br />
                 <sub><b>Luiz Ghilherme</b></sub><br />
                 💻 Dev FullStack
             </a>
         </td>
-    </tr>
-    <tr>
         <td align="center">
-            <a href="URL_GITHUB_RYAN">
+            <a href="URL_GITHUB_RYAN" style="text-decoration: none;">
                 <img src="https://avatars.githubusercontent.com/u/158313804?v=4" width="100px;" alt="Avatar de Ryan Rattini"/><br />
                 <sub><b>Ryan Rattini</b></sub><br />
                 💻 Web Designer e Dev FrontEnd
             </a>
         </td>
-        </tr>
+    </tr>
+
 </table>
+
+
 🪪 Licença
 Este projeto está sob a licença MIT – veja o arquivo LICENSE para mais detalhes.
