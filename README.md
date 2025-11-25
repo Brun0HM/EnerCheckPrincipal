@@ -149,14 +149,14 @@ npm start
             </a>
         </td>
         <td align="center">
-            <a href="URL_GITHUB_THIAGO" style="text-decoration: none;">
+            <a href="https://github.com/ThiagoM22" style="text-decoration: none;">
                 <img src="https://avatars.githubusercontent.com/u/158314044" width="100px;" alt="Avatar de Thiago Mazzi"/><br />
                 <sub><b>Thiago Mazzi</b></sub><br />
                 💻 Dev FullStack
             </a>
         </td>
         <td align="center">
-            <a href="URL_GITHUB_JOAQUIM" style="text-decoration: none;">
+            <a href="https://github.com/joaquimtxt" style="text-decoration: none;">
                 <img src="https://avatars.githubusercontent.com/u/158314249" width="100px;" alt="Avatar de Joaquim"/><br />
                 <sub><b>Joaquim</b></sub><br />
                 💻 Dev FullStack
