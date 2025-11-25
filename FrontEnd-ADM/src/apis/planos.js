@@ -36,9 +36,8 @@ const criarPlano = async (nome, preco, quantReq) => {
 };
 
 const listaPlanosId = async (id) => {
-  const response = await api.get("/Planos", {
-    id: id,
-  });
+  const response = await api.get(`/Planos/${id}`);
+  
   const planoBuscado = response.data;
 
   return planoBuscado;
