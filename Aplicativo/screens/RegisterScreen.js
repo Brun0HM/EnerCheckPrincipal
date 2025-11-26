@@ -9,7 +9,7 @@ import {
   useColorScheme,
   Alert,
 } from 'react-native';
-
+import { usuariosAPI } from '../api/Usuarios';
 
 const hasMinLength = (s) => s?.length >= 8;
 const hasUpper = (s) => /[A-Z]/.test(s || '');
@@ -66,8 +66,8 @@ export default function RegisterScreen({ navigation }) {
     number: hasNumber(senha),
   }), [senha]);
 
-  const handleRegister = () => {
-    if (!nome || !sobrenome || !email || !senha || !confirmarSenha) {
+  const handleRegister = async() => {
+    if (!nome.trim() || !sobrenome.trim() || !email.trim() || !senha || !confirmarSenha) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
     }
@@ -85,6 +85,27 @@ export default function RegisterScreen({ navigation }) {
     if (!aceitoTermos) {
       Alert.alert('Aviso', 'Você deve aceitar os termos e condições.');
       return;
+    }
+    try {
+      const userData = {
+        email: email.trim(),
+        senha: senha,
+        nomeCompleto: `${nome.trim()} ${sobrenome.trim()}`, 
+        numeroCrea: numeroCrea.trim() || "",
+        empresa: empresa.trim() || "", 
+        userReq: 0,
+      };
+
+      console.log('📤 Enviando dados para registro...');
+      const result = await usuariosAPI.createCliente(userData);
+      
+      console.log('Cliente registrado:', result);
+      Alert.alert('Cadastro realizado!', `Bem-vindo(a), ${nome}!`);
+      navigation.navigate('Planos');
+      
+    } catch (error) {
+      console.error('Erro no registro:', error);
+      Alert.alert('Erro no Cadastro', error.message || 'Erro ao realizar cadastro');
     }
     Alert.alert('Cadastro realizado!', `Bem-vindo(a), ${nome}!`);
   navigation.navigate('Planos');
