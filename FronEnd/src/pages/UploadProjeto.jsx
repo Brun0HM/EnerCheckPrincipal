@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { GoogleGenAI } from "@google/genai";
-import { analisarPlanta } from "../../services/enerCheckIa";
+
 import { useNavigate } from "react-router";
 import { FileUploader } from "react-drag-drop-files";
 
 const UploadProjeto = () => {
   const navigate = useNavigate();
-  const navigate = useNavigate();
 
   const fileTypes = ["JPG", "PNG", "JPEG", "PDF"];
 
-
   const [nome, setNome] = useState();
-
 
   const [dataArquivo, setDataArquivo] = useState(null);
   const [tipo, setTipo] = useState("");
@@ -29,13 +26,13 @@ const UploadProjeto = () => {
     });
 
   const handleData = async (data, formato) => {
-    localStorage.setItem("imagem", data)
-    localStorage.setItem("tipo", formato)
-    console.log("Data recebida!")
-    console.log("Formato do arquivo recebido: ", tipo)
-    
-    navigate("/dashboardProjeto")
-  }
+    localStorage.setItem("imagem", data);
+    localStorage.setItem("tipo", formato);
+    console.log("Data recebida!");
+    console.log("Formato do arquivo recebido: ", tipo);
+
+    navigate("/dashboardProjeto");
+  };
 
   const handleFileChange = async (e) => {
     const arquivo = e.target.files[0];
@@ -54,7 +51,6 @@ const UploadProjeto = () => {
     }
     setDataArquivo(imagem.split(",")[1]);
   };
-
 
   useEffect(() => {
     console.log("Imagem inserida: ", dataArquivo, " Nome: ", nome);
@@ -99,7 +95,7 @@ const UploadProjeto = () => {
           onClick={() => handleData(dataArquivo, tipo)}
           className="btn btn-primary fw-bold "
         >
-        Enviar Arquivo
+          Enviar Arquivo
         </button>
 
         {/* <div className="d-flex flex-column align-items-center mt-5">
@@ -142,7 +138,7 @@ const UploadProjeto = () => {
         <span>Prévia: </span>
         <img
           className="img-fluid col-3 mt-3 mb-5"
-          src={ imagem || "https://placehold.co/1000x500"  }
+          src={imagem || "https://placehold.co/1000x500"}
         />
       </div>
     </div>

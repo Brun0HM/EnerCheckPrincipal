@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { InfoGeralContainer } from "../components/InfoGeralContainer";
 import { ContainerChecagem } from "../components/ContainerChecagem";
-import { analisarPlanta } from "../../services/enerCheckIa";
+
 
 const DashboardProjeto = () => {
   const [carregando, setCarregando] = useState(false);

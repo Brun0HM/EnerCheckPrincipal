@@ -140,15 +140,17 @@ const loginUser = async (email, senha) => {
 
 //--------------------------------------------------------------------------------------------
 // 2. Planos --------------------------------------------------------------------------------
-const InserirPlano = async () => {
-  const url= "/api/Usuarios/usuario/add/plano";
 
+const putPlanos = async (id) => {
+  const url= "/api/Usuarios/usuario/add/plano";
   try{
-    const response = await api.put(url, id), {
-      
-    }
+    const response = await api.put(url, id )
+    console.log(response.data)
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao inserir plano:", error);
+    throw error;
   }
-};
 
 //--------------------------------------------------------------------------------------------
 
@@ -158,6 +160,7 @@ const apiService = {
   createUser,
   deleteUser,
   loginUser,
+  putPlanos,
 };
 
 export default apiService;
