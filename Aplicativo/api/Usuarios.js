@@ -10,7 +10,7 @@ export const usuariosAPI = {
       });
       return response.data;
     } catch (error) {
-      console.error('❌ Erro ao buscar usuários:', error);
+      console.error('Erro ao buscar usuários:', error);
       throw error.response?.data || error;
     }
   },
@@ -23,7 +23,7 @@ export const usuariosAPI = {
       });
       return response.data;
     } catch (error) {
-      console.error(`❌ Erro ao buscar usuário ${id}:`, error);
+      console.error(`Erro ao buscar usuário ${id}:`, error);
       throw error.response?.data || error;
     }
   },
@@ -36,7 +36,7 @@ export const usuariosAPI = {
       });
       return response.data;
     } catch (error) {
-      console.error('❌ Erro ao buscar usuário logado:', error);
+      console.error('Erro ao buscar usuário logado:', error);
       throw error.response?.data || error;
     }
   },
@@ -54,65 +54,11 @@ export const usuariosAPI = {
       });
       return response.data;
     } catch (error) {
-      console.error('❌ Erro ao criar cliente:', error);
+      console.error('Erro ao criar cliente:', error);
       throw error.response?.data || error;
     }
   },
 
-  // POST /api/Usuarios/Admin - Criar novo usuário como Admin (somente Admin)
-  createAdmin: async (userData, token) => {
-    try {
-      const response = await api.post('/api/Usuarios/Admin', {
-        email: userData.email,
-        senha: userData.senha,
-        nomeCompleto: userData.nomeCompleto,
-        numeroCrea: userData.numeroCrea || "",
-        empresa: userData.empresa || "",
-        userReq: userData.userReq || 0
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      return response.data;
-    } catch (error) {
-      console.error('❌ Erro ao criar admin:', error);
-      throw error.response?.data || error;
-    }
-  },
-
-  // POST /api/Usuarios/roles - Criar nova role (somente Admin)
-  createRole: async (roleName, token) => {
-    try {
-      const response = await api.post('/api/Usuarios/roles', roleName, {
-        headers: { 
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      return response.data;
-    } catch (error) {
-      console.error('❌ Erro ao criar role:', error);
-      throw error.response?.data || error;
-    }
-  },
-
-  // PUT /api/Usuarios/{id} - Atualizar usuário (somente Admin)
-  updateUser: async (id, userData, token) => {
-    try {
-      const response = await api.put(`/api/Usuarios/${id}`, {
-        id: id,
-        nomeCompleto: userData.nomeCompleto,
-        email: userData.email,
-        numeroCrea: userData.numeroCrea,
-        empresa: userData.empresa
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      return response.data;
-    } catch (error) {
-      console.error(`❌ Erro ao atualizar usuário ${id}:`, error);
-      throw error.response?.data || error;
-    }
-  },
 
   // PUT /api/Usuarios/usuario/add/plano - Vincular plano ao usuário logado
   vincularPlano: async (planoId, token) => {
@@ -125,23 +71,10 @@ export const usuariosAPI = {
       });
       return response.data;
     } catch (error) {
-      console.error('❌ Erro ao vincular plano:', error);
+      console.error('Erro ao vincular plano:', error);
       throw error.response?.data || error;
     }
   },
-
-  // DELETE /api/Usuarios/{id} - Deletar usuário (somente Admin)
-  deleteUser: async (id, token) => {
-    try {
-      const response = await api.delete(`/api/Usuarios/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      return response.data;
-    } catch (error) {
-      console.error(`❌ Erro ao deletar usuário ${id}:`, error);
-      throw error.response?.data || error;
-    }
-  },
-};
+}
 
 export default usuariosAPI;

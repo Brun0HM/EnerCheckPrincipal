@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   ScrollView, 
   View, 
@@ -10,14 +10,86 @@ import TiposPlanos from '../components/TiposPlanos';
 import PerguntasFrequentes from '../components/PerguntasFrequentes';
 import { useTheme } from '../contexts/ThemeContext';
 import { useNavigation } from '@react-navigation/native';
+import { planosAPI } from '../api/Planos'; 
 
 export default function PlanosScreen() {
   const { theme, isLoaded } = useTheme();
     const navigation = useNavigation();
+    const [planos, setPlanos] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
+    const getItensPorNome = (nomePlano) => {
+      const itensMap = {
+        'Básico': [
+          "Até 10 projetos",
+          "Conformidade NBR 5410", 
+          "Relatórios em PDF",
+          "Suporte por email",
+          "Histórico de 30 dias",
+        ],
+        'Pro': [
+          "Até 50 projetos",
+          "Conformidade NBR 5410",
+          "Relatórios personalizados", 
+          "Suporte prioritário",
+          "Histórico ilimitado",
+          "API de integração",
+        ],
+        'Empresas': [
+          "Projetos ilimitados",
+          "Conformidade NBR 5410",
+          "Relatórios white-label",
+          "Suporte dedicado 24/7",
+          "API completa", 
+          "Treinamento personalizado",
+          "SLA garantido",
+        ]
+      };
+  
+      return itensMap[nomePlano] || [
+        "Funcionalidades básicas",
+        "Suporte padrão"
+      ];
+    };
+    useEffect(() => {
+      const fetchPlanos = async () => {
+        try {
+          setIsLoading(true);
+          console.log('Buscando planos da API...');
+          
+          // Use a API com axios
+          const planosData = await planosAPI.getAllPlanos();
+          console.log('Planos carregados:', planosData);
+          
+          // Filtrar apenas planos ativos
+          const planosAtivos = planosData.filter(plano => plano.ativo);
+          setPlanos(planosAtivos);
+          
+        } catch (error) {
+          console.error('Erro ao carregar planos:', error);
+          Alert.alert(
+            'Erro', 
+            'Não foi possível carregar os planos. Verifique sua conexão.',
+            [
+              {
+                text: 'Tentar novamente',
+                onPress: fetchPlanos
+              },
+              {
+                text: 'Cancelar',
+                style: 'cancel'
+              }
+            ]
+          );
+        } finally {
+          setIsLoading(false);
+        }
+      };
+  
+      fetchPlanos();
+    }, []);
 
-
-  if (!isLoaded) {
+  if (!isLoaded || isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>Carregando tema...</Text>
@@ -35,75 +107,48 @@ export default function PlanosScreen() {
     cardBorder: theme === 'light' ? '#e0e0e0' : '#3a3a3a',
   };
 
-  const handleSelectPlan = (planName) => {
-    let planData = {};
-    
-    switch (planName) {
-      case 'Básico':
-        planData = {
-          title: 'Básico',
-          preco: 'R$49',
-          itens: [
-            "Até 10 projetos",
-            "Conformidade NBR 5410",
-            "Relatórios em PDF",
-            "Suporte por email",
-            "Histórico de 30 dias",
-          ]
-        };
-        break;
-        
-      case 'Pro':
-        planData = {
-          title: 'Pro',
-          preco: 'R$149',
-          itens: [
-            "Até 50 projetos",
-            "Conformidade NBR 5410",
-            "Relatórios personalizados",
-            "Suporte prioritário",
-            "Histórico ilimitado",
-            "API de integração",
-          ]
-        };
-        break;
-        
-      case 'Empresas':
-        planData = {
-          title: 'Empresas',
-          preco: 'R$399',
-          itens: [
-            "Projetos ilimitados",
-            "Conformidade NBR 5410",
-            "Relatórios white-label",
-            "Suporte dedicado 24/7",
-            "API completa",
-            "Treinamento personalizado",
-            "SLA garantido",
-          ]
-        };
-        break;
-        
-      default:
-        planData = {
-          title: 'Básico',
-          preco: 'R$49',
-          itens: [
-            "Até 10 projetos",
-            "Conformidade NBR 5410",
-            "Relatórios em PDF",
-            "Suporte por email",
-            "Histórico de 30 dias",
-          ]
-        };
+  const handleSelectPlan = async (planoSelecionado) => {
+    try {
+      console.log('Plano selecionado:', planoSelecionado);
+
+     
+      const planData = {
+        planoId: planoSelecionado.planoId, 
+        title: planoSelecionado.nome,
+        preco: `R$${planoSelecionado.preco?.toFixed(2).replace('.', ',')}`,
+        precoNumerico: planoSelecionado.preco,
+        quantidadeReq: planoSelecionado.quantidadeReq,
+        quantidadeUsers: planoSelecionado.quantidadeUsers,
+        itens: getItensPorNome(planoSelecionado.nome),
+      };
+
+      console.log('Dados do plano sendo enviados:', planData);
+      navigation.navigate('FinalizarEscolhaAssinatura', { 
+        planData: planData
+      });
+
+    } catch (error) {
+      console.error('Erro ao selecionar plano:', error);
+      Alert.alert('Erro', 'Erro ao selecionar plano. Tente novamente.');
     }
+  };
+  const getIconePorNome = (nomePlano) => {
+    const iconMap = {
+      'Básico': 'star-outline',
+      'Pro': 'people-outline', 
+      'Empresas': 'trophy-outline'
+    };
+    return iconMap[nomePlano] || 'star-outline';
+  };
 
-    console.log('📦 Dados do plano sendo enviados:', planData);
-
-    // Navegar para a tela de finalização
-    navigation.navigate('FinalizarEscolhaAssinatura', { 
-      planData: planData
-    });
+  // Função para obter descrição baseada no nome do plano
+  const getDescricaoPorNome = (nomePlano) => {
+    const descricaoMap = {
+      'Básico': 'Ideal para profissionais autônomos',
+      'Pro': 'Para pequenas e médias empresas',
+      'Empresas': 'Para grandes organizações'
+    };
+    return descricaoMap[nomePlano] || 'Plano personalizado';
   };
 
   return (
@@ -133,56 +178,18 @@ export default function PlanosScreen() {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.plansContainer}
           >
-            <TiposPlanos
-              icon="star-outline"
-              title="Básico"
-              descricao="Ideal para profissionais autônomos"
-              preco="R$49"
-              itens={[
-                "Até 10 projetos",
-                "Conformidade NBR 5410",
-                "Relatórios em PDF",
-                "Suporte por email",
-                "Histórico de 30 dias",
-              ]}
-              theme={currentTheme}
-              onSelect={handleSelectPlan}
-            />
-
-            <TiposPlanos
-              icon="people-outline"
-              title="Pro"
-              descricao="Para pequenas e médias empresas"
-              preco="R$149"
-              itens={[
-                "Até 50 projetos",
-                "Conformidade NBR 5410",
-                "Relatórios personalizados",
-                "Suporte prioritário",
-                "Histórico ilimitado",
-                "API de integração",
-              ]}
-              theme={currentTheme}
-              onSelect={handleSelectPlan}
-            />
-
-            <TiposPlanos
-              icon="trophy-outline"
-              title="Empresas"
-              descricao="Para grandes organizações"
-              preco="R$399"
-              itens={[
-                "Projetos ilimitados",
-                "Conformidade NBR 5410",
-                "Relatórios white-label",
-                "Suporte dedicado 24/7",
-                "API completa",
-                "Treinamento personalizado",
-                "SLA garantido",
-              ]}
-              theme={currentTheme}
-              onSelect={handleSelectPlan}
-            />
+          {planos.map((plano) => (
+              <TiposPlanos
+                key={plano.planoId}
+                icon={getIconePorNome(plano.nome)}
+                title={plano.nome}
+                descricao={getDescricaoPorNome(plano.nome)}
+                preco={`R$${plano.preco?.toFixed(2).replace('.', ',')}`}
+                itens={getItensPorNome(plano.nome)}
+                theme={currentTheme}
+                onSelect={() => handleSelectPlan(plano)}
+              />
+            ))}
           </ScrollView>
         </View>
 
