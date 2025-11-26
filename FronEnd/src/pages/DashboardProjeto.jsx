@@ -1,34 +1,57 @@
 import React, { useEffect, useState } from "react";
 import { InfoGeralContainer } from "../components/InfoGeralContainer";
 import { ContainerChecagem } from "../components/ContainerChecagem";
-
+import { analisarPlanta } from "../../services/enerCheckIa";
 
 const DashboardProjeto = () => {
+  const [carregando, setCarregando] = useState(false);
+  const [imagem, setImagem] = useState("");
+  const [tipoData, setTipoData] = useState("");
+  const [erro, setErro] = useState("");
 
-const [analise, setAnalise] = useState([])
+  const [analise, setAnalise] = useState([]);
 
 
-  const analiseData = localStorage.getItem("Analise");
-  const imagem = localStorage.getItem("Imagem");
-  const tipo = localStorage.getItem("Formato");
+
+  
+  
 
   useEffect(() => {
+    const base64 = localStorage.getItem("imagem");
+    const tipo = localStorage.getItem("formato");
 
+    if (base64 && tipo) {
+      setImagem(base64);
+      setTipoData(tipo);
 
-    setAnalise(analiseData);
-    console.log(analise);
+      const handleAnalisePlanta = async (base64, tipo) => {
+        setCarregando(true);
+        setErro("");
 
-  },[analise])
- 
+        try {
+          const response = await analisarPlanta(base64, tipo);
+          setAnalise(response);
+          console.log("Analise Carregada! Info: ", analise);
+        } catch (error) {
+          setErro("Houve um erro ao analisar a planta: " + error);
+          console.log(erro);
+        } finally {
+          setCarregando(false);
+        }
+      };
 
+      handleAnalisePlanta(base64, tipo);
+    }
 
+    // console.log("Dados: ", analise)
+  }, []);
 
   const [comentarioGeral, setComentarioGeral] = useState("");
   const [comentConform, setComentConform] = useState("");
   const [comentInstalacao, setComentInstalacao] = useState("");
 
   // Pontuações dos diferentes aspectos do projeto
-  const pontuacaoGeral = 10;
+  const [pontuacaoGeral, setPontuacaoGeral] = useState();
   const pontuacaoConformidade = 90;
   const pontuacaoInstalacao = 50;
 
@@ -61,7 +84,6 @@ const [analise, setAnalise] = useState([])
       setComentInstalacao("Erros críticos a serem revisados");
     }
   };
-
   const trocarComentConform = () => {
     if (pontuacaoConformidade <= 50) {
       setComentConform("Razoável, ajustes necessários");
@@ -80,7 +102,7 @@ const [analise, setAnalise] = useState([])
   useEffect(() => {
     trocarComentario();
   }, [pontuacaoGeral]);
-
+  
   useEffect(() => {
     trocarComentConform();
   }, [pontuacaoConformidade]);
@@ -91,15 +113,30 @@ const [analise, setAnalise] = useState([])
 
   return (
     <div
-      style={{
-        background: "var(--bg)",
+    style={{
+      background: "var(--bg)",
         color: "var(--text)",
         minHeight: "100vh",
         paddingTop: "6rem",
         paddingBottom: "2rem",
       }}
     >
+      { analise == "" ? ( 
+
+        
+        <div className="spinner-grow text-primary fs-3 align-self-center"> </div>
+        
+      )
+      
+      : (
+
+        
+        
+        
+        
       <div className="container-fluid px-3 px-md-4">
+
+        <p>{analise} </p>
         <div className="row justify-content-center">
           <div className="col-12 col-xxl-10">
             {/* Cabeçalho da página */}
@@ -117,42 +154,49 @@ const [analise, setAnalise] = useState([])
 
             {/* Seção de pontuações - Layout responsivo */}
             <div className="row g-3 mb-4">
-              <div className="col-12 col-md-4">
-                <InfoGeralContainer
-                  topico={"Pontuação Geral"}
-                  iconeTopico={"bi-speedometer2"}
-                  corNumero={"danger"}
-                  pontuacaoGeral={pontuacaoGeral}
-                  comentario={comentarioGeral}
-                />
-              </div>
-              <div className="col-12 col-md-4">
-                <InfoGeralContainer
-                  topico={"Conformidade NBR"}
-                  iconeTopico={"bi-shield-check"}
-                  corNumero={"success"}
-                  pontuacaoGeral={pontuacaoConformidade}
-                  comentario={comentConform}
-                />
-              </div>
-              <div className="col-12 col-md-4">
-                <InfoGeralContainer
-                  topico={"Instalação"}
-                  iconeTopico={"bi-tools"}
-                  corNumero={"warning"}
-                  pontuacaoGeral={pontuacaoInstalacao}
-                  comentario={comentInstalacao}
-                />
-              </div>
+              {analise.analiseCategorizada.map((analises) => (
+                <div className="col-12 col-md-4">
+                  <InfoGeralContainer
+                    topico={analises.categoria}
+                    iconeTopico={"bi-speedometer2"}
+                    corNumero={"danger"}
+                    pontuacaoGeral={
+                      analises.percentualConformidade || "Carregando..."
+                    }
+                    comentario={" "}
+                  />
+                </div>
+              ))}
+
+              {/* <div className="col-12 col-md-4">
+                
+              <InfoGeralContainer
+                topico={"Pontuação Geral"}
+                iconeTopico={"bi-speedometer2"}
+                corNumero={"danger"}
+                pontuacaoGeral={analise.analiseCategorizada?.[1]?.percentualConformidade || "Carregando..."}
+                comentario={comentarioGeral}
+              />
+          </div> */}
             </div>
 
             {/* Seção de análise detalhada */}
             <div className="row g-4">
+        
+                <div className="col-12 col-lg-6">
+                  <ContainerChecagem
+                    categoria={ "Cade o item"}
+                    descricao={"cade a observacao"}
+                  />
+                </div>
+              
+
+              {/* 
               <div className="col-12 col-lg-6">
                 <ContainerChecagem
-                  categoria={"Circuitos de Força"}
-                  descricao={"Análise dos circuitos de força e dimensionamento"}
-                />
+                categoria={"Circuitos de Força"}
+                descricao={"Análise dos circuitos de força e dimensionamento"}
+                  />
               </div>
               <div className="col-12 col-lg-6">
                 <ContainerChecagem
@@ -160,8 +204,13 @@ const [analise, setAnalise] = useState([])
                   descricao={
                     "Verificação de dispositivos de proteção (DR, disjuntores)"
                   }
+
+
+
+
+            
                 />
-              </div>
+              </div> */}
             </div>
 
             {/* Card de ações rápidas */}
@@ -206,6 +255,8 @@ const [analise, setAnalise] = useState([])
           </div>
         </div>
       </div>
+
+      )}
     </div>
   );
 };

@@ -6,9 +6,6 @@ const BASE_URL = "https://enercheck.onrender.com";
 // 1. Cria a instância do Axios com a URL base
 const api = axios.create({
   baseURL: BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
   timeout: 10000,
 });
 
@@ -109,3 +106,4 @@ const apiService = {
 };
 
 export default apiService;
+

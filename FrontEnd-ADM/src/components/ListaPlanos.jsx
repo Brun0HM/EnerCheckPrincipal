@@ -1,18 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import planos from "../apis/planos";
 import { ComponenteLista } from "./ComponenteLista";
 import VisualizarLista from "./VisualizarLista";
 import DeleteModal from "./DeleteModal";
 import Editar from "./Editar";
-
+import apiPlanos from "../apis/planos";
 export const ListaPlanos = ({paginatedData}) => {
    const [selectedItem, setSelectedItem] = useState(null);
     const [showModalView, setShowModalView] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
     const [showModalEdit, setShowModalEdit] = useState(false);
 
+  const [planos, setPlanos] = useState();
+  const [carregando, setCarregando] = useState(false)
+
        // Usar dados paginados se fornecidos, senão usar todos os dados
-       const dataToRender = paginatedData || planos;
+       const dataToRender = paginatedData
   
     const handleView = (item)=>{
       setSelectedItem(item);
@@ -38,6 +41,28 @@ export const ListaPlanos = ({paginatedData}) => {
     const handleConfirmDelete = (itemId) => {
       console.log(`Excluindo item com ID: ${itemId}`);
     }
+
+    const listarPlanos = async () => {
+
+      try {
+        setCarregando(true)
+        const dados = await apiPlanos.listagemPlanos()
+        setPlanos(dados);
+      } catch (e) {
+        console.log("Erro ao utilizar a api: ", e)
+      } finally {
+        setCarregando(false)
+      }
+    }
+
+   useEffect(() => {
+
+    listarPlanos();
+   
+
+   },[])
+    
+    
     
   return (
     <>
@@ -45,7 +70,7 @@ export const ListaPlanos = ({paginatedData}) => {
       className="d-flex flex-column gap-2 overflow-y-auto rounded-4"
       style={{ maxHeight: "500px" }}
     >
-      {dataToRender.map((item) => (
+      {planos.map((item) => (
         <ComponenteLista
           key={item.id}
           nome={item.nome}
