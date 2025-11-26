@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "../App.css";
 import { useNavigate } from "react-router";
-import { Tokens } from "@google/genai";
+import apiService from "../../services/api";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -10,20 +10,23 @@ const Login = () => {
   const [senha, setSenha] = useState("");
   const [errors, setErrors] = useState({});
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  //Pega as informações do usuario
+  const inputEmail = useRef();
+  const inputSenha = useRef();
 
-  const validatePassword = (password) => {
-    // Senha deve ter pelo menos 6 caracteres
-    return password.length >= 6;
-  };
+  //Função que loga o usuario na API
+  async function handleLogin(event) {
+    event.preventDefault();
+    try {
+      await apiService.loginUser(
+        inputEmail.current.value,
+        inputSenha.current.value
+      );
+    } catch (error) {
+      console.error("Erro ao logar usuário:", error);
+    }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
     const newErrors = {};
-
     // Validar email
     if (!email.trim()) {
       newErrors.email = "Email é obrigatório";
@@ -46,28 +49,16 @@ const Login = () => {
       // Navegar para o dashboard apenas se tudo estiver válido
       navigate("/dashboardGeral");
     }
+  }
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
-  // Função para lidar com o clique do botão
-  const handleButtonClick = (e) => {
-    e.preventDefault();
-
-    const newErrors = {};
-
-    // Validar senha
-    if (!senha.trim()) {
-      newErrors.senha = "Senha é obrigatória";
-    } else if (!validatePassword(senha)) {
-      newErrors.senha = "Senha deve ter pelo menos 6 caracteres";
-    }
-
-    setErrors(newErrors);
-
-    // Se não há erros, prosseguir com o login
-    if (Object.keys(newErrors).length === 0) {
-      console.log({ email, senha });
-      navigate("/dashboardGeral");
-    }
+  const validatePassword = (password) => {
+    // Senha deve ter pelo menos 6 caracteres
+    return password.length >= 6;
   };
 
   return (
@@ -79,7 +70,7 @@ const Login = () => {
         color: "var(--text)",
       }}
     >
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleLogin}>
         <div className="d-flex flex-column">
           {/* Cabeçalho do formulário */}
           <div className="d-flex flex-column text-start mb-1">
@@ -97,6 +88,7 @@ const Login = () => {
                 errors.email ? "is-invalid" : ""
               }`}
               placeholder="seu@email.com"
+              ref={inputEmail}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -119,6 +111,7 @@ const Login = () => {
                 errors.senha ? "is-invalid" : ""
               }`}
               placeholder="senha"
+              ref={inputSenha}
               type="password"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
@@ -169,7 +162,7 @@ const Login = () => {
               borderColor: "var(--primary)",
               color: "#ffffff",
             }}
-            onClick={handleButtonClick}
+            onClick={handleLogin}
           >
             Entrar
           </button>
