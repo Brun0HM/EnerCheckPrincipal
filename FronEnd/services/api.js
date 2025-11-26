@@ -54,12 +54,11 @@ const deleteUser = async (id) => {
 
 //login
 const loginUser = async (email, senha) => {
-
-  console.log("user: ", + email + " senha: " + senha);
+  // console.log("user: ", + email + " senha: " + senha);
   try {
     const response = await api.post("/Usuario/login", {
       email: email,
-      password: senha
+      password: senha,
     });
 
     // Ajuste conforme a estrutura real da sua API (token, accessToken, data.token etc.)

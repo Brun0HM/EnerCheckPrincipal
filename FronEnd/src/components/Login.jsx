@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import "../App.css";
 import { useNavigate } from "react-router";
 import apiService from "../../services/api";
@@ -9,23 +9,12 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [errors, setErrors] = useState({});
-
-  //Pega as informações do usuario
-  const inputEmail = useRef();
-  const inputSenha = useRef();
+  const [apiError, setApiError] = useState("");
 
   //Função que loga o usuario na API
   async function handleLogin(event) {
     event.preventDefault();
-    try {
-      await apiService.loginUser(
-        inputEmail.current.value,
-        inputSenha.current.value
-      );
-    } catch (error) {
-      console.error("Erro ao logar usuário:", error);
-    }
-
+    setApiError("");
     const newErrors = {};
     // Validar email
     if (!email.trim()) {
@@ -45,9 +34,20 @@ const Login = () => {
 
     // Se não há erros, prosseguir com o login
     if (Object.keys(newErrors).length === 0) {
-      console.log("", { email, senha });
-      // Navegar para o dashboard apenas se tudo estiver válido
-      navigate("/dashboardGeral");
+      try {
+        await apiService.loginUser(email.trim(), senha);
+        navigate("/dashboardGeral");
+      } catch (error) {
+        console.error("Erro ao logar usuário:", error);
+        const status = error.response?.status;
+        if (status === 404) {
+          setApiError("Usuário não encontrado.");
+        } else if (status === 401) {
+          setApiError("Email ou senha inválidos.");
+        } else {
+          setApiError("Erro ao acessar o serviço. Tente novamente.");
+        }
+      }
     }
   }
 
@@ -76,8 +76,9 @@ const Login = () => {
           <div className="d-flex flex-column text-start mb-1">
             <h5 style={{ color: "var(--text)" }}>Entrar</h5>
             <p style={{ color: "var(--text-secondary)" }}>
-              Digite suas credenciais para acessar sua conta
+              Faça seu login em sua conta
             </p>
+            {apiError && <p className="text-danger m-0">{apiError}</p>}
           </div>
 
           {/* Campo de email */}
@@ -88,7 +89,6 @@ const Login = () => {
                 errors.email ? "is-invalid" : ""
               }`}
               placeholder="seu@email.com"
-              ref={inputEmail}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -111,7 +111,6 @@ const Login = () => {
                 errors.senha ? "is-invalid" : ""
               }`}
               placeholder="senha"
-              ref={inputSenha}
               type="password"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
@@ -125,7 +124,6 @@ const Login = () => {
               <div className="invalid-feedback d-block">{errors.senha}</div>
             )}
           </div>
-
           {/* Opções adicionais */}
           <div className="d-flex justify-content-between mt-1">
             <div className="d-flex gap-1 align-items-center">
@@ -162,7 +160,6 @@ const Login = () => {
               borderColor: "var(--primary)",
               color: "#ffffff",
             }}
-            onClick={handleLogin}
           >
             Entrar
           </button>
