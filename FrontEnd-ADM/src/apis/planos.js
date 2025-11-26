@@ -11,10 +11,16 @@ const api = axios.create({
 });
 
 const listagemPlanos = async () => {
-  const response = await api.get("/Planos");
-  const listaCompleta = response.data;
-
-  return listaCompleta;
+  try {
+    const response = await api.get("/Planos");
+    const listaCompleta = response.data;
+  
+    return listaCompleta;
+    
+  } catch (error) {
+    console.error("erro ao buscar planos: " + error);
+    
+  }
 };
 
 

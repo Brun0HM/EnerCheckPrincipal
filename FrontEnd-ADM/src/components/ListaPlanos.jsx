@@ -11,7 +11,7 @@ export const ListaPlanos = ({paginatedData}) => {
     const [showModalDelete, setShowModalDelete] = useState(false);
     const [showModalEdit, setShowModalEdit] = useState(false);
 
-  const [planos, setPlanos] = useState();
+  const [planos, setPlanos] = useState([]);
   const [carregando, setCarregando] = useState(false)
 
        // Usar dados paginados se fornecidos, senão usar todos os dados
@@ -70,14 +70,14 @@ export const ListaPlanos = ({paginatedData}) => {
       className="d-flex flex-column gap-2 overflow-y-auto rounded-4"
       style={{ maxHeight: "500px" }}
     >
-      {planos.map((item) => (
+      {planos && planos.map((item) => (
         <ComponenteLista
-          key={item.id}
+          key={item.planoId}
           nome={item.nome}
           topic1={"Preço"}
           t1info={item.preco}
           topic2={"Requisições"}
-          t2info={item.req}
+          t2info={item.quantidadeReq}
           topic3={"Ativo?"}
           t3info={item.ativo ? "Sim" : "Não"}
           view={()=> handleView(item)}

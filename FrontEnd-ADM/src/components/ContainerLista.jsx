@@ -1,9 +1,23 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import usuarios from '../apis/usuarios';
-import planos from '../apis/planos';
+
 import monitoramento from '../apis/monitoramento';
+import apiService from '../../../FronEnd/services/api';
+import apiPlanos from '../apis/planos';
+import apiProjetos from '../apis/monitoramento';
 
 const ContainerLista = (props) => {
+
+  const [usuarios, setUsuarios] = useState([]);
+  const [planos, setPlanos] = useState([]);
+  const [projetos, setProjetos] = useState([]);
+
+
+  useEffect(() => {
+  apiPlanos.listagemPlanos().then(setPlanos);
+  apiService.getUser().then(setUsuarios);
+  apiProjetos.getProjetos().then(setProjetos);
+  })
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
 
