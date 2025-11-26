@@ -9,11 +9,13 @@ import {
   useColorScheme,
   Alert
 } from 'react-native';
+import { authAPI } from '../api/Auth';
 
 export default function LoginScreen({ navigation, setIsAuthenticated }) {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const colorScheme = useColorScheme();
 
   // Tema igual ao usado em GeralScreen
@@ -42,14 +44,80 @@ export default function LoginScreen({ navigation, setIsAuthenticated }) {
 
   const theme = themes[colorScheme] || themes.light;
 
-  const handleLogin = () => {
-    if (username === 'admin' && password === '1234') {
-      Alert.alert('Sucesso', `Login bem-sucedido!${rememberMe ? ' (Lembrar ativado)' : ''}`);
-      if (setIsAuthenticated) {
-        setIsAuthenticated(true);
+  const validarEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+  const handleLogin = async () => {
+    if (!email.trim()) {
+      Alert.alert('Erro', 'Por favor, digite seu email.');
+      return;
+    }
+
+    if (!validarEmail(email)) {
+      Alert.alert('Erro', 'Por favor, digite um email válido.');
+      return;
+    }
+
+    if (!password.trim()) {
+      Alert.alert('Erro', 'Por favor, digite sua senha.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const credentials = {
+        email: email.trim(),
+        senha: password,
+      };
+
+      console.log('Tentando fazer login...');
+      const result = await authAPI.login(credentials);
+      
+      console.log('Login realizado:', result);
+      
+      if (result.token) {
+        console.log('Token recebido:', result.token);
       }
-    } else {
-      Alert.alert('Erro', 'Usuário ou senha incorretos.');
+
+      Alert.alert(
+        'Sucesso', 
+        `Login realizado com sucesso!${rememberMe ? ' (Lembrar ativado)' : ''}`,
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              if (setIsAuthenticated) {
+                setIsAuthenticated(true);
+              }
+            }
+          }
+        ]
+      );
+      
+    } catch (error) {
+      console.error('Erro no login:', error);
+      
+      let errorMessage = 'Erro ao fazer login. Tente novamente.';
+      
+      if (error.message) {
+        errorMessage = error.message;
+      } else if (error.errors) {
+  
+        const firstError = Object.values(error.errors)[0];
+        if (Array.isArray(firstError) && firstError.length > 0) {
+          errorMessage = firstError[0];
+        }
+      } else if (error.status === 401) {
+        errorMessage = 'Email ou senha incorretos.';
+      } else if (error.status === 400) {
+        errorMessage = 'Dados inválidos. Verifique email e senha.';
+      }
+      
+      Alert.alert('Erro no Login', errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -85,10 +153,13 @@ export default function LoginScreen({ navigation, setIsAuthenticated }) {
                 color: theme.text 
               }
             ]}
-            placeholder="Digite seu usuário"
+            placeholder="Digite seu email"
             placeholderTextColor={theme.textSecondary}
-            value={username}
-            onChangeText={setUsername}
+            value={email}
+            onChangeText={setEmail} 
+            keyboardType="email-address"
+            autoCapitalize="none" 
+            editable={!isLoading} 
           />
 
           {/* Campo Senha */}
@@ -148,8 +219,9 @@ export default function LoginScreen({ navigation, setIsAuthenticated }) {
               }
             ]}
             onPress={handleLogin}
+            disabled={isLoading}
           >
-            <Text style={styles.primaryButtonText}>Entrar</Text>
+            <Text style={styles.primaryButtonText}> {isLoading ? 'Entrando...' : 'Entrar'}</Text>
           </Pressable>
         </View>
 
