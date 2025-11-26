@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/Frontend-React%20%7C%20React%20Native-blue?style=for-the-badge"/>
-  <img src="https://img.shields.io/badge/Backend-ASP.NET%20Core%209.0-purple?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Backend-ASP.NET%20Core%208.0-purple?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/IA-Gemini-green?style=for-the-badge"/>
 </p>
 
@@ -25,7 +25,7 @@ Este repositório contém o **monorepo principal** do EnerCheck, com os seguinte
 | 🖥️ **Site Institucional** | React JS | Apresenta o produto, recursos, planos e informações gerais da EnerCheck. |
 | ⚙️ **Painel Administrativo (Dashboard)** | React JS | Área para gerenciamento de usuários, análises e relatórios de projetos. |
 | 📱 **Aplicativo Mobile** | React Native | Permite aos engenheiros realizarem análises rápidas e acessarem resultados via smartphone. |
-| 🔌 **Backend API** | ASP.NET Core 9.0 | API responsável pela autenticação, controle de usuários, comunicação com o Gemini e armazenamento de dados. (Submódulo separado) |
+| 🔌 **Backend API** | ASP.NET Core 8.0 | API responsável pela autenticação, controle de usuários, comunicação com o Gemini e armazenamento de dados. (Submódulo separado) |
 
 ---
 
@@ -69,7 +69,7 @@ A IA realiza análises automáticas que:
 - Axios  
 
 ### 🔹 Backend
-- ASP.NET Core 9.0 (C#)  
+- ASP.NET Core 8.0 (C#)  
 - Entity Framework Core  
 - SQL Server  
 - JWT Authentication  
@@ -97,7 +97,7 @@ EnerCheckPrincipal/
 graph LR
 A[Usuário] --> B[App React Native]
 A --> C[Site React JS]
-B --> D[API .NET Core 9.0]
+B --> D[API .NET Core 8.0]
 C --> D
 D --> E[Gemini API]
 D --> F[Banco de Dados SQL Server]
@@ -138,10 +138,48 @@ npm start
 ⚠️ O backend deve ser inicializado separadamente (ver README no submódulo /backend).
 
 ## 🧑‍💻 Desenvolvido por
-<table align="center"> <tr> <td align="center"><img src="https://avatars.githubusercontent.com/u/160606373" width="100px;" alt=""/><br /><sub><b>Bruno Martins</b></sub><br />💻 Dev FullStack</td>
- <td align="center"><img src="https://avatars.githubusercontent.com/u/158314044" width="100px;" alt=""/><br /><sub><b>Thiago Mazzi</b></sub><br />💻 Dev FullStack</td>
- <td align="center"><img src="https://avatars.githubusercontent.com/u/158314249" width="100px;" alt=""/><br /><sub><b>Joaquim</b></sub><br />💻 Dev FullStack</td> 
- <td align="center"><img src="https://avatars.githubusercontent.com/u/158313981" width="100px;" alt=""/><br /><sub><b>Luiz Ghilherme </b></sub><br />💻 Dev FullStack</td> </tr>
+
+<table align="center">
+    <tr>
+        <td align="center">
+            <a href="https://github.com/Brun0HM" style="text-decoration: none;">
+                <img src="https://avatars.githubusercontent.com/u/160606373" width="100px;" alt="Avatar de Bruno Martins"/><br />
+                <sub><b>Bruno Martins</b></sub><br />
+                💻 Dev FullStack e Líder de projeto
+            </a>
+        </td>
+        <td align="center">
+            <a href="https://github.com/ThiagoM22" style="text-decoration: none;">
+                <img src="https://avatars.githubusercontent.com/u/158314044" width="100px;" alt="Avatar de Thiago Mazzi"/><br />
+                <sub><b>Thiago Mazzi</b></sub><br />
+                💻 Dev FullStack
+            </a>
+        </td>
+        <td align="center">
+            <a href="https://github.com/joaquimtxt" style="text-decoration: none;">
+                <img src="https://avatars.githubusercontent.com/u/158314249" width="100px;" alt="Avatar de Joaquim"/><br />
+                <sub><b>Joaquim</b></sub><br />
+                💻 Dev FullStack
+            </a>
+        </td>
+        <td align="center">
+            <a href="URL_GITHUB_LUIZ" style="text-decoration: none;">
+                <img src="https://avatars.githubusercontent.com/u/158313981" width="100px;" alt="Avatar de Luiz Ghilherme"/><br />
+                <sub><b>Luiz Ghilherme</b></sub><br />
+                💻 Dev FullStack
+            </a>
+        </td>
+        <td align="center">
+            <a href="URL_GITHUB_RYAN" style="text-decoration: none;">
+                <img src="https://avatars.githubusercontent.com/u/158313804?v=4" width="100px;" alt="Avatar de Ryan Rattini"/><br />
+                <sub><b>Ryan Rattini</b></sub><br />
+                💻 Web Designer e Dev FrontEnd
+            </a>
+        </td>
+    </tr>
+
 </table>
+
+
 🪪 Licença
 Este projeto está sob a licença MIT – veja o arquivo LICENSE para mais detalhes.

@@ -14,6 +14,7 @@ import Pix from '../components/Pix';
 import Boleto from '../components/Boleto';
 import { useTheme } from '../contexts/ThemeContext';
 import { Alert } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
 
 export default function FinalizarEscolhaAssinaturaScreen({setIsAuthenticated }) {
   const { theme, isLoaded } = useTheme();
@@ -80,7 +81,7 @@ export default function FinalizarEscolhaAssinaturaScreen({setIsAuthenticated }) 
   };
 
   const handlePaymentSuccess = () => {
-Alert.alert('Sucesso!', 'Pagamento realizado com sucesso!', [
+    Alert.alert('Sucesso!', 'Pagamento realizado com sucesso!', [
       {
         text: 'OK',
         onPress: () => {
@@ -88,14 +89,18 @@ Alert.alert('Sucesso!', 'Pagamento realizado com sucesso!', [
             // Novo usuário - autentica e vai para app principal
             setIsAuthenticated(true);
           } else {
-            // Usuário já logado - volta para configurações
-            navigation.navigate('Geral', { screen: 'GeralMain' });
+            // Usuário já logado - reseta o stack e vai para Geral
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Geral' }],
+              })
+            );
           }
         }
       }
     ]);
-    // Opcional: Mostrar uma mensagem de sucesso
-    console.log('✅ Pagamento realizado com sucesso! Redirecionando para dashboard...');
+    console.log('✅ Pagamento realizado com sucesso!');
   };
 
   return (
