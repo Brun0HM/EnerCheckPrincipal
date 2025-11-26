@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // URL base da sua API
-const BASE_URL = "https://192.168.1.114:7257";
+const BASE_URL = "https://enercheck.onrender.com";
 
 // 1. Cria a instância do Axios com a URL base
 const api = axios.create({
@@ -12,6 +12,7 @@ const api = axios.create({
   timeout: 10000,
 });
 
+// 1. Usuarios --------------------------------------------------------------------------------
 /**
  * Função para buscar os perfis.
  * Faz a requisição e já retorna a lista filtrada (id, nome e email).
@@ -35,7 +36,7 @@ const getUser = async () => {
  */
 const createUser = async (email, senha, nomeCompleto, numeroCrea, empresa) => {
   // O endpoint para registro pode ser diferente, ajuste se necessário
-  return await api.post("/api/Usuarios", {
+  return await api.post("/api/Usuarios/Cliente", {
     email: email,
     senha: senha,
     nomeCompleto: nomeCompleto,
@@ -51,11 +52,59 @@ const deleteUser = async (id) => {
   return await api.delete(`/api/Usuarios/${id}`);
 };
 
+const loginUser = async (email, senha) => {
+  try {
+    const response = await api.post("/api/Usuarios/login", {
+      email,
+      senha,
+    });
+
+    // Ajuste conforme a estrutura real da sua API (token, accessToken, data.token etc.)
+    const token =
+      response.data?.token || response.data?.accessToken || response.data;
+
+    console.log("Login bem-sucedido!");
+    console.log("Token Bearer:", token);
+
+    // Se quiser, define header default para futuras chamadas
+    if (token) {
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      // e salva no localStorage para persistência
+      try {
+        localStorage.setItem("token", token);
+        console.log(token);
+      } catch (e) {
+        console.warn("Não foi possível salvar o token no localStorage:", e);
+      }
+    }
+
+    return response;
+  } catch (error) {
+    // Logs detalhados para ajudar a depuração
+    if (error.response) {
+      console.error("Erro na resposta da API:", {
+        status: error.response.status,
+        data: error.response.data,
+        headers: error.response.headers,
+      });
+    } else if (error.request) {
+      console.error("Requisição feita mas sem resposta:", error.request);
+    } else {
+      console.error("Erro ao configurar requisição:", error.message);
+    }
+    throw error;
+  }
+};
+
+//--------------------------------------------------------------------------------------------
+// 2. Planos --------------------------------------------------------------------------------
+
 // Exporta as funções que o componente usará
 const apiService = {
   getUser,
   createUser,
   deleteUser,
+  loginUser,
 };
 
 export default apiService;
