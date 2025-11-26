@@ -140,6 +140,17 @@ const loginUser = async (email, senha) => {
 
 //--------------------------------------------------------------------------------------------
 // 2. Planos --------------------------------------------------------------------------------
+const InserirPlano = async () => {
+  const url= "/api/Usuarios/usuario/add/plano";
+
+  try{
+    const response = await api.put(url, id), {
+      
+    }
+  }
+};
+
+//--------------------------------------------------------------------------------------------
 
 // Exporta as funções que o componente usará
 const apiService = {
