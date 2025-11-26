@@ -36,7 +36,7 @@ const Login = () => {
     if (Object.keys(newErrors).length === 0) {
       try {
         await apiService.loginUser(email.trim(), senha);
-        navigate("/dashboardGeral");
+        navigate("/planos");
       } catch (error) {
         console.error("Erro ao logar usuário:", error);
         const status = error.response?.status;
