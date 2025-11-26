@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../App.css";
 import { useNavigate } from "react-router";
+import { Tokens } from "@google/genai";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const Login = () => {
 
     // Se não há erros, prosseguir com o login
     if (Object.keys(newErrors).length === 0) {
-      console.log("Login válido:", { email, senha });
+      console.log("", { email, senha });
       // Navegar para o dashboard apenas se tudo estiver válido
       navigate("/dashboardGeral");
     }
@@ -52,7 +53,6 @@ const Login = () => {
     e.preventDefault();
 
     const newErrors = {};
-
 
     // Validar senha
     if (!senha.trim()) {
@@ -65,7 +65,7 @@ const Login = () => {
 
     // Se não há erros, prosseguir com o login
     if (Object.keys(newErrors).length === 0) {
-      console.log("Login válido:", { email, senha });
+      console.log({ email, senha });
       navigate("/dashboardGeral");
     }
   };

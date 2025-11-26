@@ -14,6 +14,7 @@ import DashboardNavbar from "./components/DashboardNavbar";
 import UploadProjeto from "./pages/UploadProjeto.jsx";
 import Configurações from "./pages/Configurações.jsx";
 import Teste from "./pages/Teste.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -43,18 +44,46 @@ const Layout = () => {
       {shouldShowDashboardNavbar && <DashboardNavbar />}
       <Routes>
         <Route path="/*" element={<App />} />
-        <Route path="/dashboardProjeto" element={<DashboardProjeto />}></Route>
+        <Route
+          path="/dashboardProjeto"
+          element={
+            <PrivateRoute>
+              <DashboardProjeto />
+            </PrivateRoute>
+          }
+        />
         <Route path="/login" element={<Logar />} />
         <Route path="/cadastro" element={<Cadastrar />} />
-        <Route path="/dashboardGeral" element={<DashBoardGeral />} />
+        <Route
+          path="/dashboardGeral"
+          element={
+            <PrivateRoute>
+              <DashBoardGeral />
+            </PrivateRoute>
+          }
+        />
         <Route path="/planos" element={<Planos />} />
         <Route path="/tema" element={<Tema />} />
         <Route
           path="/comecarAssinatura"
           element={<FinalizarEscolhaAssinatura />}
         />
-        <Route path="/uploadProjeto" element={<UploadProjeto />} />
-        <Route path="/configuracoes" element={<Configurações />} />
+        <Route
+          path="/uploadProjeto"
+          element={
+            <PrivateRoute>
+              <UploadProjeto />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/configuracoes"
+          element={
+            <PrivateRoute>
+              <Configurações />
+            </PrivateRoute>
+          }
+        />
         <Route path="/Teste" element={<Teste />} />
       </Routes>
       {!shouldHideNavbar && <Footer />}

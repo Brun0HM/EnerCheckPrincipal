@@ -72,7 +72,6 @@ const loginUser = async (email, senha) => {
       // e salva no localStorage para persistência
       try {
         localStorage.setItem("token", token);
-        console.log(token);
       } catch (e) {
         console.warn("Não foi possível salvar o token no localStorage:", e);
       }
