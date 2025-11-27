@@ -1,36 +1,39 @@
-import React, { useState } from 'react'
-import usuarios from '../apis/usuarios'
-import { ComponenteLista } from './ComponenteLista'
-import VisualizarLista from './VisualizarLista';
-import DeleteModal from './DeleteModal';
-import Editar from "./Editar";
+import React, { useEffect, useState } from "react";
 
-export const ListaUsers = ({ paginatedData}) => {
+import { ComponenteLista } from "./ComponenteLista";
+import VisualizarLista from "./VisualizarLista";
+import DeleteModal from "./DeleteModal";
+import Editar from "./Editar";
+import apiService from "../../../FronEnd/services/api";
+
+export const ListaUsers = ({ paginatedData }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModalView, setShowModalView] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
-  
-  // Usar dados paginados se fornecidos, senão usar todos os dados
-  const dataToRender = paginatedData || usuarios;
 
-  const handleView = (item)=>{
+  const [usuarios, setUsuarios] = useState([]);
+  const [carregando, setCarregando] = useState(false);
+
+  // Usar dados paginados se fornecidos, senão usar todos os dados
+
+  const handleView = (item) => {
     setSelectedItem(item);
     setShowModalView(true);
-  }
-  const handleCloseModalView = ()=>{
+  };
+  const handleCloseModalView = () => {
     setSelectedItem(null);
     setShowModalView(false);
-  }
-  const handleCloseModalDelete = ()=>{
+  };
+  const handleCloseModalDelete = () => {
     setSelectedItem(null);
     setShowModalDelete(false);
-  }
+  };
   const handleDelete = (item) => {
     setSelectedItem(item);
     setShowModalDelete(true);
-  }
-  
+  };
+
   const handleEdit = (item) => {
     setSelectedItem(item);
     setShowModalEdit(true);
@@ -38,42 +41,75 @@ export const ListaUsers = ({ paginatedData}) => {
 
   const handleConfirmDelete = (itemId) => {
     console.log(`Excluindo item com ID: ${itemId}`);
-  }
+  };
+
+  const listarUsers = async () => {
+    try {
+      setCarregando(true);
+      const dados = await apiService.getUser();
+      setUsuarios(dados);
+    } catch (error) {
+      console.log("Erro ao buscar usuarios: " + error);
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  useEffect(() => {
+    listarUsers();
+  }, []);
 
   return (
     <>
-      <div className="d-flex flex-column gap-2 rounded-4" style={{ maxHeight: "500px" }}>
-        {dataToRender.map((item) => (
-          <ComponenteLista
-            key={item.id}
-            nome={item.usuarioNome}
-            desc={item.email}
-            topic1={'CREA'}
-            t1info={item.crea}
-            topic2={'Data de Criação'}
-            t2info={item.dataCriacao}
-            topic3={'Plano'}
-            t3info={item.planos[0]?.nome}
-            view={()=> handleView(item)}
-            delete={()=> handleDelete(item)}
-            editar={() => handleEdit(item)}
-          />
-        ))}
+      <div
+        className="d-flex flex-column gap-2 rounded-4"
+        style={{ maxHeight: "500px" }}
+      >
+        {!usuarios ? (
+          <div className="d-flex flex-column align-items-center text-center gap-3 mt-5"> 
+          <div style={{width: "5rem", height: "5rem",}} className="spinner-border text-primary align-self-center fs-2"> </div>
+          <p>Carregando Informações...</p>
+          </div>
+          ) : !carregando ?
+          usuarios.map((usuario) => (
+            <ComponenteLista
+              key={usuario.id}
+              nome={usuario.nome}
+              desc={usuario.email}
+              topic1={"CREA"}
+              t1info={usuario.crea}
+              topic2={"Empresa"}
+              t2info={usuario.empresa}
+              topic3={"Plano"}
+              t3info={"MANUTENÇÃO"} // item.planos[0]?.nome}
+              view={() => handleView(usuario)} // nesses handles, o .map vai passar o usuário COMPLETO.
+              delete={() => handleDelete(usuario)} // é bom comentar isso pq eu fiquei perdido desde o inicio tentando entender
+              editar={() => handleEdit(usuario)}
+            />
+          )) : (
+            <div className="d-flex flex-column align-items-center text-center gap-3 mt-5"> 
+          <div style={{width: "5rem", height: "5rem",}} className="spinner-border text-primary align-self-center fs-2"> </div>
+          <p>Carregando Informações...</p>
+          </div>
+          ) }
       </div>
-      
+
       {showModalView && (
-        <div className='modal show d-block' tabIndex="-1">
-          <div className='modal-backdrop show' onClick={handleCloseModalView}></div>
-          <VisualizarLista
-            item={selectedItem}
-            onClose={handleCloseModalView}
-          />
+        <div className="modal show d-block" tabIndex="-1">
+          <div
+            className="modal-backdrop show"
+            onClick={handleCloseModalView}
+          ></div>
+          <VisualizarLista item={selectedItem} onClose={handleCloseModalView} />
         </div>
       )}
-      
-      { showModalDelete && (
-        <div className='modal show d-block' tabIndex="-1">
-          <div className='modal-backdrop show' onClick={handleCloseModalDelete}></div>
+
+      {showModalDelete && (
+        <div className="modal show d-block" tabIndex="-1">
+          <div
+            className="modal-backdrop show"
+            onClick={handleCloseModalDelete}
+          ></div>
           <DeleteModal
             item={selectedItem}
             onClose={handleCloseModalDelete}
@@ -81,17 +117,17 @@ export const ListaUsers = ({ paginatedData}) => {
           />
         </div>
       )}
-       {showModalEdit && (
-           <>
-             {/* Fundo escuro */}
-             <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75"></div>
-   
-             {/* Modal centralizado */}
-             <div className="d-flex justify-content-center align-items-center w-100 h-100 position-fixed z-3 top-0 end-0">
-               <Editar fechar={() => setShowModalEdit(false)} />
-             </div>
-           </>
-         )}
+      {showModalEdit && (
+        <>
+          {/* Fundo escuro */}
+          <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75"></div>
+
+          {/* Modal centralizado */}
+          <div className="d-flex justify-content-center align-items-center w-100 h-100 position-fixed z-3 top-0 end-0">
+            <Editar fechar={() => setShowModalEdit(false)} />
+          </div>
+        </>
+      )}
     </>
-  )
-}
+  );
+};

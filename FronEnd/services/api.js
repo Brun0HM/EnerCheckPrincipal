@@ -67,6 +67,8 @@ const getUser = async () => {
     id: user.id,
     nome: user.nomeCompleto,
     email: user.email,
+    crea: user.numeroCrea,
+    empresa: user.empresa
   }));
 
   return listaSimples;
@@ -141,12 +143,25 @@ const loginUser = async (email, senha) => {
 //--------------------------------------------------------------------------------------------
 // 2. Planos --------------------------------------------------------------------------------
 
+const deletePlano = async (planoId) => {
+
+  try {
+    console.log('Plano deletado com sucesso.')
+    return await api.delete(`/api/Planos/${planoId}`)
+  } catch (e) {
+ console.log("Erro ao deletar plano: " + e)
+  }
+
+
+}
+
 // Exporta as funções que o componente usará
 const apiService = {
   getUser,
   createUser,
   deleteUser,
   loginUser,
+  deletePlano
 };
 
 export default apiService;

@@ -1,16 +1,11 @@
 import React from "react";
 
 const DeleteModal = ({
-  item,
   onClose,
-  onConfirm,
+  endpointDelete,
   title = "Certeza que deseja excluir o cadastro?",
 }) => {
-  const handleConfirmDelete = () => {
-    // Passa apenas o ID do item para a função de confirmação
-    onConfirm(item.id);
-    onClose();
-  };
+ 
   return (
     <div
       className="modal-dialog modal-dialog-centered"
@@ -30,7 +25,7 @@ const DeleteModal = ({
             <div className="d-flex justify-content-center align-items-center border-bottom pb-2">
               <button
                 className="btn btn-danger text-light rounded-2 me-5"
-                onClick={handleConfirmDelete}
+                onClick={endpointDelete}
               >
                 Excluir
               </button>

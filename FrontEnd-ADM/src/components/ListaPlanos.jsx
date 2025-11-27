@@ -1,100 +1,116 @@
 import React, { useEffect, useState } from "react";
-import planos from "../apis/planos";
+
 import { ComponenteLista } from "./ComponenteLista";
 import VisualizarLista from "./VisualizarLista";
 import DeleteModal from "./DeleteModal";
 import Editar from "./Editar";
 import apiPlanos from "../apis/planos";
-export const ListaPlanos = ({paginatedData}) => {
-   const [selectedItem, setSelectedItem] = useState(null);
-    const [showModalView, setShowModalView] = useState(false);
-    const [showModalDelete, setShowModalDelete] = useState(false);
-    const [showModalEdit, setShowModalEdit] = useState(false);
+import apiService from "../../../FronEnd/services/api";
+export const ListaPlanos = () => {
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showModalView, setShowModalView] = useState(false);
+  const [showModalDelete, setShowModalDelete] = useState(false);
+  const [showModalEdit, setShowModalEdit] = useState(false);
 
   const [planos, setPlanos] = useState([]);
-  const [carregando, setCarregando] = useState(false)
+  const [carregando, setCarregando] = useState(false);
 
-       // Usar dados paginados se fornecidos, senão usar todos os dados
-       const dataToRender = paginatedData
-  
-    const handleView = (item)=>{
-      setSelectedItem(item);
-      setShowModalView(true);
-    }
-    const handleCloseModalView = ()=>{
-      setSelectedItem(null);
-      setShowModalView(false);
-    }
-    const handleCloseModalDelete = ()=>{
-      setSelectedItem(null);
-      setShowModalDelete(false);
-    }
-    const handleDelete = (item) => {
-      setSelectedItem(item);
-      setShowModalDelete(true);
-    };
-    const handleEdit = (item) => {
-      setSelectedItem(item);
-      setShowModalEdit(true);
-    };
-  
-    const handleConfirmDelete = (itemId) => {
-      console.log(`Excluindo item com ID: ${itemId}`);
-    }
+  const handleView = (item) => {
+    setSelectedItem(item);
+    setShowModalView(true);
+  };
+  const handleCloseModalView = () => {
+    setSelectedItem(null);
+    setShowModalView(false);
+  };
+  const handleCloseModalDelete = () => {
+    setSelectedItem(null);
+    setShowModalDelete(false);
+  };
+  const handleDelete = (item) => {
+    setSelectedItem(item);
+    setShowModalDelete(true);
+  };
+  const handleEdit = (item) => {
+    setSelectedItem(item);
+    setShowModalEdit(true);
+  };
 
-    const listarPlanos = async () => {
-
+  const handleConfirmDelete = () => {
+    const id = selectedItem.planoId;
+    if (id) {
       try {
-        setCarregando(true)
-        const dados = await apiPlanos.listagemPlanos()
-        setPlanos(dados);
-      } catch (e) {
-        console.log("Erro ao utilizar a api: ", e)
-      } finally {
-        setCarregando(false)
+        apiService.deletePlano(id);
+        console.log(`Excluindo item com ID: ${id}`);
+        setShowModalDelete(false);
+        window.location.reload();
+      } catch (error) {
+        console.log("Erro ao deletar plano: " + error);
       }
+    } else {
+      console.log("não foi possível obter o ID do plano para exclusão.");
     }
+  };
 
-   useEffect(() => {
+  const listarPlanos = async () => {
+    try {
+      setCarregando(true);
+      const dados = await apiPlanos.listagemPlanos();
+      setPlanos(dados);
+    } catch (e) {
+      console.log("Erro ao utilizar a api: ", e);
+    } finally {
+      setCarregando(false);
+    }
+  };
 
+  useEffect(() => {
     listarPlanos();
-   
+  }, []);
 
-   },[])
-    
-    
-    
   return (
     <>
-    <div
-      className="d-flex flex-column gap-2 overflow-y-auto rounded-4"
-      style={{ maxHeight: "500px" }}
-    >
-      {planos && planos.map((item) => (
-        <ComponenteLista
-          key={item.planoId}
-          nome={item.nome}
-          topic1={"Preço"}
-          t1info={item.preco}
-          topic2={"Requisições"}
-          t2info={item.quantidadeReq}
-          topic3={"Ativo?"}
-          t3info={item.ativo ? "Sim" : "Não"}
-          view={()=> handleView(item)}
-          delete={() => handleDelete(item)}
-          editar={() => handleEdit(item)}
-        />
-      ))}
-    </div>
-     {showModalView &&(
-      <div className='modal show d-block' tabIndex="-1">
-        <div className='modal-backdrop show' onClick={handleCloseModalView}></div>
-        <VisualizarLista
-        item={selectedItem}
-        onClose={handleCloseModalView}
-        />
+      <div
+        className="d-flex flex-column gap-2 overflow-y-auto rounded-4 "
+        style={{ maxHeight: "500px" }}
+      >
+        {!planos ? (
+        <div className="d-flex flex-column align-items-center text-center gap-3 mt-5"> 
+          <div style={{width: "5rem", height: "5rem",}} className="spinner-border text-primary align-self-center fs-2"> </div>
+          <p>Carregando Informações...</p>
+          </div>
+        ) : !carregando ? (
+          planos.map((plano) => (
+            <ComponenteLista
+              key={plano.planoId}
+              nome={plano.nome}
+              topic1={"Preço"}
+              t1info={plano.preco}
+              topic2={"Requisições"}
+              t2info={plano.quantidadeReq}
+              topic3={"Ativo?"}
+              t3info={plano.ativo ? "Sim" : "Não"}
+              view={() => handleView(plano)} // nesses handles, o .map vai passar o plano COMPLETO
+              delete={() => handleDelete(plano)} // é bom comentar isso pq eu fiquei perdido desde o inicio tentando entender
+              editar={() => handleEdit(plano)}
+            />
+          ))
+        ) : (
+          <div className="d-flex flex-column align-items-center text-center gap-3 mt-5"> 
+          <div style={{width: "5rem", height: "5rem",}} className="spinner-border text-primary align-self-center fs-2"> </div>
+          <p>Carregando Informações...</p>
+          </div>
+        )}
       </div>
-     )}
+      {showModalView && (
+        <div className="modal show d-block" tabIndex="-1">
+          <div
+            className="modal-backdrop show"
+            onClick={handleCloseModalView}
+          ></div>
+          <VisualizarLista item={selectedItem} onClose={handleCloseModalView} />
+        </div>
+      )}
       {showModalDelete && (
         <div className="modal show d-block" tabIndex="-1">
           <div
@@ -104,7 +120,7 @@ export const ListaPlanos = ({paginatedData}) => {
           <DeleteModal
             item={selectedItem}
             onClose={handleCloseModalDelete}
-            onConfirm={handleConfirmDelete}
+            endpointDelete={handleConfirmDelete}
           />
         </div>
       )}

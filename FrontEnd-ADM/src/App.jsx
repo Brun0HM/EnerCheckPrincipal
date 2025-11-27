@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import Editar from "./components/Editar";
-import loginUser from "./apis/usuarios";
+import apiService from "../../FronEnd/services/api";
 
 function App() {
   const [email, setEmail] = useState("");
@@ -32,25 +32,22 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    setCarregando(true);
-    
-    if (validateForm()) {
 
+    setCarregando(true);
+
+    if (validateForm()) {
       console.log("Dados do formulário:", { email, senha });
 
       try {
-      loginUser(email, senha)
-      setEmail("");
-      setSenha("");
+        apiService.loginUser(email, senha);
+        setEmail("");
+        setSenha("");
 
-      alert("Usuário logado com sucesso.")
-      navigate("/users");
-      console.log("Token de login: " + localStorage.getItem("Token"))
-
+        alert("Usuário logado com sucesso.");
+        navigate("/users");
+        console.log("Token de login: " + localStorage.getItem("Token"));
       } catch (error) {
-        console.log("Erro ao logar: ", error)
-        
+        console.log("Erro ao logar: ", error);
       } finally {
         setCarregando(false);
       }
@@ -117,7 +114,9 @@ function App() {
               <div className="d-grid">
                 <button
                   type="submit"
-                  className={`btn btn-primary btn-lg fw-semibold ${carregando && "disabled"}`}
+                  className={`btn btn-primary btn-lg fw-semibold ${
+                    carregando && "disabled"
+                  }`}
                   disabled={carregando}
                 >
                   Entrar

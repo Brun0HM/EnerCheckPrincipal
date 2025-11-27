@@ -1,12 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TabelaGeral } from "../components/TabelaGeral";
 import { ContainerLista } from "../components/ContainerLista";
-import usuarios from "../apis/usuarios";
+
 import { ListaUsers } from "../components/ListaUsers";
 import Modal from "../components/Modal";
+import apiService from "../../../FronEnd/services/api";
 
 const GerenciamentoUsers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [usuarios, setUsuarios] = useState([])
+
+
+const listarUsers = async () => {
+  try {
+    const dados = await apiService.getUser();
+    setUsuarios(dados)
+  } catch (error) {
+    console.log("Erro ao buscar usuarios: "+ error)
+  }
+}
+
+useEffect(() => {
+  listarUsers();
+},[])
 
   return (
     <>

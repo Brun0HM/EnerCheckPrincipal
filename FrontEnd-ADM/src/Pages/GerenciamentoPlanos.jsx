@@ -6,6 +6,9 @@ import apiPlanos from "../apis/planos";
 
 const GerenciamentoPlanos = () => {
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+  
+
   const [planos, setPlanos] = useState([]);
   const [carregando, setCarregando] = useState(false);
   
@@ -26,7 +29,7 @@ const GerenciamentoPlanos = () => {
   
   useEffect(() => {
   
-  listarPlanos().then(setPlanos).catch(console.error);
+  listarPlanos().catch(console.error);
   
   },[])
 
@@ -39,12 +42,12 @@ const GerenciamentoPlanos = () => {
         <h3 className='text-capitalize fw-bold text-start m-0'>Administração de planos</h3>
         <p className='fs-6 fw-light'>Ler, criar, editar e excluir cadastro de planos</p>
 
-{!carregando && planos && (
+{ planos && (
 
   <div className='d-flex flex-column gap-3 overflow-hidden'>
 
         <TabelaGeral
-        topic1={"Cadastros Totais"}
+        topic1={"Planos Disponíveis"}
         t1info={planos.length}
         
         topic2={"Faturamento Atual"}
@@ -54,9 +57,10 @@ const GerenciamentoPlanos = () => {
         t3info={"41"}
         />
     <ContainerLista
-    topico={"lorem ipsum dolor sit amet"}
-    desc={"lorem ipsum dolor doloris"}
+    topico={"Listagem de Planos"}
+    desc={"Gerencie todos os Planos disponíveis"}
     lista={<ListaPlanos />}
+    ModalOpen={() => setIsModalOpen(true)}
     />
   
 
