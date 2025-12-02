@@ -150,6 +150,15 @@ const Teste = () => {
     }
   }
 
+  async function handleDeleteProjeto(id) {
+    try {
+      await apiService.deleteProjetos(id);
+      handleGetProjeto(); // Atualiza a lista
+    } catch (error) {
+      console.error("Erro ao deletar projeto:", error);
+    }
+  }
+
   return (
     <div>
       <h1 className="text-white">Teste de API</h1>
@@ -238,6 +247,15 @@ const Teste = () => {
                   <div>Descrição: {projeto.descricao}</div>
                   <div>Status: {projeto.status}</div>
                   <div>Análise: {projeto.analise}</div>
+                  <div>
+                    {" "}
+                    <i
+                      className="bi-trash"
+                      onClick={() => handleDeleteProjeto(projeto.projetoId)}
+                    >
+                      Excluir
+                    </i>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -257,7 +275,7 @@ const Teste = () => {
             <button onClick={handlePostProjeto}>Criar Projeto</button>
           </form>
           <h4>Put projetos</h4>
-          <h4>Delete projetos</h4>
+          
         </div>
       </div>
     </div>
