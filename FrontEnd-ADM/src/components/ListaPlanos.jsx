@@ -6,13 +6,15 @@ import DeleteModal from "./DeleteModal";
 import Editar from "./Editar";
 import apiPlanos from "../apis/planos";
 import apiService from "../../../FronEnd/services/api";
-export const ListaPlanos = () => {
+
+export const ListaPlanos = (props) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModalView, setShowModalView] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
 
-  const [planos, setPlanos] = useState([]);
+  const planos = (props.plano);
+
   const [carregando, setCarregando] = useState(false);
 
   const handleView = (item) => {
@@ -53,12 +55,13 @@ export const ListaPlanos = () => {
   };
 
   const listarPlanos = async () => {
+    setCarregando(true);
     try {
-      setCarregando(true);
-      const dados = await apiPlanos.listagemPlanos();
-      setPlanos(dados);
+      if (planos) {
+        console.log("planos carregados!")
+      }
     } catch (e) {
-      console.log("Erro ao utilizar a api: ", e);
+      console.log("Plano nao carregou: ", e);
     } finally {
       setCarregando(false);
     }
@@ -75,9 +78,14 @@ export const ListaPlanos = () => {
         style={{ maxHeight: "500px" }}
       >
         {!planos ? (
-        <div className="d-flex flex-column align-items-center text-center gap-3 mt-5"> 
-          <div style={{width: "5rem", height: "5rem",}} className="spinner-border text-primary align-self-center fs-2"> </div>
-          <p>Carregando Informações...</p>
+          <div className="d-flex flex-column align-items-center text-center gap-3 mt-5">
+            <div
+              style={{ width: "5rem", height: "5rem" }}
+              className="spinner-border text-primary align-self-center fs-2"
+            >
+              {" "}
+            </div>
+            <p>Carregando Informações...</p>
           </div>
         ) : !carregando ? (
           planos.map((plano) => (
@@ -96,9 +104,14 @@ export const ListaPlanos = () => {
             />
           ))
         ) : (
-          <div className="d-flex flex-column align-items-center text-center gap-3 mt-5"> 
-          <div style={{width: "5rem", height: "5rem",}} className="spinner-border text-primary align-self-center fs-2"> </div>
-          <p>Carregando Informações...</p>
+          <div className="d-flex flex-column align-items-center text-center gap-3 mt-5">
+            <div
+              style={{ width: "5rem", height: "5rem" }}
+              className="spinner-border text-primary align-self-center fs-2"
+            >
+              {" "}
+            </div>
+            <p>Carregando Informações...</p>
           </div>
         )}
       </div>

@@ -104,17 +104,20 @@ const ContainerLista = (props) => {
           <p className="small">{props.desc}</p>
         </div>
         {props.ModalOpen && (
+          <div className='d-flex flex-row gap-2'>
           <button className={`btn btn-dark py-1 px-3 rounded-3 ${props.sumiu}`}>
             <div
               className="d-flex flex-row align-items-center"
               onClick={props.ModalOpen}
             >
-              <i className="bi bi-person-plus-fill text-primary fs-3 me-2"></i>{" "}
-              <b className="fs-5">
+              <i className="bi bi-person-plus-fill text-primary fs-5 me-2"></i>{" "}
+              <b className="fs-6">
                 Cadastrar
               </b>
             </div>
           </button>
+    <button onClick={""} className="btn bg-primary text-light fw-medium">Carregar Lista</button>
+          </div>
         )}
       </div>
 
