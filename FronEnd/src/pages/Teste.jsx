@@ -6,6 +6,7 @@ const Teste = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   //Criar usuarios
   const inputEmail = useRef();
@@ -104,6 +105,16 @@ const Teste = () => {
     }
   }
 
+  // Função para obter o usuário logado pelo token
+  async function handleGetUserByToken() {
+    try {
+      const user = await apiService.getUserByToken();
+      setCurrentUser(user);
+    } catch (error) {
+      console.error("Erro ao obter usuário pelo token:", error);
+    }
+  }
+
   return (
     <div>
       <h1 className="text-white">Teste de API</h1>
@@ -157,6 +168,25 @@ const Teste = () => {
       <div>
         <h1 className="text-white">Teste do PUTA plano</h1>
         <button onClick={handlePutPlanos}>poer o plano no cu do user</button>
+      </div>
+
+      <div>
+        <h1 className="text-white">Teste do Usuário Logado</h1>
+        <button onClick={handleGetUserByToken}>Obter Usuário pelo Token</button>
+        {currentUser ? (
+          <div className="text-white">
+            <p>ID: {currentUser.id}</p>
+            <p>Email: {currentUser.email}</p>
+            <p>Nome: {currentUser.nomeCompleto}</p>
+            <p>Número CREA: {currentUser.numeroCrea}</p>
+            <p>Empresa: {currentUser.empresa}</p>
+            <p>
+              Plano: {currentUser.plano ? currentUser.plano.nome : "Nenhum"}
+            </p>
+          </div>
+        ) : (
+          <p className="text-white">Nenhum usuário logado ou erro ao obter.</p>
+        )}
       </div>
     </div>
   );

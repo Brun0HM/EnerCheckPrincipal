@@ -75,6 +75,32 @@ const getUser = async () => {
   return listaSimples;
 };
 
+const getUserByToken = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.warn("Token não encontrado. Usuário não autenticado.");
+      return null;
+    }
+
+    const response = await api.get("/api/Usuarios/me");
+    console.log("Usuário obtido com sucesso:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao obter usuário pelo token:", error.message);
+    if (error.response) {
+      console.error(
+        "Status:",
+        error.response.status,
+        "Dados:",
+        error.response.data
+      );
+    }
+    // Em caso de erro, retorne null ou lance o erro para o chamador decidir
+    return null;
+  }
+};
+
 /**
  * Função para criar um novo usuário.
  */
@@ -169,6 +195,7 @@ const apiService = {
   deleteUser,
   loginUser,
   putPlanos,
+  getUserByToken,
 };
 
 export default apiService;
