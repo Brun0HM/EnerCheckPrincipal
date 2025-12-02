@@ -203,6 +203,10 @@ const getProjetos = async () => {
 };
 
 const postProjetos = async (nome, descricao) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("Usuário não autenticado. Token ausente.");
+  }
   try {
     return await api.post("/api/Projetos", {
       nome: nome,

@@ -15,6 +15,8 @@ const Teste = () => {
   const inputNomeCompleto = useRef();
   const inputNumeroCrea = useRef();
   const inputEmpresa = useRef();
+  const inputProjetoNome = useRef();
+  const inputProjetoDescricao = useRef();
 
   //salva informação dos usuarios para login
   const inputLoginEmail = useRef();
@@ -133,6 +135,21 @@ const Teste = () => {
     }
   }
 
+  async function handlePostProjeto(event) {
+    event.preventDefault();
+    try {
+      await apiService.postProjetos(
+        inputProjetoNome.current.value,
+        inputProjetoDescricao.current.value
+      );
+      handleGetProjeto();
+      inputProjetoNome.current.value = "";
+      inputProjetoDescricao.current.value = "";
+    } catch (error) {
+      console.error("Erro ao criar projeto:", error);
+    }
+  }
+
   return (
     <div>
       <h1 className="text-white">Teste de API</h1>
@@ -226,6 +243,19 @@ const Teste = () => {
             </ul>
           )}
           <h4>Post projetos</h4>
+          <form>
+            <input
+              type="text"
+              placeholder="Nome do Projeto"
+              ref={inputProjetoNome}
+            />
+            <input
+              type="text"
+              placeholder="Descrição do Projeto"
+              ref={inputProjetoDescricao}
+            />
+            <button onClick={handlePostProjeto}>Criar Projeto</button>
+          </form>
           <h4>Put projetos</h4>
           <h4>Delete projetos</h4>
         </div>
