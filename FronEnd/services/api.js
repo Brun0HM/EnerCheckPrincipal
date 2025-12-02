@@ -6,52 +6,51 @@ const BASE_URL = "https://enercheck.onrender.com";
 // 1. Cria a instância do Axios com a URL base
 const api = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  timeout: 90000,
 });
 
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token"); // Padronizado para minúsculo
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("Token");
-  if(token) {
-    config.headers['Authorization'] = `Bearer ${token}`;
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
+);
 
-  return config;
-}, (error) => {
-  return Promise.reject(error);
-})
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    const originalRequest = error.config;
 
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        const refreshToken = localStorage.getItem("refreshToken");
 
+        const response = await api.post("/Usuario/refresh", {
+          refreshToken: refreshToken,
+        });
 
-api.interceptors.response.use((response) => {
-  return response;
-}, async (error) => {
-  const originalRequest = error.config;
-
-  if (error.response?.status === 401 && !originalRequest._retry) {
-    originalRequest._retry = true;
-    try {
-      const refreshToken = localStorage.getItem('refreshToken');
-
-      const response = await api.post("/Usuario/refresh", {
-        refreshToken: refreshToken
-      });
-
-      const novoToken = response.data.accessToken;
-      localStorage.setItem('Token', novoToken);
-      originalRequest.headers['Authorization'] = `Bearer ${novoToken}`;
-      return api(originalRequest);
-    } catch (refreshError) {
-      console.error('O refresh token falhou: ', refreshError);
-      localStorage.clear();
-      window.location.href = '/'
-       
-      
+        const novoToken = response.data.accessToken;
+        localStorage.setItem("token", novoToken); // Padronizado para minúsculo
+        originalRequest.headers["Authorization"] = `Bearer ${novoToken}`;
+        return api(originalRequest);
+      } catch (refreshError) {
+        console.error("O refresh token falhou: ", refreshError);
+        localStorage.clear();
+        window.location.href = "/";
+      }
     }
   }
-} 
-
-)
+);
 
 // 1. Usuarios --------------------------------------------------------------------------------
 /**
@@ -67,6 +66,10 @@ const getUser = async () => {
     id: user.id,
     nome: user.nomeCompleto,
     email: user.email,
+    numeroCrea: user.numeroCrea,
+    useReq: user.useReq,
+    empresa: user.empresa,
+    plano: user.plano,
   }));
 
   return listaSimples;
@@ -141,16 +144,21 @@ const loginUser = async (email, senha) => {
 //--------------------------------------------------------------------------------------------
 // 2. Planos --------------------------------------------------------------------------------
 
-const putPlanos = async (id) => {
-  const url= "/api/Usuarios/usuario/add/plano";
-  try{
-    const response = await api.put(url, id )
-    console.log(response.data)
+const putPlanos = async (data, config = {}) => {
+  const token = localStorage.getItem("token"); // Padronizado para minúsculo
+  if (!token) {
+    throw new Error("Usuário não autenticado. Token ausente.");
+  }
+  const url = "/api/Usuarios/usuario/add/plano";
+  try {
+    const response = await api.put(url, data, config);
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Erro ao inserir plano:", error);
     throw error;
   }
+};
 
 //--------------------------------------------------------------------------------------------
 
@@ -164,4 +172,3 @@ const apiService = {
 };
 
 export default apiService;
-

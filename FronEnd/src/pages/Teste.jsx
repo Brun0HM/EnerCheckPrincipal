@@ -64,8 +64,6 @@ const Teste = () => {
     }
   }
 
-  
-
   // Chama a função getUsers assim que o componente é montado
   useEffect(() => {
     getUsers();
@@ -92,6 +90,20 @@ const Teste = () => {
     }
   }
 
+  // colocar o plano no usuario logado
+  async function handlePutPlanos(event) {
+    event.preventDefault();
+    try {
+      // Envie apenas o planoId como inteiro no corpo
+      await apiService.putPlanos(3, {
+        headers: { "Content-Type": "application/json" },
+      });
+      getUsers(); // Atualiza a lista de usuários
+    } catch (error) {
+      console.error("Erro ao colocar plano no usuário:", error);
+    }
+  }
+
   return (
     <div>
       <h1 className="text-white">Teste de API</h1>
@@ -101,8 +113,18 @@ const Teste = () => {
         <ul className="text-white">
           {users.map((user) => (
             <li key={user.id} style={{ marginBottom: 12 }}>
-              <div>{user.email}</div>
-              <div>{user.nome}</div>
+              <div>ID: {user.id}</div>
+              <div>Email: {user.email}</div>
+              <div>Nome: {user.nome}</div>
+              <div>Número CREA: {user.numeroCrea}</div>
+              <div>UseReq: {user.useReq}</div>
+              <div>Empresa: {user.empresa}</div>
+              <div>
+                Plano:{" "}
+                {user.plano
+                  ? `${user.plano.nome} (ID: ${user.plano.planoId}, Preço: R$ ${user.plano.preco})`
+                  : "Nenhum plano"}
+              </div>
               <i
                 className="bi bi-trash"
                 onClick={() => handleDeleteUser(user.id)}
@@ -130,6 +152,11 @@ const Teste = () => {
         <input type="text" ref={inputLoginEmail} placeholder="login email" />
         <input type="text" ref={inputLoginSenha} placeholder="login senha" />
         <button onClick={handleLogin}>logar na pqp</button>
+      </div>
+
+      <div>
+        <h1 className="text-white">Teste do PUTA plano</h1>
+        <button onClick={handlePutPlanos}>poer o plano no cu do user</button>
       </div>
     </div>
   );
