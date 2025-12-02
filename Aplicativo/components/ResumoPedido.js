@@ -47,25 +47,11 @@ const ResumoPedido = ({ theme, planData }) => {
           </View>
         ))}
       </View>
-
-      <View style={[styles.divider, { backgroundColor: theme.cardBorder }]} />
-
-      <View style={styles.totalsSection}>
-        <View style={styles.totalRow}>
-          <Text style={[styles.totalLabel, { color: theme.text }]}>Subtotal:</Text>
-          <Text style={[styles.totalValue, { color: theme.text }]}>R$00.00</Text>
-        </View>
-        <View style={styles.totalRow}>
-          <Text style={[styles.totalLabel, { color: theme.text }]}>Desconto:</Text>
-          <Text style={[styles.totalValue, { color: theme.text }]}>R$00.00</Text>
-        </View>
-      </View>
-
       <View style={[styles.divider, { backgroundColor: theme.cardBorder }]} />
 
       <View style={styles.finalTotal}>
         <Text style={[styles.finalTotalLabel, { color: theme.text }]}>Total</Text>
-        <Text style={[styles.finalTotalValue, { color: theme.text }]}>R$00.00</Text>
+        <Text style={[styles.finalTotalValue, { color: theme.text }]}>{preco}</Text>
       </View>
     </View>
   );

@@ -10,6 +10,8 @@ import {
   Alert,
 } from 'react-native';
 import { usuariosAPI } from '../api/Usuarios';
+import { authAPI } from '../api/Auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const hasMinLength = (s) => s?.length >= 8;
 const hasUpper = (s) => /[A-Z]/.test(s || '');
@@ -135,12 +137,12 @@ export default function RegisterScreen({ navigation }) {
   const handleRegister = async () => {
     const errosValidacao = validarFormulario();
     setErrors(errosValidacao);
-
+  
     if (Object.keys(errosValidacao).length > 0) {
       Alert.alert('Erro', 'Por favor, corrija os erros no formulário');
       return;
     }
-
+  
     try {
       const userData = {
         email: email.trim(),
@@ -150,25 +152,118 @@ export default function RegisterScreen({ navigation }) {
         empresa: empresa.trim() || "",
         userReq: 0,
       };
-
-      console.log('Enviando dados para registro...');
-      const result = await usuariosAPI.createCliente(userData);
+  
+      console.log('📤 1. Registrando usuário...');
+      const registerResult = await usuariosAPI.createCliente(userData);
+      console.log('✅ 1. Cliente registrado:', registerResult);
+  
+      // ✅ Aguardar salvamento
+      console.log('⏳ Aguardando salvamento no banco...');
+      await new Promise(resolve => setTimeout(resolve, 3000));
+  
+      console.log('🔐 2. Fazendo login obrigatório...');
       
-      console.log('Cliente registrado:', result);
-      Alert.alert('Cadastro realizado!', `Bem-vindo(a), ${nome}!`);
-      navigation.navigate('Planos');
-      
+      try {
+        const loginResult = await authAPI.login({
+          email: userData.email,
+          senha: userData.senha
+        });
+        
+        if (!loginResult.success) {
+          throw new Error('Login falhou após registro');
+        }
+        
+        console.log('✅ 2. Login bem-sucedido!');
+        console.log('👤 Dados do usuário do login:', loginResult.user);
+        
+        // ✅ CORRIGIDO: Montar dados completos usando registro + login
+        let finalUserData = loginResult.user;
+        
+        // Se os dados do login estão vazios, usar dados do registro
+        if (!finalUserData || Object.keys(finalUserData).length === 0) {
+          console.log('⚠️ Dados do login vazios, usando dados do registro');
+          finalUserData = {
+            email: registerResult.email || userData.email,
+            nomeCompleto: registerResult.nomeCompleto || userData.nomeCompleto,
+            numeroCrea: registerResult.numeroCrea || userData.numeroCrea,
+            empresa: registerResult.empresa || userData.empresa,
+            id: registerResult.id,
+            roles: registerResult.roles || ['Cliente']
+          };
+        } else {
+          // Complementar dados que podem estar faltando
+          finalUserData = {
+            ...finalUserData,
+            email: finalUserData.email || registerResult.email || userData.email,
+            nomeCompleto: finalUserData.nomeCompleto || registerResult.nomeCompleto || userData.nomeCompleto,
+            numeroCrea: finalUserData.numeroCrea || registerResult.numeroCrea || userData.numeroCrea,
+            empresa: finalUserData.empresa || registerResult.empresa || userData.empresa,
+            id: finalUserData.id || registerResult.id,
+            roles: finalUserData.roles || registerResult.roles || ['Cliente']
+          };
+        }
+        
+        console.log('💾 Dados finais para salvar:', finalUserData);
+        
+        // ✅ Salvar dados completos
+        await AsyncStorage.setItem('userToken', loginResult.token);
+        await AsyncStorage.setItem('userData', JSON.stringify(finalUserData));
+        
+        // ✅ Verificar se foi salvo corretamente
+        const savedUserData = await AsyncStorage.getItem('userData');
+        console.log('🔍 Verificação - dados salvos:', savedUserData);
+        
+        Alert.alert(
+          'Cadastro realizado!', 
+          `Bem-vindo(a), ${nome}!\n\nLogin automático realizado com sucesso.`,
+          [{
+            text: 'Continuar',
+            onPress: () => {
+              navigation.navigate('Planos', {
+                userToken: loginResult.token,
+                userData: finalUserData // ✅ Dados completos garantidos
+              });
+            }
+          }]
+        );
+        return;
+        
+      } catch (loginError) {
+        console.error('❌ Login obrigatório falhou:', loginError);
+        
+        Alert.alert(
+          'Erro no Login',
+          'Seu cadastro foi realizado, mas houve um erro no login automático.\n\nTente fazer login manualmente.',
+          [
+            {
+              text: 'Ir para Login',
+              onPress: () => navigation.navigate('Login')
+            },
+            {
+              text: 'Voltar',
+              style: 'cancel'
+            }
+          ]
+        );
+        return;
+      }
+        
     } catch (error) {
-      console.error('Erro no registro:', error);
+      console.error('❌ Erro no registro:', error);
       
       let errorMessage = 'Erro ao realizar cadastro. Tente novamente.';
       
-      if (error.errors) {
-        const firstError = Object.values(error.errors)[0];
-        if (Array.isArray(firstError) && firstError.length > 0) {
-          errorMessage = firstError[0];
+      if (error?.errors) {
+        const errorsList = [];
+        for (const [field, messages] of Object.entries(error.errors)) {
+          if (Array.isArray(messages)) {
+            errorsList.push(...messages);
+          } else {
+            errorsList.push(messages);
+          }
         }
-      } else if (error.message) {
+        errorMessage = errorsList.join('\n');
+      } else if (error?.message) {
         errorMessage = error.message;
       }
       

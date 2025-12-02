@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   ScrollView, 
   View, 
@@ -15,32 +15,129 @@ import Boleto from '../components/Boleto';
 import { useTheme } from '../contexts/ThemeContext';
 import { Alert } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
+import {planosAPI} from '../api/Planos.js'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { usuariosAPI } from '../api/Usuarios';
 
 export default function FinalizarEscolhaAssinaturaScreen({setIsAuthenticated }) {
   const { theme, isLoaded } = useTheme();
   const route = useRoute();
   const navigation = useNavigation();
   
-  // Recebe dados do plano selecionado
-  const planData = route.params?.planData || {
-    title: "Básico",
-    preco: "R$49",
-    itens: [
-      "Até 10 projetos",
-      "Conformidade NBR 5410", 
-      "Relatórios em PDF",
-      "Suporte por email",
-      "Histórico de 30 dias"
-    ]
-  };
-
-  
   const [activeCard, setActiveCard] = useState(false);
   const [activeBoleto, setActiveBoleto] = useState(false);
   const [activePix, setActivePix] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [planData, setPlanData] = useState(null);
+  const [isLoadingPlan, setIsLoadingPlan] = useState(true);
+  const [userToken, setUserToken] = useState(null);
+  const [userData, setUserData] = useState(null);
 
- 
+  const getItensPorNome = (nomePlano) => {
+    const itensMap = {
+      'Básico': [
+        "Até 10 projetos",
+        "Conformidade NBR 5410", 
+        "Relatórios em PDF",
+        "Suporte por email",
+        "Histórico de 30 dias",
+      ],
+      'Pro': [
+        "Até 50 projetos",
+        "Conformidade NBR 5410",
+        "Relatórios personalizados", 
+        "Suporte prioritário",
+        "Histórico ilimitado",
+        "API de integração",
+      ],
+      'Empresas': [
+        "Projetos ilimitados",
+        "Conformidade NBR 5410",
+        "Relatórios white-label",
+        "Suporte dedicado 24/7",
+        "API completa", 
+        "Treinamento personalizado",
+        "SLA garantido",
+      ]
+    };
 
+    return itensMap[nomePlano] || [
+      "Funcionalidades básicas",
+      "Suporte padrão"
+    ];
+  };
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        let token = route.params?.userToken;
+        let user = route.params?.userData;
+
+        if (!token) {
+          token = await AsyncStorage.getItem('userToken');
+          const userDataString = await AsyncStorage.getItem('userData');
+          if (userDataString) {
+            user = JSON.parse(userDataString);
+          }
+        }
+        
+        if (token) {
+          authAPI.setAuthToken(token);
+          console.log('Token configurado para requisições da API');
+        }
+        
+        setUserToken(token);
+        setUserData(user);
+      } catch (error) {
+        console.error('Erro ao carregar dados do usuário:', error);
+      }
+    };
+    
+    loadUserData();
+  }, [route.params]);
+
+  useEffect(() => {
+    const loadPlanData = async () => {
+      try {
+        setIsLoadingPlan(true);
+        
+        // Pegar o ID do plano que foi passado via navigation
+        const planoId = route.params?.planData?.planoId;
+        
+        if (planoId) {
+          console.log(`Buscando plano ID: ${planoId}`);
+          
+          // Buscar dados do plano pela API
+          const planoData = await planosAPI.getPlanoById(null, planoId);
+          
+          // Montar dados completos com itens
+          const planDataCompleto = {
+            planoId: planoData.planoId,
+            title: planoData.nome,
+            preco: `R$${planoData.preco?.toFixed(2).replace('.', ',')}`,
+            precoNumerico: planoData.preco,
+            quantidadeReq: planoData.quantidadeReq,
+            quantidadeUsers: planoData.quantidadeUsers || 0,
+            itens: getItensPorNome(planoData.nome),
+          };
+          
+          console.log('Dados do plano carregados:', planDataCompleto);
+          setPlanData(planDataCompleto);
+        } else {
+          console.log('Nenhum plano ID recebido');
+          Alert.alert('Erro', 'Plano não encontrado');
+          navigation.goBack();
+        }
+      } catch (error) {
+        console.error('Erro ao carregar plano:', error);
+        Alert.alert('Erro', 'Erro ao carregar dados do plano');
+        navigation.goBack();
+      } finally {
+        setIsLoadingPlan(false);
+      }
+    };
+
+    loadPlanData();
+  }, [route.params?.planData?.planoId]);
   if (!isLoaded) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -80,27 +177,115 @@ export default function FinalizarEscolhaAssinaturaScreen({setIsAuthenticated }) 
     setActiveCard(false);
   };
 
-  const handlePaymentSuccess = () => {
-    Alert.alert('Sucesso!', 'Pagamento realizado com sucesso!', [
-      {
-        text: 'OK',
-        onPress: () => {
-          if (setIsAuthenticated) {
-            // Novo usuário - autentica e vai para app principal
-            setIsAuthenticated(true);
-          } else {
-            // Usuário já logado - reseta o stack e vai para Geral
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [{ name: 'Geral' }],
-              })
-            );
+  const handlePaymentSuccess = async () => {
+    if (!activeCard && !activeBoleto && !activePix) {
+      Alert.alert('Atenção', 'Por favor, selecione um método de pagamento.');
+      return;
+    }
+  
+    // Verificação de segurança: planData deve existir
+    if (!planData || !planData.planoId) {
+      Alert.alert('Erro', 'Dados do plano não encontrados.');
+      return;
+    }
+  
+    setIsProcessingPayment(true);
+  
+    try {
+      console.log('Processando pagamento para plano:', planData.planoId);
+      
+      const incrementResult = await planosAPI.incrementarUsuarios(planData.planoId, userToken);
+      console.log('Resultado do incremento:', incrementResult);
+  
+      // Verificação de segurança antes de atualizar
+      if (incrementResult && typeof incrementResult.quantidadeUsers === 'number') {
+        setPlanData(prevData => ({
+          ...prevData,
+          quantidadeUsers: incrementResult.quantidadeUsers
+        }));
+
+        if (userToken && userData){
+          try{
+            const vincularResult = await usuariosAPI.vincularPlano(planData.planoId, userToken);
+         console.log('Plano vinculado ao usuário', vincularResult);
+          } catch(linkError){
+          console.warn('Erro ao vincular plano:', linkError);
           }
         }
+  
+        Alert.alert(
+          'Pagamento Realizado!',
+          `Seu plano ${planData.title} foi ativado com sucesso!\n\nVocê é o usuário nº ${incrementResult.quantidadeUsers}!`,
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                if (setIsAuthenticated) {
+                  setIsAuthenticated(true);
+                } else {
+                  navigation.dispatch(
+                    CommonActions.reset({
+                      index: 0,
+                      routes: [{ name: 'TabNavigator' }],
+                    })
+                  );
+                }
+              }
+            }
+          ]
+        );
+      } else {
+        console.warn('Resultado do incremento inválido:', incrementResult);
+        Alert.alert(
+          'Pagamento Realizado!',
+          `Seu plano ${planData.title} foi ativado com sucesso!`,
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                if (setIsAuthenticated) {
+                  setIsAuthenticated(true);
+                } else {
+                  navigation.dispatch(
+                    CommonActions.reset({
+                      index: 0,
+                      routes: [{ name: 'TabNavigator' }],
+                    })
+                  );
+                }
+              }
+            }
+          ]
+        );
       }
-    ]);
-    console.log('✅ Pagamento realizado com sucesso!');
+  
+    } catch (error) {
+      console.error('Erro no processamento:', error);
+      console.error('Stack trace:', error.stack);
+
+      const planTitle = planData?.title || 'Plano';
+
+      let errorMessage = 'Erro ao processar pagamento. Tente novamente.'; 
+      Alert.alert('Erro no Pagamento', errorMessage, [
+        {
+          text: 'Tentar Novamente',
+          onPress: handlePaymentSuccess
+        },
+        {
+          text: 'Voltar',
+          style: 'cancel',
+          onPress: () => navigation.goBack()
+        }
+      ]);
+      
+    } finally {
+      setIsProcessingPayment(false);
+    }
+  };
+  
+  const getTokenStatus = () => {
+    if (!userData) return '';
+    return `👤 Logado como: ${userData.email}`;
   };
 
   return (
@@ -114,6 +299,11 @@ export default function FinalizarEscolhaAssinaturaScreen({setIsAuthenticated }) 
           <Text style={[styles.subtitle, { color: currentTheme.textSecondary }]}>
             Complete os dados de pagamento para começar a usar o EnerCheck
           </Text>
+            {userData && (
+            <Text style={[styles.userStatus, { color: currentTheme.primary }]}>
+              {getTokenStatus()}
+            </Text>
+          )}
         </View>
 
         {/* Layout Principal */}
