@@ -17,6 +17,8 @@ const Teste = () => {
   const inputEmpresa = useRef();
   const inputProjetoNome = useRef();
   const inputProjetoDescricao = useRef();
+  const inputProjetoNomePut = useRef();
+  const inputProjetoDescricaoPut = useRef();
 
   //salva informação dos usuarios para login
   const inputLoginEmail = useRef();
@@ -71,8 +73,11 @@ const Teste = () => {
   // Chama a função getUsers assim que o componente é montado
   useEffect(() => {
     getUsers();
-    handleGetProjeto();
-    handleGetUserByToken();
+    const token = localStorage.getItem("token");
+    if (token) {
+      handleGetProjeto();
+      handleGetUserByToken();
+    }
   }, []);
 
   if (loading) {
@@ -96,6 +101,7 @@ const Teste = () => {
       await handleGetProjeto();
     } catch (error) {
       console.error("Erro ao logar usuário:", error);
+      throw error;
     }
   }
 
@@ -137,13 +143,21 @@ const Teste = () => {
 
   async function handlePostProjeto(event) {
     event.preventDefault();
+    const nome = inputProjetoNome.current?.value || "";
+    const descricao = inputProjetoDescricao.current?.value || "";
+
+    // Depuração: verifique os valores no console
+    console.log("Valores capturados - Nome:", nome, "Descrição:", descricao);
+
+    if (!nome.trim() || !descricao.trim()) {
+      console.error("Nome ou descrição estão vazios. Preencha os campos.");
+      return;
+    }
+
     try {
-      await apiService.postProjetos(
-        inputProjetoNome.current.value,
-        inputProjetoDescricao.current.value
-      );
+      await apiService.postProjetos(nome, descricao);
       handleGetProjeto();
-      inputProjetoNome.current.value = "";
+      inputProjetoNome.current.value = ""; // Limpa após sucesso
       inputProjetoDescricao.current.value = "";
     } catch (error) {
       console.error("Erro ao criar projeto:", error);
@@ -158,6 +172,15 @@ const Teste = () => {
       console.error("Erro ao deletar projeto:", error);
     }
   }
+  // falta fazer funcionar corretamente
+  // async function handlePutProjeto(id, data) {
+  //   try {
+  //     await apiService.putProjetos(id, data);
+  //     handleGetProjeto(); // Atualiza a lista
+  //   } catch (error) {
+  //     console.error("Erro ao atualizar projeto:", error);
+  //   }
+  // }
 
   return (
     <div>
@@ -256,12 +279,14 @@ const Teste = () => {
                       Excluir
                     </i>
                   </div>
+                  <div> </div>
                 </li>
               ))}
             </ul>
           )}
           <h4>Post projetos</h4>
-          <form>
+          <form onSubmit={handlePostProjeto}>
+            {" "}
             <input
               type="text"
               placeholder="Nome do Projeto"
@@ -272,10 +297,8 @@ const Teste = () => {
               placeholder="Descrição do Projeto"
               ref={inputProjetoDescricao}
             />
-            <button onClick={handlePostProjeto}>Criar Projeto</button>
+            <button type="submit">Criar Projeto</button>{" "}
           </form>
-          <h4>Put projetos</h4>
-          
         </div>
       </div>
     </div>
