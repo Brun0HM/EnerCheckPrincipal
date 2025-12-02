@@ -7,6 +7,7 @@ const Teste = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+  const [projetos, setProjetos] = useState([]);
 
   //Criar usuarios
   const inputEmail = useRef();
@@ -68,6 +69,8 @@ const Teste = () => {
   // Chama a função getUsers assim que o componente é montado
   useEffect(() => {
     getUsers();
+    handleGetProjeto();
+    handleGetUserByToken();
   }, []);
 
   if (loading) {
@@ -86,6 +89,9 @@ const Teste = () => {
         inputLoginEmail.current.value,
         inputLoginSenha.current.value
       );
+      // Após login bem-sucedido, buscar projetos
+      await handleGetUserByToken();
+      await handleGetProjeto();
     } catch (error) {
       console.error("Erro ao logar usuário:", error);
     }
@@ -112,6 +118,18 @@ const Teste = () => {
       setCurrentUser(user);
     } catch (error) {
       console.error("Erro ao obter usuário pelo token:", error);
+    }
+  }
+
+  async function handleGetProjeto() {
+    try {
+      setLoading(true);
+      const projeto = await apiService.getProjetos();
+      setProjetos(projeto);
+    } catch (error) {
+      console.error("Erro ao obter projeto:", error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -166,13 +184,12 @@ const Teste = () => {
       </div>
 
       <div>
-        <h1 className="text-white">Teste do PUTA plano</h1>
+        <h1 className="text-white">Teste do put plano</h1>
         <button onClick={handlePutPlanos}>poer o plano no cu do user</button>
       </div>
 
       <div>
         <h1 className="text-white">Teste do Usuário Logado</h1>
-        <button onClick={handleGetUserByToken}>Obter Usuário pelo Token</button>
         {currentUser ? (
           <div className="text-white">
             <p>ID: {currentUser.id}</p>
@@ -187,6 +204,31 @@ const Teste = () => {
         ) : (
           <p className="text-white">Nenhum usuário logado ou erro ao obter.</p>
         )}
+      </div>
+
+      <div>
+        <h1 className="text-white">teste das chamadas de projeto</h1>
+        <div className="text-secondary">
+          <h4>Get projetos</h4>
+          {projetos.length === 0 ? (
+            <p>Nenhum projeto encontrado.</p>
+          ) : (
+            <ul className="text-white">
+              {projetos.map((projeto) => (
+                <li key={projeto.id} style={{ marginBottom: 12 }}>
+                  <div>ID: {projeto.projetoId}</div>
+                  <div>Nome: {projeto.nome}</div>
+                  <div>Descrição: {projeto.descricao}</div>
+                  <div>Status: {projeto.status}</div>
+                  <div>Análise: {projeto.analise}</div>
+                </li>
+              ))}
+            </ul>
+          )}
+          <h4>Post projetos</h4>
+          <h4>Put projetos</h4>
+          <h4>Delete projetos</h4>
+        </div>
       </div>
     </div>
   );
