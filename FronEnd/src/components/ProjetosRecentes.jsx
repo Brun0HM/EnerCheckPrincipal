@@ -12,7 +12,7 @@ export const ProjetosRecentes = (props) => {
       fontWeight: "500",
     };
 
-    switch (status.toLowerCase()) {
+    switch (status) {
       case "aprovado":
         return {
           ...baseStyle,

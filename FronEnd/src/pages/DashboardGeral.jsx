@@ -2,8 +2,42 @@ import React from "react";
 import { CardStatusProjetoDashboard } from "../components/CardStatusProjetoDashboard";
 import { ProjetosRecentes } from "../components/ProjetosRecentes";
 import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import apiService from "../../services/api";
+
 const DashboardGeral = () => {
+  const [projetos, setProjetos] = useState([]);
+  async function getProjeto() {
+    try {
+      const projeto = await apiService.getProjetos();
+      setProjetos(projeto);
+    } catch (error) {
+      console.error("Erro ao obter projeto:", error);
+    }
+  }
+
+  useEffect(() => {
+    getProjeto();
+  }, []);
+
   const navigate = useNavigate();
+
+  // Função para calcular o tempo relativo
+  const calcularTempo = (dataCriacao) => {
+    if (!dataCriacao) return "Data desconhecida";
+    const agora = new Date();
+    const data = new Date(dataCriacao);
+    const diff = agora - data;
+    const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
+    if (dias === 0) return "Hoje";
+    if (dias === 1) return "1 dia atrás";
+    return `${dias} dias atrás`;
+  };
+
+  // Ordenar projetos por data decrescente e pegar os 3 últimos
+  const projetosRecentes = projetos
+    .sort((a, b) => new Date(b.dataInicio) - new Date(a.dataInicio))
+    .slice(0, 3);
   return (
     <div
       style={{
@@ -75,25 +109,18 @@ const DashboardGeral = () => {
               Seus últimos projetos verificados
             </p>
           </div>
-
-          {/* Projetos */}
-          <ProjetosRecentes
-            nomeProjeto={"Residencial Vila Belmiro"}
-            tempoProjeto={"2 dias atrás"}
-            statusProjeto={"Aprovado"}
-          />
-
-          <ProjetosRecentes
-            nomeProjeto={"Centro Comercial"}
-            tempoProjeto={"5 dias atrás"}
-            statusProjeto={"Aprovado"}
-          />
-
-          <ProjetosRecentes
-            nomeProjeto={"SENAI 721"}
-            tempoProjeto={"1 semana atrás"}
-            statusProjeto={"Aprovado"}
-          />
+          {projetosRecentes.length === 0 ? (
+            <p>Nenhum projeto encontrado.</p>
+          ) : (
+            projetosRecentes.map((projeto, index) => (
+              <ProjetosRecentes
+                key={projeto.id || index}
+                nomeProjeto={projeto.nome}
+                tempoProjeto={calcularTempo(projeto.dataInicio)}
+                statusProjeto={projeto.status || "pendente"}
+              />
+            ))
+          )}
         </div>
 
         <div className="d-flex flex-column flex-lg-row gap-3">
