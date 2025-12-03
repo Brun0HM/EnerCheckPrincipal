@@ -28,6 +28,7 @@ const Cadastro = () => {
       inputEmpresa.current.value = ""; // Limpa o campo
     } catch (error) {
       console.error("Erro ao criar usuário:", error);
+      throw error; // Lançar erro para que o chamador possa lidar
     }
   }
 
@@ -197,7 +198,7 @@ const Cadastro = () => {
   /**
    * Manipula o submit do formulário
    */
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitted(true);
 
@@ -205,8 +206,20 @@ const Cadastro = () => {
     setErrors(formErrors);
 
     if (Object.keys(formErrors).length === 0) {
-      handleCreateUser(e); // Chama a função de criar usuário
-      navigate("/login"); // Redireciona para a tela de login
+      try {
+        await handleCreateUser(e); // Aguardar a criação do usuário
+        // Após criar, fazer login automático e redirecionar baseado no plano
+        await apiService.loginUser(formData.email, formData.senha);
+        const user = await apiService.getUserByToken();
+        if (user && user.plano && user.useReq > 0) {
+          navigate("/dashboardGeral");
+        } else {
+          navigate("/planos");
+        }
+      } catch (error) {
+        console.error("Erro ao criar usuário ou fazer login:", error);
+        // Talvez mostrar erro ao usuário, mas por enquanto apenas log
+      }
     }
   };
 

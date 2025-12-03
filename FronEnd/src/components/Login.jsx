@@ -36,7 +36,13 @@ const Login = () => {
     if (Object.keys(newErrors).length === 0) {
       try {
         await apiService.loginUser(email.trim(), senha);
-        navigate("/planos");
+        // Verificar se o usuário tem plano ativo
+        const user = await apiService.getUserByToken();
+        if (user && user.plano && user.useReq > 0) {
+          navigate("/dashboardGeral");
+        } else {
+          navigate("/planos");
+        }
       } catch (error) {
         console.error("Erro ao logar usuário:", error);
         const status = error.response?.status;

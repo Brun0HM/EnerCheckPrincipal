@@ -74,7 +74,9 @@ const Boleto = (props) => {
             backgroundColor: "var(--button-primary-bg)",
             border: "none",
           }}
-          onClick={() => (console.log("Gerar Boleto"), navigate("/login"))}
+          onClick={() => (
+            console.log("Gerar Boleto"), navigate("/dashboardGeral")
+          )}
         >
           Gerar Boleto
         </button>
