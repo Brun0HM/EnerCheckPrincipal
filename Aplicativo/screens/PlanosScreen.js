@@ -25,37 +25,52 @@ export default function PlanosScreen() {
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    const fetchPlanos = async () => {
+    const getUserData = async () => {
       try {
-        setIsLoading(true);
-        console.log('📤 Buscando planos da API...');
+        let token = route.params?.userToken || await AsyncStorage.getItem('userToken');
+        let user = route.params?.userData;
         
-        const planosData = await planosAPI.getAllPlanos();
-        console.log('✅ Planos carregados:', planosData?.length || 0);
-        
-        if (Array.isArray(planosData)) {
-          const planosAtivos = planosData.filter(plano => plano.ativo);
-          setPlanos(planosAtivos);
-          console.log('📋 Planos ativos:', planosAtivos.length);
-        } else {
-          console.warn('⚠️ Planos recebidos não são um array:', typeof planosData);
-          setPlanos([]);
+        if (!user) {
+          const userDataString = await AsyncStorage.getItem('userData');
+          if (userDataString) user = JSON.parse(userDataString);
         }
         
+        console.log('Usuário carregado:', user?.email || 'N/A');
+        setUserToken(token);
+        setUserData(user);
       } catch (error) {
-        console.error('❌ Erro ao carregar planos:', error);
-        Alert.alert('Erro', 'Não foi possível carregar os planos. Verifique sua conexão.');
-        setPlanos([]); // ✅ Array vazio em caso de erro
+        console.error('Erro ao carregar usuário:', error);
+      }
+    };
+    
+    getUserData();
+  }, []);
+
+  useEffect(() => {
+    const fetchPlanos = async () => {
+      try {
+        console.log('Buscando planos...');
+        
+        const planosData = await planosAPI.getAllPlanos();
+        const planosAtivos = planosData.filter(plano => plano.ativo);
+        
+        setPlanos(planosAtivos);
+        console.log('Planos carregados:', planosAtivos.length);
+        
+      } catch (error) {
+        console.error('Erro ao carregar planos:', error);
+        Alert.alert('Erro', 'Não foi possível carregar os planos.');
+        setPlanos([]);
       } finally {
         setIsLoading(false);
       }
     };
 
-    // ✅ Só buscar planos quando componente montar
     fetchPlanos();
   }, []);
 
-  // ✅ Função para obter itens por nome do plano
+
+ 
   const getItensPorNome = (nomePlano) => {
     const itensMap = {
       'Básico': [
@@ -90,25 +105,36 @@ export default function PlanosScreen() {
     ];
   };
 
-  if (!isLoaded) {
+  
+  const getIconePorNome = (nomePlano) => {
+    const iconesMap = {
+      'Básico': 'star-outline',
+      'Pro': 'people-outline',
+      'Empresas': 'trophy-outline'
+    };
+    return iconesMap[nomePlano] || 'star-outline';
+  };
+
+
+  const getDescricaoPorNome = (nomePlano) => {
+    const descMap = {
+      'Básico': 'Ideal para profissionais autônomos',
+      'Pro': 'Para pequenas e médias empresas',
+      'Empresas': 'Para grandes organizações'
+    };
+    return descMap[nomePlano] || 'Plano personalizado';
+  };
+
+  if (!isLoaded || isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" />
-        <Text>Carregando tema...</Text>
+        <Text>Carregando...</Text>
       </View>
     );
   }
 
-  if (isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-        <Text>Carregando planos...</Text>
-      </View>
-    );
-  }
 
-  // Cores diretas baseadas no tema
   const currentTheme = {
     bg: theme === 'light' ? '#ffffff' : '#131313',
     text: theme === 'light' ? '#131313' : '#ffffff',
@@ -118,30 +144,33 @@ export default function PlanosScreen() {
     cardBorder: theme === 'light' ? '#e0e0e0' : '#3a3a3a',
   };
 
-  // ✅ CORRIGIDO: handleSelectPlan
-  const handleSelectPlan = async (planoSelecionado) => {
-    try {
-      console.log('📦 Plano selecionado:', planoSelecionado);
-      console.log('🔐 Token disponível:', userToken ? 'Sim' : 'Não');
-      console.log('👤 Dados do usuário:', userData ? JSON.stringify(userData) : 'Vazio');
 
+  const handleSelectPlan = (planName) => {
+    try {
+      console.log('Plano selecionado:', planName);
+      
+      const planoSelecionado = planos.find(plano => plano.nome === planName);
+      
+      if (!planoSelecionado) {
+        Alert.alert('Erro', 'Plano não encontrado');
+        return;
+      }
+
+      // Preparar dados do plano para enviar
       const planData = {
-        planoId: planoSelecionado.planoId, 
-        title: planoSelecionado.nome,
+        planoId: planoSelecionado.planoId,
+        title: planName,
+        nome: planoSelecionado.nome,
         preco: `R$${planoSelecionado.preco?.toFixed(2).replace('.', ',')}`,
         precoNumerico: planoSelecionado.preco,
         quantidadeReq: planoSelecionado.quantidadeReq,
         quantidadeUsers: planoSelecionado.quantidadeUsers,
-        itens: getItensPorNome(planoSelecionado.nome),
+        ativo: planoSelecionado.ativo,
+        itens: getItensPorNome(planName) // Relacionar itens pelo nome
       };
 
-      console.log('🚀 Dados sendo enviados:', {
-        planData,
-        userToken: userToken ? 'Presente' : 'Ausente',
-        userData: userData ? 'Presente' : 'Ausente'
-      });
+      console.log('Dados do plano sendo enviados:', planData);
 
-      // ✅ Navegar passando token e userData separadamente
       navigation.navigate('FinalizarEscolhaAssinatura', { 
         planData: planData,
         userToken: userToken,
@@ -149,28 +178,88 @@ export default function PlanosScreen() {
       });
 
     } catch (error) {
-      console.error('❌ Erro ao selecionar plano:', error);
+      console.error('Erro ao selecionar plano:', error);
       Alert.alert('Erro', 'Erro ao selecionar plano. Tente novamente.');
     }
   };
 
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: currentTheme.bg }]}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* ✅ Debug info no topo (remover depois) */}
-        {__DEV__ && (
-          <View style={{ padding: 10, backgroundColor: 'rgba(0,0,255,0.1)', margin: 10 }}>
-            <Text>🔐 Token: {userToken ? 'Presente' : 'Ausente'}</Text>
-            <Text>👤 User: {userData ? JSON.stringify(userData).substring(0, 50) + '...' : 'Vazio'}</Text>
+
+        <View style={styles.header}>
+          <View style={[styles.badge, { backgroundColor: currentTheme.primary }]}>
+            <Text style={styles.badgeText}>Planos Flexíveis</Text>
           </View>
-        )}
-        
-        <TiposPlanos 
-          theme={theme}
-          planos={planos}
-          onSelectPlan={handleSelectPlan}
-        />
-        <PerguntasFrequentes theme={theme} />
+          
+          <Text style={[styles.mainTitle, { color: currentTheme.text }]}>
+            Escolha o plano ideal{'\n'}
+            para seu <Text style={{ color: currentTheme.primary }}>negócio</Text>
+          </Text>
+          
+          <Text style={[styles.subtitle, { color: currentTheme.textSecondary }]}>
+            Desde profissionais autônomos até grandes empresas, temos a solução 
+            perfeita para suas necessidades de verificação de projetos elétricos.
+          </Text>
+        </View>
+
+
+        <View style={styles.plansSection}>
+        <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.plansContainer}
+          >
+            {planos.map((plano, index) => (
+              <TiposPlanos
+                key={plano.planoId || index}
+                icon={getIconePorNome(plano.nome)}
+                title={plano.nome}
+                descricao={getDescricaoPorNome(plano.nome)}
+                preco={`R$${plano.preco?.toFixed(2).replace('.', ',')}`}
+                itens={getItensPorNome(plano.nome)}
+                theme={currentTheme}
+                onSelect={handleSelectPlan} 
+              />
+            ))}
+          </ScrollView>
+        </View>
+
+        <View style={styles.faqSection}>
+          <Text style={[styles.faqTitle, { color: currentTheme.text }]}>
+            Perguntas Frequentes
+          </Text>
+          <Text style={[styles.faqSubtitle, { color: currentTheme.textSecondary }]}>
+            Tire suas dúvidas sobre nossos planos e funcionalidades
+          </Text>
+
+          <View style={styles.faqGrid}>
+            <PerguntasFrequentes
+              title="Como funciona o teste grátis?"
+              descricao="O plano Básico inclui 7 dias de teste gratuito com acesso completo a todas as funcionalidades. Não é necessário cartão de crédito para começar."
+              theme={currentTheme}
+            />
+
+            <PerguntasFrequentes
+              title="Posso mudar de plano a qualquer momento?"
+              descricao="Sim, você pode alterar seu plano a qualquer momento. As mudanças são aplicadas imediatamente e você paga apenas a diferença proporcional."
+              theme={currentTheme}
+            />
+
+            <PerguntasFrequentes
+              title="Os relatórios seguem as normas brasileiras?"
+              descricao="Sim, nossa IA é treinada especificamente para verificar conformidade com a NBR 5410 e outras normas técnicas brasileiras relevantes."
+              theme={currentTheme}
+            />
+
+            <PerguntasFrequentes
+              title="Há suporte técnico disponível?"
+              descricao="Todos os planos incluem suporte técnico. O plano Pro tem suporte prioritário e o plano Empresas inclui suporte dedicado 24/7."
+              theme={currentTheme}
+            />
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -243,18 +332,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-  },
-
-  // Debug
-  debugContainer: {
-    padding: 12,
-    borderRadius: 8,
-    borderWidth: 1,
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  debugText: {
-    fontSize: 12,
-    fontStyle: 'italic',
   },
 });

@@ -33,19 +33,19 @@ const validarEmail = (email) => {
   return emailRegex.test(email);
 };
 
-export default function RegisterScreen({ navigation }) {
-  const colorScheme = useColorScheme();
+  export default function RegisterScreen({ navigation }) {
+    const colorScheme = useColorScheme();
 
-  const [nome, setNome] = useState('');
-  const [sobrenome, setSobrenome] = useState('');
-  const [email, setEmail] = useState('');
-  const [empresa, setEmpresa] = useState('');
-  const [numeroCrea, setNumeroCrea] = useState(''); // Campo CREA adicionado
-  const [senha, setSenha] = useState('');
-  const [confirmarSenha, setConfirmarSenha] = useState('');
-  const [aceitoTermos, setAceitoTermos] = useState(false);
-  const [receberAtualizacoes, setReceberAtualizacoes] = useState(false);
-  const [errors, setErrors] = useState({});
+    const [nome, setNome] = useState('');
+    const [sobrenome, setSobrenome] = useState('');
+    const [email, setEmail] = useState('');
+    const [empresa, setEmpresa] = useState('');
+    const [numeroCrea, setNumeroCrea] = useState('');
+    const [senha, setSenha] = useState('');
+    const [confirmarSenha, setConfirmarSenha] = useState('');
+    const [aceitoTermos, setAceitoTermos] = useState(false);
+    const [receberAtualizacoes, setReceberAtualizacoes] = useState(false);
+    const [errors, setErrors] = useState({})
 
   const themes = {
     light: {
@@ -135,15 +135,8 @@ export default function RegisterScreen({ navigation }) {
   };
 
   const handleRegister = async () => {
-    const errosValidacao = validarFormulario();
-    setErrors(errosValidacao);
-  
-    if (Object.keys(errosValidacao).length > 0) {
-      Alert.alert('Erro', 'Por favor, corrija os erros no formulário');
-      return;
-    }
-  
     try {
+      // 1. Criar usuário
       const userData = {
         email: email.trim(),
         senha: senha,
@@ -152,122 +145,77 @@ export default function RegisterScreen({ navigation }) {
         empresa: empresa.trim() || "",
         userReq: 0,
       };
-  
-      console.log('📤 1. Registrando usuário...');
+
+      console.log('📤 Dados para registro:', userData);
+
+      console.log('📝 Criando usuário...');
       const registerResult = await usuariosAPI.createCliente(userData);
-      console.log('✅ 1. Cliente registrado:', registerResult);
-  
-      // ✅ Aguardar salvamento
-      console.log('⏳ Aguardando salvamento no banco...');
-      await new Promise(resolve => setTimeout(resolve, 3000));
-  
-      console.log('🔐 2. Fazendo login obrigatório...');
+      console.log('Usuário criado com sucesso:', registerResult);
       
-      try {
-        const loginResult = await authAPI.login({
-          email: userData.email,
-          senha: userData.senha
-        });
-        
-        if (!loginResult.success) {
-          throw new Error('Login falhou após registro');
-        }
-        
-        console.log('✅ 2. Login bem-sucedido!');
-        console.log('👤 Dados do usuário do login:', loginResult.user);
-        
-        // ✅ CORRIGIDO: Montar dados completos usando registro + login
-        let finalUserData = loginResult.user;
-        
-        // Se os dados do login estão vazios, usar dados do registro
-        if (!finalUserData || Object.keys(finalUserData).length === 0) {
-          console.log('⚠️ Dados do login vazios, usando dados do registro');
-          finalUserData = {
-            email: registerResult.email || userData.email,
-            nomeCompleto: registerResult.nomeCompleto || userData.nomeCompleto,
-            numeroCrea: registerResult.numeroCrea || userData.numeroCrea,
-            empresa: registerResult.empresa || userData.empresa,
-            id: registerResult.id,
-            roles: registerResult.roles || ['Cliente']
-          };
-        } else {
-          // Complementar dados que podem estar faltando
-          finalUserData = {
-            ...finalUserData,
-            email: finalUserData.email || registerResult.email || userData.email,
-            nomeCompleto: finalUserData.nomeCompleto || registerResult.nomeCompleto || userData.nomeCompleto,
-            numeroCrea: finalUserData.numeroCrea || registerResult.numeroCrea || userData.numeroCrea,
-            empresa: finalUserData.empresa || registerResult.empresa || userData.empresa,
-            id: finalUserData.id || registerResult.id,
-            roles: finalUserData.roles || registerResult.roles || ['Cliente']
-          };
-        }
-        
-        console.log('💾 Dados finais para salvar:', finalUserData);
-        
-        // ✅ Salvar dados completos
-        await AsyncStorage.setItem('userToken', loginResult.token);
-        await AsyncStorage.setItem('userData', JSON.stringify(finalUserData));
-        
-        // ✅ Verificar se foi salvo corretamente
-        const savedUserData = await AsyncStorage.getItem('userData');
-        console.log('🔍 Verificação - dados salvos:', savedUserData);
-        
-        Alert.alert(
-          'Cadastro realizado!', 
-          `Bem-vindo(a), ${nome}!\n\nLogin automático realizado com sucesso.`,
-          [{
-            text: 'Continuar',
-            onPress: () => {
-              navigation.navigate('Planos', {
-                userToken: loginResult.token,
-                userData: finalUserData // ✅ Dados completos garantidos
-              });
-            }
-          }]
-        );
-        return;
-        
-      } catch (loginError) {
-        console.error('❌ Login obrigatório falhou:', loginError);
-        
-        Alert.alert(
-          'Erro no Login',
-          'Seu cadastro foi realizado, mas houve um erro no login automático.\n\nTente fazer login manualmente.',
-          [
-            {
-              text: 'Ir para Login',
-              onPress: () => navigation.navigate('Login')
-            },
-            {
-              text: 'Voltar',
-              style: 'cancel'
-            }
-          ]
-        );
-        return;
+      // 2. Fazer login
+      console.log('Fazendo login...');
+      const loginResult = await authAPI.login(userData.email, senha);
+      
+      // 3. Salvar dados
+      const token = loginResult.token || loginResult.accessToken;
+      if (!token) {
+        throw new Error('Token não foi retornado pela API');
       }
-        
-    } catch (error) {
-      console.error('❌ Erro no registro:', error);
       
+      console.log('Token recebido:', token.substring(0, 50) + '...');
+      const user = loginResult.user || {
+        email: userData.email,
+        nomeCompleto: userData.nomeCompleto,
+        numeroCrea: userData.numeroCrea,
+        empresa: userData.empresa,
+      };
+
+      try {
+        await AsyncStorage.setItem('userToken', token);
+        await AsyncStorage.setItem('userData', JSON.stringify(user));
+        console.log('✅ Dados salvos no AsyncStorage');
+      } catch (storageError) {
+        console.error(' Erro ao salvar no AsyncStorage:', storageError);
+        throw new Error('Erro ao salvar dados localmente');
+      }
+  
+      Alert.alert(
+        'Cadastro Realizado! 🎉', 
+        `Bem-vindo(a), ${nome}! Sua conta foi criada com sucesso.`,
+        [{
+          text: 'Escolher Plano',
+          onPress: () => {
+            navigation.navigate('Planos', {
+              userToken: token,
+              userData: user
+            });
+          }
+        }]
+      );
+  
+    } catch (error) {
+      console.error(' ERRO NO PROCESSO DE REGISTRO:');
+      console.error('Erro completo:', error);
+      console.error('Resposta da API:', error?.response?.data);
+      
+      // Mensagem de erro mais específica
       let errorMessage = 'Erro ao realizar cadastro. Tente novamente.';
       
-      if (error?.errors) {
-        const errorsList = [];
-        for (const [field, messages] of Object.entries(error.errors)) {
-          if (Array.isArray(messages)) {
-            errorsList.push(...messages);
-          } else {
-            errorsList.push(messages);
-          }
-        }
-        errorMessage = errorsList.join('\n');
-      } else if (error?.message) {
-        errorMessage = error.message;
+      if (error?.message === 'Token não foi retornado pela API') {
+        errorMessage = 'Erro na autenticação. Tente fazer login manualmente.';
+      } else if (error?.message?.includes('AsyncStorage')) {
+        errorMessage = 'Erro ao salvar dados. Tente novamente.';
+      } else if (error?.response?.status === 400) {
+        errorMessage = 'Dados inválidos. Verifique as informações.';
+      } else if (error?.response?.status === 409) {
+        errorMessage = 'Este email já está cadastrado. Faça login.';
+      } else if (error?.response?.data?.message) {
+        errorMessage = error.response.data.message;
       }
       
       Alert.alert('Erro no Cadastro', errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -453,6 +401,7 @@ export default function RegisterScreen({ navigation }) {
   );
 }
 
+
 /* Componente Input com suporte a erro */
 const Input = ({ label, theme, style, error, ...props }) => (
   <View style={[{ marginBottom: 16 }, style]}>
@@ -533,6 +482,7 @@ const PasswordStrength = ({ checks, theme }) => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
@@ -648,4 +598,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     flexWrap: 'wrap',
   },
+
 });
