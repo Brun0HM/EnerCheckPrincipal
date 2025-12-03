@@ -6,12 +6,12 @@ const BASE_URL = "https://enercheck.onrender.com";
 // 1. Cria a instância do Axios com a URL base
 const api = axios.create({
   baseURL: BASE_URL,
-  timeout: 90000,
+  timeout: 10000,
 });
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token"); // Padronizado para minúsculo
+    const token = localStorage.getItem("Token");
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
@@ -40,7 +40,7 @@ api.interceptors.response.use(
         });
 
         const novoToken = response.data.accessToken;
-        localStorage.setItem("token", novoToken); // Padronizado para minúsculo
+        localStorage.setItem("Token", novoToken);
         originalRequest.headers["Authorization"] = `Bearer ${novoToken}`;
         return api(originalRequest);
       } catch (refreshError) {
@@ -77,7 +77,7 @@ const getUser = async () => {
 
 const getUserByToken = async () => {
   try {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("Token");
     if (!token) {
       console.warn("Token não encontrado. Usuário não autenticado.");
       return null;
@@ -143,7 +143,7 @@ const loginUser = async (email, senha) => {
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       // e salva no localStorage para persistência
       try {
-        localStorage.setItem("token", token);
+        localStorage.setItem("Token", token);
       } catch (e) {
         console.warn("Não foi possível salvar o token no localStorage:", e);
       }
@@ -171,7 +171,7 @@ const loginUser = async (email, senha) => {
 // 2. Planos --------------------------------------------------------------------------------
 
 const putPlanos = async (data, config = {}) => {
-  const token = localStorage.getItem("token"); // Padronizado para minúsculo
+  const token = localStorage.getItem("Token"); // Padronizado para minúsculo
   if (!token) {
     throw new Error("Usuário não autenticado. Token ausente.");
   }
@@ -189,7 +189,7 @@ const putPlanos = async (data, config = {}) => {
 //--------------------------------------------------------------------------------------------
 // 3. Projeto --------------------------------------------------------------------------------
 const getProjetos = async () => {
-  const token = localStorage.getItem("token"); // Padronizado para minúsculo
+  const token = localStorage.getItem("Token"); // Padronizado para minúsculo
   if (!token) {
     throw new Error("Usuário não autenticado. Token ausente.");
   }
@@ -203,7 +203,7 @@ const getProjetos = async () => {
 };
 
 const postProjetos = async (nome, descricao) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("Token");
   if (!token) {
     throw new Error("Usuário não autenticado. Token ausente.");
   }
@@ -219,7 +219,7 @@ const postProjetos = async (nome, descricao) => {
 };
 
 const putProjetos = async (id, data) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("Token");
   if (!token) {
     throw new Error("Usuário não autenticado. Token ausente.");
   }
