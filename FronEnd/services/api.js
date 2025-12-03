@@ -75,6 +75,7 @@ const getUser = async () => {
   return listaSimples;
 };
 
+// Função para obter o usuário autenticado pelo token
 const getUserByToken = async () => {
   try {
     const token = localStorage.getItem("Token");
