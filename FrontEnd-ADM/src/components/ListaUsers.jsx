@@ -5,15 +5,17 @@ import VisualizarLista from "./VisualizarLista";
 import DeleteModal from "./DeleteModal";
 import Editar from "./Editar";
 import apiService from "../../../FronEnd/services/api";
+import { toast, ToastContainer } from "react-toastify";
 
 export const ListaUsers = (props) => {
+  const { paginatedData } = props;
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModalView, setShowModalView] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
 
-  const users = props.users;
   const [carregando, setCarregando] = useState(false);
+  const [erro, setErro] = useState("");
 
   // Usar dados paginados se fornecidos, senão usar todos os dados
 
@@ -39,34 +41,50 @@ export const ListaUsers = (props) => {
     setShowModalEdit(true);
   };
 
-  const handleConfirmDelete = (itemId) => {
-    console.log(`Excluindo item com ID: ${itemId}`);
-  };
+  const handleConfirmDelete = async () => {
+    setErro("");
 
-  const listarUsers = async () => {
-    setCarregando(true);
-    try {
-      if (users != null) {
-        console.log("usuarios carregados!");
+    const alerta = () =>
+      toast.success("Usuário deletado com sucesso.", {
+        position: "bottom-right",
+        className: "bg-primary text-light",
+        autoClose: 3000,
+        progressClassName: "text-light bg-success-subtle",
+      });
+
+    const id = selectedItem.id;
+    if (id) {
+      try {
+        await apiService.deleteUser(id);
+        console.log(`Excluindo item com ID: ${id}`);
+        setShowModalDelete(false);
+        alerta();
+        setTimeout(() => {
+          window.location.reload();
+        }, 4000);
+      } catch (error) {
+        console.log("Ocorreu um erro ao deletar o usuário: ", error);
+        setErro(error);
+        toast.update(alerta, {
+          render:
+            "Erro ao acessar a API. cheque o console para mais informações",
+          type: "danger",
+          className: "bg-danger text-light",
+          isLoading: false,
+          autoClose: 2000,
+        });
       }
-    } catch (error) {
-      console.log("Erro ao buscar usuarios: " + error);
-    } finally {
-      setCarregando(false);
     }
   };
 
-  useEffect(() => {
-    listarUsers();
-  }, []);
-
   return (
     <>
+      <ToastContainer></ToastContainer>
       <div
         className="d-flex flex-column gap-2 rounded-4"
         style={{ maxHeight: "500px" }}
       >
-        {!users ? (
+        {!paginatedData || paginatedData.length === 0 ? (
           <div className="d-flex flex-column align-items-center text-center gap-3 mt-5">
             <div
               style={{ width: "5rem", height: "5rem" }}
@@ -77,7 +95,7 @@ export const ListaUsers = (props) => {
             <p>Carregando Informações...</p>
           </div>
         ) : !carregando ? (
-          users.map((usuario) => (
+          paginatedData.map((usuario) => (
             <ComponenteLista
               key={usuario.id}
               nome={usuario.nome}
@@ -85,9 +103,9 @@ export const ListaUsers = (props) => {
               topic1={"CREA"}
               t1info={usuario.crea}
               topic2={"Empresa"}
-              t2info={usuario.empresa}
+              t2info={usuario.empresa || "Nenhuma"}
               topic3={"Plano"}
-              t3info={"MANUTENÇÃO"} // item.planos[0]?.nome}
+                  t3info={usuario.plano?.nome || "Não Cadastrado"} // item.planos[0]?.nome}
               view={() => handleView(usuario)} // nesses handles, o .map vai passar o usuário COMPLETO.
               delete={() => handleDelete(usuario)} // é bom comentar isso pq eu fiquei perdido desde o inicio tentando entender
               editar={() => handleEdit(usuario)}

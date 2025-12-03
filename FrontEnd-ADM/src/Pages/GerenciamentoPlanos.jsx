@@ -73,7 +73,7 @@ const GerenciamentoPlanos = () => {
         <ContainerLista
           topico={"Listagem de Planos"}
           desc={"Gerencie todos os Planos disponíveis"}
-          lista={<ListaPlanos plano={planos} carregarUsers={listarPlanos} />}
+          lista={<ListaPlanos plano={planos} />}
           ModalOpen={() => setIsModalOpen(true)}
         />
       </div>

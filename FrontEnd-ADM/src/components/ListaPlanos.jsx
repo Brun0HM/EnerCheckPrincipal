@@ -5,6 +5,7 @@ import VisualizarLista from "./VisualizarLista";
 import DeleteModal from "./DeleteModal";
 import Editar from "./Editar";
 import apiService from "../../../FronEnd/services/api";
+import { toast, ToastContainer } from "react-toastify";
 
 export const ListaPlanos = (props) => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -13,6 +14,7 @@ export const ListaPlanos = (props) => {
   const [showModalEdit, setShowModalEdit] = useState(false);
 
   const planos = (props.plano);
+
 
   const [carregando, setCarregando] = useState(false);
 
@@ -38,13 +40,20 @@ export const ListaPlanos = (props) => {
   };
 
   const handleConfirmDelete = () => {
+    
+  const alerta = () => toast.success("Usuário deletado com sucesso.",{
+    position: "bottom-right",
+    className: "bg-success text-light",
+    autoClose: 3000,
+  })
     const id = selectedItem.planoId;
     if (id) {
       try {
         apiService.deletePlano(id);
         console.log(`Excluindo item com ID: ${id}`);
         setShowModalDelete(false);
-        props.carregarUsers;
+        window.location.reload();
+        alerta();
       } catch (error) {
         console.log("Erro ao deletar plano: " + error);
       }
@@ -72,6 +81,7 @@ export const ListaPlanos = (props) => {
 
   return (
     <>
+        <ToastContainer></ToastContainer>
       <div
         className="d-flex flex-column gap-2 overflow-y-auto rounded-4 "
         style={{ maxHeight: "500px" }}

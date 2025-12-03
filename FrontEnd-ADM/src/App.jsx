@@ -30,7 +30,7 @@ function App() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setCarregando(true);
@@ -39,7 +39,7 @@ function App() {
       console.log("Dados do formulário:", { email, senha });
 
       try {
-        apiService.loginUser(email, senha);
+        await apiService.loginUser(email, senha);
         setEmail("");
         setSenha("");
         alert("Usuário logado com sucesso.");

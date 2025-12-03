@@ -9,49 +9,53 @@ const api = axios.create({
   timeout: 10000,
 });
 
+api.interceptors.request.use(
+  (config) => {
+    console.log("Interceptor de requisição chamado!");
+    const token = localStorage.getItem("Token");
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("Token");
-  if(token) {
-    config.headers['Authorization'] = `Bearer ${token}`;
+    return config;
+  },
+  (error) => {
+    console.error("Erro no interceptor de resposta ", error);
+    return Promise.reject(error);
   }
+);
 
-  return config;
-}, (error) => {
-  return Promise.reject(error);
-})
+api.interceptors.response.use(
+  (response) => {
+    console.log("Interceptor de resposta chamado!");
 
+    return response;
+  },
+  async (error) => {
+    console.error("Erro no interceptor de resposta");
+    const originalRequest = error.config;
 
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        const refreshToken = localStorage.getItem("refreshToken");
 
-api.interceptors.response.use((response) => {
-  return response;
-}, async (error) => {
-  const originalRequest = error.config;
+        const response = await api.post("/Usuario/refresh", {
+          refreshToken: refreshToken,
+        });
 
-  if (error.response?.status === 401 && !originalRequest._retry) {
-    originalRequest._retry = true;
-    try {
-    const refreshToken = localStorage.getItem('refreshToken');
-
-    const response = await api.post("/Usuario/refresh", {
-        refreshToken: refreshToken
-      });
-
-      const novoToken = response.data.accessToken;
-      localStorage.setItem('Token', novoToken);
-      originalRequest.headers['Authorization'] = `Bearer ${novoToken}`;
-      return api(originalRequest);
-    } catch (refreshError) {
-      console.error('O refresh token falhou: ', refreshError);
-      localStorage.clear();
-      window.location.href = '/'
-       
-      
+        const novoToken = response.data.accessToken;
+        localStorage.setItem("Token", novoToken);
+        originalRequest.headers["Authorization"] = `Bearer ${novoToken}`;
+        return api(originalRequest);
+      } catch (refreshError) {
+        console.error("O refresh token falhou: ", refreshError);
+        localStorage.clear();
+        window.location.href = "/";
+      }
     }
   }
-} 
-
-)
+);
 
 // 1. Usuarios --------------------------------------------------------------------------------
 /**
@@ -59,24 +63,25 @@ api.interceptors.response.use((response) => {
  * Faz a requisição e já retorna a lista filtrada (id, nome e email).
  */
 const getUser = async () => {
-
   try {
-
     const response = await api.get("/api/Usuarios");
-    const listaCompleta = response.data;
-    
-    // Mapeia a lista para retornar id, nome e email
-    const listaSimples = listaCompleta.map((user) => ({
-      id: user.id,
-      nome: user.nomeCompleto,
-      email: user.email,
-      crea: user.numeroCrea,
-      empresa: user.empresa
-    }));
-    
-    return listaSimples;
+    if (response && response.data) {
+      const listaCompleta = response.data;
+
+      // Mapeia a lista para retornar id, nome e email
+      const listaSimples = listaCompleta.map((user) => ({
+        id: user.id,
+        nome: user.nomeCompleto,
+        email: user.email,
+        crea: user.numeroCrea,
+        empresa: user.empresa,
+        plano: user.plano
+      }));
+
+      return listaSimples;
+    }
   } catch (error) {
-    console.log("Erro ao Carregar usuários: ", error)
+    console.log("Erro ao carregar usuários: ", error);
   }
 };
 
@@ -98,7 +103,11 @@ const createUser = async (email, senha, nomeCompleto, numeroCrea, empresa) => {
  * Função para deletar um usuário.
  */
 const deleteUser = async (id) => {
-  return await api.delete(`/api/Usuarios/${id}`);
+  try {
+    await api.delete(`/api/Usuarios/${id}`);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 //login
@@ -113,17 +122,17 @@ const loginUser = async (email, senha) => {
     // Ajuste conforme a estrutura real da sua API (token, accessToken, data.token etc.)
     const token =
       response.data?.token || response.data?.accessToken || response.data;
-    const refreshToken = response.data?.refreshToken
+    const refreshToken = response.data?.refreshToken;
     console.log("Login bem-sucedido!");
     console.log("Token Bearer:", token);
-    console.log("Refresh Token: ", refreshToken)
+    console.log("Refresh Token: ", refreshToken);
     // Se quiser, define header default para futuras chamadas
     if (token) {
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       // e salva no localStorage para persistência
       try {
         localStorage.setItem("token", token);
-        localStorage.setItem("refreshToken", refreshToken)
+        localStorage.setItem("refreshToken", refreshToken);
       } catch (e) {
         console.warn("Não foi possível salvar o token no localStorage:", e);
       }
@@ -151,16 +160,13 @@ const loginUser = async (email, senha) => {
 // 2. Planos --------------------------------------------------------------------------------
 
 const deletePlano = async (planoId) => {
-
-  try {
-    console.log('Plano deletado com sucesso.')
-    return await api.delete(`/api/Planos/${planoId}`)
-  } catch (e) {
- console.log("Erro ao deletar plano: " + e)
-  }
-
-
-}
+  if (String.length(planoId) === 0)
+    try {
+      const response = await api.delete(`/api/Planos/${planoId}`);
+      console.log("Plano deletado com sucesso.");
+      return response.data;
+    } catch (error) {}
+};
 
 // Exporta as funções que o componente usará
 const apiService = {
@@ -168,8 +174,7 @@ const apiService = {
   createUser,
   deleteUser,
   loginUser,
-  deletePlano
+  deletePlano,
 };
 
 export default apiService;
-

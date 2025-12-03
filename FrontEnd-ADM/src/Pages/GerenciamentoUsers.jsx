@@ -6,22 +6,30 @@ import { ListaUsers } from "../components/ListaUsers";
 import Modal from "../components/Modal";
 import apiService from "../../../FronEnd/services/api";
 import { ToastContainer, toast } from "react-toastify";
+import { ListaPlanos } from "../components/ListaPlanos";
 
 const GerenciamentoUsers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [usuarios, setUsuarios] = useState([]);
   const [carregando, setCarregando] = useState(false);
 
+  
+  
+  
   const listarUsers = async () => {
-    setCarregando(true);
-    setUsuarios("");
+
     const notificacao = toast.loading(" Carregando dados...", {
       position: "bottom-right",
-      className: "bg-primary text-light"
+      className: "bg-primary text-light",
     });
+    setUsuarios("");
+    setCarregando(true);
+
+
+    
     try {
       const dados = await apiService.getUser();
-      if (dados) setUsuarios(dados);
+      if (dados && Array.isArray(dados)) setUsuarios(dados);
       if (usuarios) {
         toast.update(notificacao, {
           render: "Dados Carregados!",
@@ -29,7 +37,7 @@ const GerenciamentoUsers = () => {
           className: "bg-success text-light border border-2 border-light",
           isLoading: false,
           autoClose: 2000,
-          progressClassName: "text-light bg-success-subtle"
+          progressClassName: "text-light bg-success-subtle",
         });
       }
     } catch (error) {
@@ -52,7 +60,7 @@ const GerenciamentoUsers = () => {
 
   return (
     <>
-    <ToastContainer></ToastContainer>
+      <ToastContainer></ToastContainer>
       <div className="container mt-2 pt-2 mb-3 pb-3">
         <div className="flex-shrink-0 mb-3">
           <h3 className="text-capitalize fw-bold text-start m-0">
@@ -62,19 +70,17 @@ const GerenciamentoUsers = () => {
             Ler, criar, editar e excluir cadastro de usuários
           </p>
         </div>
-        <div className="d-flex flex-column overflow-hidden">
+        <div className="d-flex flex-md-row  flex-column gap-2 gap-md-5 overflow-hidden">
           <TabelaGeral
             topic1={"Cadastros Totais"}
             t1info={usuarios.length}
-            topic2={"Tópico 2"}
-            t2info={"67"}
-            topic3={"Tópico 3"}
-            t3info={"41"}
+            
           />
           <ContainerLista
             topico={"Listagem de usuários"}
             desc={"gerencie os usuários disponíveis"}
-            lista={<ListaUsers users={usuarios} />}
+            getLista={listarUsers}
+            lista={<ListaUsers users={usuarios} getLista={listarUsers} />}
             ModalOpen={() => setIsModalOpen(true)}
           />
         </div>

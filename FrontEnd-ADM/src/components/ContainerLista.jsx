@@ -16,10 +16,10 @@ const ContainerLista = (props) => {
   apiPlanos.listagemPlanos().then(setPlanos);
   apiService.getUser().then(setUsuarios);
   apiProjetos.getProjetos().then(setProjetos);
-  })
+  }, [])
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3;
+  const itemsPerPage = 5;
 
   // Extrair os itens considerando filtros
   const allItems = useMemo(() => {
@@ -42,20 +42,25 @@ const ContainerLista = (props) => {
       }
     }
     return [];
-  }, [props.lista]);
+  }, [props.lista, usuarios, planos, projetos]);
 
   // Resetar para página 1 quando os dados mudarem
   useEffect(() => {
     setCurrentPage(1);
   }, [allItems]);
 
-  // Cálculos de paginação
-  const totalItems = allItems.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+ 
+ 
+
+    // Cálculos de paginação
+    const totalItems = allItems.length;
+
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
   const currentItems = allItems.slice(startIndex, endIndex);
 
+  
   // Manipuladores de navegação
   const handlePreviousPage = () => {
     setCurrentPage(prev => Math.max(prev - 1, 1));
@@ -65,7 +70,7 @@ const ContainerLista = (props) => {
     setCurrentPage(prev => Math.min(prev + 1, totalPages));
   };
 
- 
+  
 
   // Renderizar o componente de lista com os itens paginados
   const renderPaginatedList = () => {
@@ -96,9 +101,9 @@ const ContainerLista = (props) => {
   };
 
   return (
-    <div className="border border-2 border-dark border-opacity-10 shadow d-flex flex-column rounded-4 px-3 py-3">
+    <div className="border border-2 border-dark border-opacity-10 d-flex flex-column rounded-4 px-3 py-3">
       {/* Header original mantido */}
-      <div className="d-flex justify-content-between align-items-center">
+      <div className=" mb-3 mt-md-0 d-flex flex-column flex-md-row justify-content-between align-items-center">
         <div>
           <p className="m-0 fw-bold fs-5">{props.topico}</p>
           <p className="small">{props.desc}</p>
@@ -116,13 +121,13 @@ const ContainerLista = (props) => {
               </b>
             </div>
           </button>
-    <button onClick={props.getLista} className="btn bg-primary text-light fw-medium">Carregar Lista</button>
+    <button onClick={props.getLista} className="btn bg-primary text-light fw-medium">Recarregar Lista</button>
           </div>
         )}
       </div>
 
       {/* Container da Lista - altura fixa para exatamente 3 itens */}
-      <div className="flex-grow-1" style={{minHeight: '340px', overflow: 'hidden'}}>
+      <div className="flex-grow-1" style={{minHeight: '540px', overflow: 'hidden'}}>
         {renderPaginatedList()}
       </div>
       
