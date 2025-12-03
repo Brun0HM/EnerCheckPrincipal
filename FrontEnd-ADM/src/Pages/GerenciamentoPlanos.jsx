@@ -17,6 +17,7 @@ const GerenciamentoPlanos = () => {
     setPlanos("");
     const notificacao = toast.loading(" Carregando dados...", {
       position: "bottom-right",
+      className: "bg-primary text-light"
     });
 
     try {
@@ -27,11 +28,12 @@ const GerenciamentoPlanos = () => {
         console.log("Dados de planos carregados!");
         if (planos) {
           toast.update(notificacao, {
-            render: "Dados Carregados!",
-            type: "success",
-            className: "bg-success",
-            isLoading: false,
-            autoClose: 2000,
+           render: "Dados Carregados!",
+          type: "success",
+          className: "bg-success text-light border border-2 border-light",
+          isLoading: false,
+          autoClose: 2000,
+          progressClassName: "text-light bg-success-subtle"
           });
         }
       }
@@ -43,7 +45,7 @@ const GerenciamentoPlanos = () => {
   };
 
   useEffect(() => {
-    listarPlanos().catch(console.error);
+    listarPlanos();
   }, []);
 
   //  const faturamentoTotal = planos.reduce((valorAnt, plano) => {
@@ -71,7 +73,7 @@ const GerenciamentoPlanos = () => {
         <ContainerLista
           topico={"Listagem de Planos"}
           desc={"Gerencie todos os Planos disponíveis"}
-          lista={<ListaPlanos plano={planos} />}
+          lista={<ListaPlanos plano={planos} carregarUsers={listarPlanos} />}
           ModalOpen={() => setIsModalOpen(true)}
         />
       </div>

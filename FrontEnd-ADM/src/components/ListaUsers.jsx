@@ -6,13 +6,13 @@ import DeleteModal from "./DeleteModal";
 import Editar from "./Editar";
 import apiService from "../../../FronEnd/services/api";
 
-export const ListaUsers = ({ paginatedData }) => {
+export const ListaUsers = (props) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModalView, setShowModalView] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
 
-  const [usuarios, setUsuarios] = useState([]);
+  const users = props.users;
   const [carregando, setCarregando] = useState(false);
 
   // Usar dados paginados se fornecidos, senão usar todos os dados
@@ -44,10 +44,11 @@ export const ListaUsers = ({ paginatedData }) => {
   };
 
   const listarUsers = async () => {
+    setCarregando(true);
     try {
-      setCarregando(true);
-      const dados = await apiService.getUser();
-      setUsuarios(dados);
+      if (users != null) {
+        console.log("usuarios carregados!");
+      }
     } catch (error) {
       console.log("Erro ao buscar usuarios: " + error);
     } finally {
@@ -65,13 +66,18 @@ export const ListaUsers = ({ paginatedData }) => {
         className="d-flex flex-column gap-2 rounded-4"
         style={{ maxHeight: "500px" }}
       >
-        {!usuarios ? (
-          <div className="d-flex flex-column align-items-center text-center gap-3 mt-5"> 
-          <div style={{width: "5rem", height: "5rem",}} className="spinner-border text-primary align-self-center fs-2"> </div>
-          <p>Carregando Informações...</p>
+        {!users ? (
+          <div className="d-flex flex-column align-items-center text-center gap-3 mt-5">
+            <div
+              style={{ width: "5rem", height: "5rem" }}
+              className="spinner-border text-primary align-self-center fs-2"
+            >
+              {" "}
+            </div>
+            <p>Carregando Informações...</p>
           </div>
-          ) : !carregando ?
-          usuarios.map((usuario) => (
+        ) : !carregando ? (
+          users.map((usuario) => (
             <ComponenteLista
               key={usuario.id}
               nome={usuario.nome}
@@ -86,12 +92,18 @@ export const ListaUsers = ({ paginatedData }) => {
               delete={() => handleDelete(usuario)} // é bom comentar isso pq eu fiquei perdido desde o inicio tentando entender
               editar={() => handleEdit(usuario)}
             />
-          )) : (
-            <div className="d-flex flex-column align-items-center text-center gap-3 mt-5"> 
-          <div style={{width: "5rem", height: "5rem",}} className="spinner-border text-primary align-self-center fs-2"> </div>
-          <p>Carregando Informações...</p>
+          ))
+        ) : (
+          <div className="d-flex flex-column align-items-center text-center gap-3 mt-5">
+            <div
+              style={{ width: "5rem", height: "5rem" }}
+              className="spinner-border text-primary align-self-center fs-2"
+            >
+              {" "}
+            </div>
+            <p>Carregando Informações...</p>
           </div>
-          ) }
+        )}
       </div>
 
       {showModalView && (

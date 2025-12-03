@@ -42,10 +42,8 @@ function App() {
         apiService.loginUser(email, senha);
         setEmail("");
         setSenha("");
-
         alert("Usuário logado com sucesso.");
         navigate("/users");
-        console.log("Token de login: " + localStorage.getItem("Token"));
       } catch (error) {
         console.log("Erro ao logar: ", error);
       } finally {

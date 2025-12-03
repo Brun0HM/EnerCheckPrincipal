@@ -31,9 +31,9 @@ api.interceptors.response.use((response) => {
   if (error.response?.status === 401 && !originalRequest._retry) {
     originalRequest._retry = true;
     try {
-      const refreshToken = localStorage.getItem('refreshToken');
+    const refreshToken = localStorage.getItem('refreshToken');
 
-      const response = await api.post("/Usuario/refresh", {
+    const response = await api.post("/Usuario/refresh", {
         refreshToken: refreshToken
       });
 
@@ -59,19 +59,25 @@ api.interceptors.response.use((response) => {
  * Faz a requisição e já retorna a lista filtrada (id, nome e email).
  */
 const getUser = async () => {
-  const response = await api.get("/api/Usuarios");
-  const listaCompleta = response.data;
 
-  // Mapeia a lista para retornar id, nome e email
-  const listaSimples = listaCompleta.map((user) => ({
-    id: user.id,
-    nome: user.nomeCompleto,
-    email: user.email,
-    crea: user.numeroCrea,
-    empresa: user.empresa
-  }));
+  try {
 
-  return listaSimples;
+    const response = await api.get("/api/Usuarios");
+    const listaCompleta = response.data;
+    
+    // Mapeia a lista para retornar id, nome e email
+    const listaSimples = listaCompleta.map((user) => ({
+      id: user.id,
+      nome: user.nomeCompleto,
+      email: user.email,
+      crea: user.numeroCrea,
+      empresa: user.empresa
+    }));
+    
+    return listaSimples;
+  } catch (error) {
+    console.log("Erro ao Carregar usuários: ", error)
+  }
 };
 
 /**
@@ -107,16 +113,17 @@ const loginUser = async (email, senha) => {
     // Ajuste conforme a estrutura real da sua API (token, accessToken, data.token etc.)
     const token =
       response.data?.token || response.data?.accessToken || response.data;
-
+    const refreshToken = response.data?.refreshToken
     console.log("Login bem-sucedido!");
     console.log("Token Bearer:", token);
-
+    console.log("Refresh Token: ", refreshToken)
     // Se quiser, define header default para futuras chamadas
     if (token) {
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       // e salva no localStorage para persistência
       try {
         localStorage.setItem("token", token);
+        localStorage.setItem("refreshToken", refreshToken)
       } catch (e) {
         console.warn("Não foi possível salvar o token no localStorage:", e);
       }

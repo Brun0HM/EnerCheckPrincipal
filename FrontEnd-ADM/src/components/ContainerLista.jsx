@@ -116,7 +116,7 @@ const ContainerLista = (props) => {
               </b>
             </div>
           </button>
-    <button onClick={""} className="btn bg-primary text-light fw-medium">Carregar Lista</button>
+    <button onClick={props.getLista} className="btn bg-primary text-light fw-medium">Carregar Lista</button>
           </div>
         )}
       </div>

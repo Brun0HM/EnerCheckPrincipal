@@ -4,7 +4,6 @@ import { ComponenteLista } from "./ComponenteLista";
 import VisualizarLista from "./VisualizarLista";
 import DeleteModal from "./DeleteModal";
 import Editar from "./Editar";
-import apiPlanos from "../apis/planos";
 import apiService from "../../../FronEnd/services/api";
 
 export const ListaPlanos = (props) => {
@@ -45,7 +44,7 @@ export const ListaPlanos = (props) => {
         apiService.deletePlano(id);
         console.log(`Excluindo item com ID: ${id}`);
         setShowModalDelete(false);
-        window.location.reload();
+        props.carregarUsers;
       } catch (error) {
         console.log("Erro ao deletar plano: " + error);
       }
