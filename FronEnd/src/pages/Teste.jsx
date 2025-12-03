@@ -110,9 +110,7 @@ const Teste = () => {
     event.preventDefault();
     try {
       // Envie apenas o planoId como inteiro no corpo
-      await apiService.putPlanos(3, {
-        headers: { "Content-Type": "application/json" },
-      });
+      await apiService.putPlanos(3);
       getUsers(); // Atualiza a lista de usuários
     } catch (error) {
       console.error("Erro ao colocar plano no usuário:", error);

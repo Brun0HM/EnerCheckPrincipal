@@ -1,12 +1,20 @@
 import React from "react";
-import {useNavigate } from "react-router";
+import { useNavigate } from "react-router";
+import apiService from "../../services/api";
+
 const TiposPlanos = (props) => {
   const navigate = useNavigate();
-
-
-  const handleEnviarInfo = () =>{
-    navigate("/comecarAssinatura")
-  }
+  const handleEscolherPlano = async () => {
+    try {
+      // Chama putPlanos com o planoId passado como prop
+      await apiService.putPlanos(props.planoId);
+      // Após sucesso, navega para a página de assinatura
+      navigate("/comecarAssinatura");
+    } catch (error) {
+      console.error("Erro ao selecionar plano:", error);
+      // Opcional: adicione tratamento de erro, como mostrar uma mensagem ao usuário
+    }
+  };
 
   return (
     <div className="d-flex flex-column align-items-center justify-content-center h-100">
@@ -98,7 +106,7 @@ const TiposPlanos = (props) => {
                 borderColor: "var(--primary)",
                 color: "#ffffff",
               }}
-              onClick={handleEnviarInfo}
+              onClick={handleEscolherPlano}
             >
               Escolher {props.title}
             </button>

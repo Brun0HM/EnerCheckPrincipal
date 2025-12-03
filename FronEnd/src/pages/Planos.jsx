@@ -48,6 +48,7 @@ const Planos = () => {
               title="Básico"
               desgracao="Ideal para profissionais autônomos"
               preco="R$49"
+              planoId={1}
               itens={[
                 "Até 10 projetos",
                 "Conformidade NBR 5410",
@@ -62,6 +63,7 @@ const Planos = () => {
               title="Pro"
               desgracao="Para pequenas e médias empresas"
               preco="R$149"
+              planoId={2}
               itens={[
                 "Até 50 projetos",
                 "Conformidade NBR 5410",
@@ -77,6 +79,7 @@ const Planos = () => {
               title="Empresas"
               desgracao="Para grandes organizações"
               preco="R$399"
+              planoId={3}
               itens={[
                 "Projetos ilimitados",
                 "Conformidade NBR 5410",

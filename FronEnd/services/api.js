@@ -170,14 +170,20 @@ const loginUser = async (email, senha) => {
 //--------------------------------------------------------------------------------------------
 // 2. Planos --------------------------------------------------------------------------------
 
-const putPlanos = async (data, config = {}) => {
+const putPlanos = async (planoId, config = {}) => {
   const token = localStorage.getItem("Token"); // Padronizado para minúsculo
   if (!token) {
     throw new Error("Usuário não autenticado. Token ausente.");
   }
   const url = "/api/Usuarios/usuario/add/plano";
   try {
-    const response = await api.put(url, data, config);
+    const response = await api.put(url, planoId, {
+      ...config,
+      headers: {
+        ...config.headers,
+        "Content-Type": "application/json",
+      },
+    });
     console.log(response.data);
     return response.data;
   } catch (error) {

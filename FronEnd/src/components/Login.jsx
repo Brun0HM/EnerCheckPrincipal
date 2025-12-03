@@ -57,8 +57,8 @@ const Login = () => {
   };
 
   const validatePassword = (password) => {
-    // Senha deve ter pelo menos 6 caracteres
-    return password.length >= 6;
+    // Senha deve ter pelo menos 5 caracteres
+    return password.length >= 5;
   };
 
   return (
