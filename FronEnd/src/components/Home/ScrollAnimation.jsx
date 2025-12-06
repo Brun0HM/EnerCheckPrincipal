@@ -1,7 +1,7 @@
 // Importações necessárias
 import React from "react";
-import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
-import "../styles/ScrollAnimation.css";
+import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
+import "../../styles/ScrollAnimation.css";
 
 const ScrollAnimation = ({
   children,

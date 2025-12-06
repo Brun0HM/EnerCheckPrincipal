@@ -1,6 +1,8 @@
 import React from "react";
-import apiService from "../../services/api";
 import { useEffect, useState, useRef } from "react";
+import apiUserService from "../../../services/usuario";
+import projetosService from "../../../services/projetos";
+import planosService from "../../../services/planos";
 
 const Teste = () => {
   const [users, setUsers] = useState([]);
@@ -28,7 +30,7 @@ const Teste = () => {
   async function getUsers() {
     try {
       setLoading(true);
-      const dados = await apiService.getUser();
+      const dados = await apiUserService.getUser();
       setUsers(dados);
     } catch (error) {
       setError(error);
@@ -42,7 +44,7 @@ const Teste = () => {
   async function handleCreateUser(event) {
     event.preventDefault();
     try {
-      await apiService.createUser(
+      await apiUserService.createUser(
         inputEmail.current.value,
         inputSenha.current.value,
         inputNomeCompleto.current.value,
@@ -63,7 +65,7 @@ const Teste = () => {
   // Função que deleta usuarios na API
   async function handleDeleteUser(id) {
     try {
-      await apiService.deleteUser(id);
+      await apiUserService.deleteUser(id);
       getUsers(); // Atualiza a lista
     } catch (error) {
       console.error("Erro ao deletar usuário:", error);
@@ -92,7 +94,7 @@ const Teste = () => {
   async function handleLogin(event) {
     event.preventDefault();
     try {
-      await apiService.loginUser(
+      await apiUserService.loginUser(
         inputLoginEmail.current.value,
         inputLoginSenha.current.value
       );
@@ -110,7 +112,7 @@ const Teste = () => {
     event.preventDefault();
     try {
       // Envie apenas o planoId como inteiro no corpo
-      await apiService.putPlanos(3);
+      await planosService.putPlanos(3);
       getUsers(); // Atualiza a lista de usuários
     } catch (error) {
       console.error("Erro ao colocar plano no usuário:", error);
@@ -120,7 +122,7 @@ const Teste = () => {
   // Função para obter o usuário logado pelo token
   async function handleGetUserByToken() {
     try {
-      const user = await apiService.getUserByToken();
+      const user = await apiUserService.getUserByToken();
       setCurrentUser(user);
     } catch (error) {
       console.error("Erro ao obter usuário pelo token:", error);
@@ -130,7 +132,7 @@ const Teste = () => {
   async function handleGetProjeto() {
     try {
       setLoading(true);
-      const projeto = await apiService.getProjetos();
+      const projeto = await projetosService.getProjetos();
       setProjetos(projeto);
     } catch (error) {
       console.error("Erro ao obter projeto:", error);
@@ -146,14 +148,14 @@ const Teste = () => {
 
     // Depuração: verifique os valores no console
     console.log("Valores capturados - Nome:", nome, "Descrição:", descricao);
-  
+
     if (!nome.trim() || !descricao.trim()) {
       console.error("Nome ou descrição estão vazios. Preencha os campos.");
       return;
     }
 
     try {
-      await apiService.postProjetos(nome, descricao);
+      await projetosService.postProjetos(nome, descricao);
       handleGetProjeto();
       inputProjetoNome.current.value = ""; // Limpa após sucesso
       inputProjetoDescricao.current.value = "";
@@ -164,7 +166,7 @@ const Teste = () => {
 
   async function handleDeleteProjeto(id) {
     try {
-      await apiService.deleteProjetos(id);
+      await projetosService.deleteProjetos(id);
       handleGetProjeto(); // Atualiza a lista
     } catch (error) {
       console.error("Erro ao deletar projeto:", error);

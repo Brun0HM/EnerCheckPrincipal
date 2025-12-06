@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import planosService from "../../services/planos";
+import planosService from "../../../services/planos";
 
 const TiposPlanos = (props) => {
   const navigate = useNavigate();

@@ -1,9 +1,9 @@
 import React from "react";
-import Login from "../components/Login";
 import { useNavigate } from "react-router";
-import { useTheme } from "../hooks/useTheme"; // Importando o hook
-import LogoClara from "../assets/LogoEsticadaBranca.png";
-import LogoEscura from "../assets/LogoEsticadaPreta.png";
+import Login from "../../components/Forms/Login";
+import { useTheme } from "../../hooks/useTheme"; // Importando o hook
+import LogoClara from "../../assets/LogoEsticadaBranca.png";
+import LogoEscura from "../../assets/LogoEsticadaPreta.png";
 
 const Logar = () => {
   const navigate = useNavigate();

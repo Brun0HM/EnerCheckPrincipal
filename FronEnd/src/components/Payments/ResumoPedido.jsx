@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import apiService from "../../services/api";
+import apiService from "../../../services/api";
 
 const ResumoPedido = () => {
   const [currentUser, setCurrentUser] = useState(null);

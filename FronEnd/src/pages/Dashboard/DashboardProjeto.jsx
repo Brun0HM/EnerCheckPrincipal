@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { InfoGeralContainer } from "../components/InfoGeralContainer";
-import { ContainerChecagem } from "../components/ContainerChecagem";
+import { InfoGeralContainer } from "../../components/Dashboard/InfoGeralContainer";
+import { ContainerChecagem } from "../../components/Projects/ContainerChecagem";
 
 // Querem me matar
 // e estão conseguindo

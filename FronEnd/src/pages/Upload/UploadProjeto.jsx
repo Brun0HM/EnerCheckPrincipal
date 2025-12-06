@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
-import projetosService from "../../services/projetos";
+import projetosService from "../../../services/projetos";
 
 const UploadProjeto = () => {
   const navigate = useNavigate();

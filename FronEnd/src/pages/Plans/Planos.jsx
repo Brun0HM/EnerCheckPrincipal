@@ -1,10 +1,7 @@
-import PerguntasFrequentes from "../components/PerguntasFrequentes";
-import TiposPlanos from "../components/TiposPlanos";
+import PerguntasFrequentes from "../../components/Support/PerguntasFrequentes";
+import TiposPlanos from "../../components/Plans/TiposPlanos";
 
 const Planos = () => {
-
-  
-
   return (
     <div
       style={{

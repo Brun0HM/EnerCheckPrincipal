@@ -1,9 +1,9 @@
 import React from "react";
-import { CardStatusProjetoDashboard } from "../components/CardStatusProjetoDashboard";
-import { ProjetosRecentes } from "../components/ProjetosRecentes";
+import { CardStatusProjetoDashboard } from "../../components/Dashboard/CardStatusProjetoDashboard";
+import { ProjetosRecentes } from "../../components/Dashboard/ProjetosRecentes";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
-import projetosService from "../../services/projetos";
+import projetosService from "../../../services/projetos";
 const DashboardGeral = () => {
   const [projetos, setProjetos] = useState([]);
 

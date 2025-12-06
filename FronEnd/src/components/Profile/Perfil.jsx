@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import apiUserService from "../../services/usuario";
+import apiUserService from "../../../services/usuario";
 
 const Perfil = () => {
   const [email, setEmail] = useState("");

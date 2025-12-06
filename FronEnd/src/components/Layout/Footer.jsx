@@ -1,7 +1,7 @@
 import React from "react";
 const DataAtual = new Date();
 const AnoAtual = DataAtual.getUTCFullYear();
-import LogoClara from "../assets/LogoEsticadaBranca.png";
+import LogoClara from "../../assets/LogoEsticadaBranca.png";
 
 const Footer = () => {
   return (
@@ -10,12 +10,7 @@ const Footer = () => {
         <div className="row ">
           <div className="col col-12 col-md-3 mb-1 mb-md-4">
             <div className="d-flex align-items-center mb-1 mb-md-3">
-              <img
-                src={LogoClara}
-                height={90}
-                alt="Logo"
-                className="logo"
-              />
+              <img src={LogoClara} height={90} alt="Logo" className="logo" />
             </div>
             <p className="text-light fw-light fs-6">
               Verificação automatizada de projetos elétricos com inteligência

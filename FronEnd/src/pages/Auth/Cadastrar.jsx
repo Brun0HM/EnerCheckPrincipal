@@ -1,9 +1,8 @@
 import React from "react";
-import Cadastro from "../components/Cadastro";
-import { useTheme } from "../hooks/useTheme"; // Importando o hook
-import LogoClara from "../assets/LogoEsticadaBranca.png";
-import LogoEscura from "../assets/LogoEsticadaPreta.png";
-
+import Cadastro from "../../components/Forms/Cadastro";
+import { useTheme } from "../../hooks/useTheme"; // Importando o hook
+import LogoClara from "../../assets/LogoEsticadaBranca.png";
+import LogoEscura from "../../assets/LogoEsticadaPreta.png";
 
 const Cadastrar = () => {
   const { theme } = useTheme(); // Usando o hook para obter o tema

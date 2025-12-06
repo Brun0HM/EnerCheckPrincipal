@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router";
-import apiUserService from "../../services/usuario";
-import "../App.css";
+import apiUserService from "../../../services/usuario";
+import "../../App.css";
 const Cadastro = () => {
   // Criar usuarios
   const inputNomeCompleto = useRef();

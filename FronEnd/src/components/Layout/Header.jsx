@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import "../styles/main.scss";
-import { useTheme } from "../hooks/useTheme";
+import "../../styles/main.scss";
+import { useTheme } from "../../hooks/useTheme";
 import { useNavigate } from "react-router";
-import LogoEscura from "../assets/LogoGrandeEscura.svg";
-import LogoClara from "../assets/LogoGrandeClara.svg";
+import LogoEscura from "../../assets/LogoGrandeEscura.svg";
+import LogoClara from "../../assets/LogoGrandeClara.svg";
 
 const Header = () => {
   const [MenuOpen, setMenuOpen] = useState(false);

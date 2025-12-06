@@ -1,19 +1,19 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router";
 import App from "./App.jsx";
-import DashboardProjeto from "./pages/DashboardProjeto";
-import Logar from "./pages/Logar";
-import Cadastrar from "./pages/Cadastrar";
-import Header from "./components/Header";
-import DashBoardGeral from "./pages/DashboardGeral";
-import Planos from "./pages/Planos";
-import Tema from "./pages/TesteTheme";
-import Footer from "./components/Footer";
-import FinalizarEscolhaAssinatura from "./pages/FinalizarEscolhaAssinatura.jsx";
-import DashboardNavbar from "./components/DashboardNavbar";
-import UploadProjeto from "./pages/UploadProjeto.jsx";
-import Configurações from "./pages/Configurações.jsx";
-import Teste from "./pages/Teste.jsx";
+import DashboardProjeto from "./pages/Dashboard/DashboardProjeto";
+import Logar from "./pages/Auth/Logar";
+import Cadastrar from "./pages/Auth/Cadastrar";
+import Header from "./components/Layout/Header";
+import DashBoardGeral from "./pages/Dashboard/DashboardGeral";
+import Planos from "./pages/Plans/Planos";
+import Tema from "./pages/Test/TesteTheme";
+import Footer from "./components/Layout/Footer";
+import FinalizarEscolhaAssinatura from "./pages/Plans/FinalizarEscolhaAssinatura.jsx";
+import DashboardNavbar from "./components/Layout/DashboardNavbar";
+import UploadProjeto from "./pages/Upload/UploadProjeto.jsx";
+import Configurações from "./pages/Settings/Configurações.jsx";
+import Teste from "./pages/Test/Teste.jsx";
 
 const Layout = () => {
   const location = useLocation();
