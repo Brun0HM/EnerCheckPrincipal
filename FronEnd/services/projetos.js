@@ -66,7 +66,6 @@ const postProjetoAnalisar = async (id, data) => {
   }
 };
 
-
 //Exportando as funções de projetos
 const projetosService = {
   getProjetos,

@@ -1,14 +1,11 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
-import projetosService from "../../../services/projetos";
 
 const UploadProjeto = () => {
   const navigate = useNavigate();
 
   const fileTypes = ["JPG", "PNG", "JPEG", "PDF"];
   const nome = useRef("");
-  const nomeProjeto = useRef("");
-  const desc = useRef("");
   const dataArquivo = useRef(null);
   const tipo = useRef("");
   const imagem = localStorage.getItem("Imagem");
@@ -19,36 +16,6 @@ const UploadProjeto = () => {
       reader.onload = () => resolve(reader.result);
       reader.onerror = (error) => reject(error);
     });
-
-  async function postProjeto(data, formato) {
-    // Obtém os valores dos refs
-    const nome = nomeProjeto.current?.value || "";
-    const descricao = desc.current?.value || "";
-
-    try {
-      await projetosService.postProjetos(nome, descricao);
-      // adiconar a logica de envio do arquivo para a analise da AI
-      // await apiService.PostProjetoAnalisar(id, dataArquivo);
-      localStorage.setItem("imagem", data);
-      localStorage.setItem("tipo", formato);
-      console.log("Data recebida!");
-      console.log("Formato do arquivo recebido: ", formato);
-
-      navigate("/dashboardProjeto");
-    } catch (error) {
-      console.error("Erro ao criar projeto:", error);
-    }
-  }
-
-  // Função anterior (remover quando for possivel )
-  // const handleData = async (data, formato) => {
-  //   localStorage.setItem("imagem", data);
-  //   localStorage.setItem("tipo", formato);
-  //   console.log("Data recebida!");
-  //   console.log("Formato do arquivo recebido: ", tipo);
-
-  //   navigate("/dashboardProjeto");
-  // };
 
   const handleFileChange = async (e) => {
     const arquivo = e.target.files[0];
@@ -65,7 +32,7 @@ const UploadProjeto = () => {
     } else if (data.startsWith("data:image/png")) {
       tipo.current = "image/png";
     }
-    dataArquivo.current = imagem.split(",")[1];
+    dataArquivo.current = data.split(",")[1];
   };
 
   useEffect(() => {
@@ -76,7 +43,7 @@ const UploadProjeto = () => {
       nome.current
     );
     console.log("Tipo de Imagem Inserida: ", tipo.current);
-  }, [tipo.current, dataArquivo.current, nome.current]);
+  });
 
   return (
     <div
@@ -102,52 +69,6 @@ const UploadProjeto = () => {
         >
           Nova Análise - EnerCheckAI
         </h1>
-
-        {/* Campos para nome e descrição */}
-        <div className="w-100 px-4">
-          <div className="mb-3">
-            <label
-              htmlFor="nomeProjeto"
-              className="form-label fw-bold"
-              style={{ color: "var(--text)" }}
-            >
-              Nome do Projeto
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="nomeProjeto"
-              ref={nomeProjeto}
-              placeholder="Digite o nome do projeto"
-              style={{
-                backgroundColor: "var(--input-bg)",
-                borderColor: "var(--input-border)",
-                color: "var(--text)",
-              }}
-            />
-          </div>
-          <div className="mb-3">
-            <label
-              htmlFor="descricao"
-              className="form-label fw-bold"
-              style={{ color: "var(--text)" }}
-            >
-              Descrição do Projeto
-            </label>
-            <textarea
-              className="form-control"
-              id="descricao"
-              rows="3"
-              ref={desc}
-              placeholder="Digite uma descrição para o projeto"
-              style={{
-                backgroundColor: "var(--input-bg)",
-                borderColor: "var(--input-border)",
-                color: "var(--text)",
-              }}
-            ></textarea>
-          </div>
-        </div>
 
         {/* Área de upload */}
         <div
@@ -199,7 +120,7 @@ const UploadProjeto = () => {
         <button
           type="button"
           onClick={() => {
-            postProjeto(dataArquivo.current, tipo.current);
+            navigate("/info-projeto");
           }}
           className="btn fw-bold mb-4"
           style={{
@@ -208,7 +129,7 @@ const UploadProjeto = () => {
             color: "#ffffff",
           }}
         >
-          Enviar Arquivo
+          Próxima Etapa
         </button>
       </div>
 

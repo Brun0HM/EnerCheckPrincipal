@@ -14,6 +14,7 @@ import DashboardNavbar from "./components/Layout/DashboardNavbar";
 import UploadProjeto from "./pages/Upload/UploadProjeto.jsx";
 import Configurações from "./pages/Settings/Configurações.jsx";
 import Teste from "./pages/Test/Teste.jsx";
+import InfoProjeto from "./pages/Upload/InfoProjeto.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -28,6 +29,7 @@ const Layout = () => {
     "/teste",
     "/uploadProjeto",
     "/planos",
+    "/novoProjeto",
   ];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
@@ -60,6 +62,7 @@ const Layout = () => {
         <Route path="/uploadProjeto" element={<UploadProjeto />} />
         <Route path="/configuracoes" element={<Configurações />} />
         <Route path="/Teste" element={<Teste />} />
+        <Route path="/novoProjeto" element={<InfoProjeto />} />
       </Routes>
       {!shouldHideNavbar && <Footer />}
     </>

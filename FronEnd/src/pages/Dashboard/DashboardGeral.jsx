@@ -149,7 +149,7 @@ const DashboardGeral = () => {
                   borderColor: "var(--primary)",
                   color: "#ffffff",
                 }}
-                onClick={() => navigate("/uploadProjeto")}
+                onClick={() => navigate("/novoProjeto")}
               >
                 Fazer Upload
               </button>
