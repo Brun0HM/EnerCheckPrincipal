@@ -27,5 +27,6 @@ const putPlanos = async (planoId, config = {}) => {
 // Exportando as funções de planos
 const planosService = {
   putPlanos,
+  
 };
 export default planosService;

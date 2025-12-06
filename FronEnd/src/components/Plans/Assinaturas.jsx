@@ -1,6 +1,25 @@
 import React from "react";
-
+import apiUserService from "../../../services/usuario";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 const Assinaturas = () => {
+  const navigate = useNavigate();
+  const [plano, setPlano] = useState(null);
+
+  async function planoAtual() {
+    try {
+      const plano = await apiUserService.getUserByToken();
+      setPlano(plano.plano);
+      console.log("plano atual:", plano.plano);
+    } catch (error) {
+      console.error("Erro ao obter plano atual:", error);
+    }
+  }
+
+  useEffect(() => {
+    planoAtual();
+  }, []);
+
   return (
     <div className=" col-11 col-md-8 shadow border-2 border rounded-4 px-4 py-3 pb-5 mb-5 ">
       <div>
@@ -11,8 +30,10 @@ const Assinaturas = () => {
       <div className="SeuPlano border border-1 rounded-4 px-4 py-3">
         <div className="d-flex justify-content-between align-items-center">
           <div>
-            <h5 className="mb-1">Plano Pro</h5>
-            <p className="m-0">R$ 149/mês</p>
+            <h5 className="mb-1">
+              Plano: {plano ? `${plano.nome}` : "Nenhum plano"}
+            </h5>
+            <p className="m-0">R$ {plano ? plano.preco : 149}/mês</p>
           </div>
           <span
             className="bg-primary bg-opacity-10 p-1 px-3 rounded-5 fw-semibold"
@@ -25,7 +46,10 @@ const Assinaturas = () => {
         <p className="mt-3">Próxima cobrança: 15 de Fevereiro, 2025</p>
 
         <div className="d-flex flex-column flex-md-row justify-content-between col-12">
-          <button className="btn mb-3 mb-md-0 btn-primary fw-semibold col-12 col-md-4">
+          <button
+            className="btn mb-3 mb-md-0 btn-primary fw-semibold col-12 col-md-4"
+            onClick={() => navigate("/planos")}
+          >
             Alterar Plano
           </button>
           <button className="btn btn-outline-danger fw-semibold col-12 col-md-4 ">
@@ -46,7 +70,10 @@ const Assinaturas = () => {
                 <p className="m-0">Expira em 12/2026</p>
               </div>
             </div>
-            <button className="btn btn-outline-primary fw-semibold">
+            <button
+              className="btn btn-outline-primary fw-semibold"
+              onClick={() => navigate("/comecarAssinatura")}
+            >
               Editar
             </button>
           </div>
