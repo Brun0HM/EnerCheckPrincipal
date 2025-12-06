@@ -14,7 +14,6 @@ import DashboardNavbar from "./components/DashboardNavbar";
 import UploadProjeto from "./pages/UploadProjeto.jsx";
 import Configurações from "./pages/Configurações.jsx";
 import Teste from "./pages/Teste.jsx";
-import TabelaProjetos from "./pages/TabelaProjetos.jsx";
 
 const Layout = () => {
   const location = useLocation();
