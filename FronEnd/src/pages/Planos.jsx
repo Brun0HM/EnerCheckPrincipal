@@ -1,10 +1,10 @@
-import React from "react";
-import TiposPlanos from "../components/TiposPlanos";
 import PerguntasFrequentes from "../components/PerguntasFrequentes";
-import { useState, useRef } from "react";
-import apiService from "../../services/api";
+import TiposPlanos from "../components/TiposPlanos";
 
 const Planos = () => {
+
+  
+
   return (
     <div
       style={{

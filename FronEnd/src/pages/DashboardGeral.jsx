@@ -43,6 +43,7 @@ const DashboardGeral = () => {
       style={{
         background: "var(--bg)",
         color: "var(--text)",
+        
         minHeight: "100vh",
         paddingTop: "3rem",
         paddingBottom: "2rem",

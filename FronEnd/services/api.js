@@ -54,7 +54,7 @@ api.interceptors.response.use(
 
 // 1. Usuarios --------------------------------------------------------------------------------
 /**
- * Função para buscar os perfis.
+ * Função 1ra buscar os perfis.
  * Faz a requisição e já retorna a lista filtrada (id, nome e email).
  */
 const getUser = async () => {
@@ -172,7 +172,7 @@ const loginUser = async (email, senha) => {
 // 2. Planos --------------------------------------------------------------------------------
 
 const putPlanos = async (planoId, config = {}) => {
-  const token = localStorage.getItem("Token"); // Padronizado para minúsculo
+  const token = localStorage.getItem("Token");
   if (!token) {
     throw new Error("Usuário não autenticado. Token ausente.");
   }
@@ -196,7 +196,7 @@ const putPlanos = async (planoId, config = {}) => {
 //--------------------------------------------------------------------------------------------
 // 3. Projeto --------------------------------------------------------------------------------
 const getProjetos = async () => {
-  const token = localStorage.getItem("Token"); // Padronizado para minúsculo
+  const token = localStorage.getItem("Token");
   if (!token) {
     throw new Error("Usuário não autenticado. Token ausente.");
   }

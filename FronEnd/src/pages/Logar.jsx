@@ -4,7 +4,6 @@ import { useNavigate } from "react-router";
 import { useTheme } from "../hooks/useTheme"; // Importando o hook
 import LogoClara from "../assets/LogoEsticadaBranca.png";
 import LogoEscura from "../assets/LogoEsticadaPreta.png";
-import apiService from "../../services/api";
 
 const Logar = () => {
   const navigate = useNavigate();

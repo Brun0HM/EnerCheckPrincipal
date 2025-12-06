@@ -1,61 +1,82 @@
-import React, { useEffect, useState } from "react";
-import { GoogleGenAI } from "@google/genai";
-
+import { useEffect, useRef } from "react";
+import apiService from "../../services/api";
 import { useNavigate } from "react-router";
-import { FileUploader } from "react-drag-drop-files";
 
 const UploadProjeto = () => {
   const navigate = useNavigate();
 
   const fileTypes = ["JPG", "PNG", "JPEG", "PDF"];
-
-  const [nome, setNome] = useState();
-
-  const [dataArquivo, setDataArquivo] = useState(null);
-  const [tipo, setTipo] = useState("");
-
+  const nome = useRef("");
+  const nomeProjeto = useRef("");
+  const desc = useRef("");
+  const dataArquivo = useRef(null);
+  const tipo = useRef("");
   const imagem = localStorage.getItem("Imagem");
   const fileToBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
-
       reader.readAsDataURL(file);
-
       reader.onload = () => resolve(reader.result);
       reader.onerror = (error) => reject(error);
     });
 
-  const handleData = async (data, formato) => {
-    localStorage.setItem("imagem", data);
-    localStorage.setItem("tipo", formato);
-    console.log("Data recebida!");
-    console.log("Formato do arquivo recebido: ", tipo);
+  async function postProjeto(data, formato) {
+    // Obtém os valores dos refs
+    const nome = nomeProjeto.current?.value || "";
+    const descricao = desc.current?.value || "";
 
-    navigate("/dashboardProjeto");
-  };
+    try {
+      await apiService.postProjetos(nome, descricao);
+      // adiconar a logica de envio do arquivo para a analise da AI
+      // await apiService.PostProjetoAnalisar(id, dataArquivo);
+      localStorage.setItem("imagem", data);
+      localStorage.setItem("tipo", formato);
+      console.log("Data recebida!");
+      console.log("Formato do arquivo recebido: ", formato);
+
+      navigate("/dashboardProjeto");
+    } catch (error) {
+      console.error("Erro ao criar projeto:", error);
+    }
+  }
+
+  // Função anterior (remover quando for possivel)
+  // const handleData = async (data, formato) => {
+  //   localStorage.setItem("imagem", data);
+  //   localStorage.setItem("tipo", formato);
+  //   console.log("Data recebida!");
+  //   console.log("Formato do arquivo recebido: ", tipo);
+
+  //   navigate("/dashboardProjeto");
+  // };
 
   const handleFileChange = async (e) => {
     const arquivo = e.target.files[0];
     const data = await fileToBase64(arquivo);
     localStorage.setItem("Imagem", data);
-    setNome(arquivo.name);
+    nome.current = arquivo.name;
     if (
       data.startsWith("data:image/jpg") ||
       data.startsWith("data:image/jpeg")
     ) {
-      setTipo("image/jpeg");
+      tipo.current = "image/jpeg";
     } else if (data.startsWith("data:application/pdf")) {
-      setTipo("pdf");
+      tipo.current = "pdf";
     } else if (data.startsWith("data:image/png")) {
-      setTipo("image/png");
+      tipo.current = "image/png";
     }
-    setDataArquivo(imagem.split(",")[1]);
+    dataArquivo.current = imagem.split(",")[1];
   };
 
   useEffect(() => {
-    console.log("Imagem inserida: ", dataArquivo, " Nome: ", nome);
-    console.log("Tipo de Imagem Inserida: ", tipo);
-  }, [tipo, dataArquivo, nome]);
+    console.log(
+      "Imagem inserida: ",
+      dataArquivo.current,
+      " Nome: ",
+      nome.current
+    );
+    console.log("Tipo de Imagem Inserida: ", tipo.current);
+  }, [tipo.current, dataArquivo.current, nome.current]);
 
   return (
     <div
@@ -67,78 +88,139 @@ const UploadProjeto = () => {
         paddingTop: "2rem",
       }}
     >
-      <div className="container col-12 col-md-5 my-5 d-flex flex-column justify-content-center align-items-center gap-2 border border-primary">
-        <p className="fs-2 fw-bold">Nova Análise - EnerCheckAI</p>
+      <div
+        className="container-fluid col-12 col-md-8 col-lg-6 my-5 d-flex flex-column justify-content-center align-items-center gap-4 rounded shadow"
+        style={{
+          border: "1px solid var(--primary)",
+          backgroundColor: "var(--card-bg)",
+          color: "var(--text)",
+        }}
+      >
+        <h1
+          className="fs-2 fw-bold text-center mt-4"
+          style={{ color: "var(--text)" }}
+        >
+          Nova Análise - EnerCheckAI
+        </h1>
+
+        {/* Campos para nome e descrição */}
+        <div className="w-100 px-4">
+          <div className="mb-3">
+            <label
+              htmlFor="nomeProjeto"
+              className="form-label fw-bold"
+              style={{ color: "var(--text)" }}
+            >
+              Nome do Projeto
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="nomeProjeto"
+              ref={nomeProjeto}
+              placeholder="Digite o nome do projeto"
+              style={{
+                backgroundColor: "var(--input-bg)",
+                borderColor: "var(--input-border)",
+                color: "var(--text)",
+              }}
+            />
+          </div>
+          <div className="mb-3">
+            <label
+              htmlFor="descricao"
+              className="form-label fw-bold"
+              style={{ color: "var(--text)" }}
+            >
+              Descrição do Projeto
+            </label>
+            <textarea
+              className="form-control"
+              id="descricao"
+              rows="3"
+              ref={desc}
+              placeholder="Digite uma descrição para o projeto"
+              style={{
+                backgroundColor: "var(--input-bg)",
+                borderColor: "var(--input-border)",
+                color: "var(--text)",
+              }}
+            ></textarea>
+          </div>
+        </div>
+
+        {/* Área de upload */}
         <div
           id="uploadContainer"
-          className="container border-2 bg-primary bg-opacity-25 rounded-2 d-flex justify-content-center align-items-center flex-column gap-2 py-3 col-8 border-primary"
+          className="container rounded-2 d-flex justify-content-center align-items-center flex-column gap-3 py-4 col-10"
+          style={{
+            border: "2px solid var(--primary)",
+            backgroundColor: "rgba(var(--primary-rgb), 0.25)",
+            color: "var(--text)",
+          }}
         >
-          <i className="bi bi-cloud-upload display-1"></i>
+          <i
+            className="bi bi-cloud-upload display-1"
+            style={{ color: "var(--primary)" }}
+          ></i>
 
-          <div className="d-flex flex-column gap-2 align-items-center ">
-            <p className="fs-5 m-0 text-center fw-bold">
+          <div className="d-flex flex-column gap-2 align-items-center text-center">
+            <p className="fs-5 m-0 fw-bold" style={{ color: "var(--text)" }}>
               Arraste & solte arquivos aqui
             </p>
-            {/* <FileUploader  handleChange={handleFileChange} name="file"  classes="border-0 text-primary text-decoration-underline fw-bolder fs-5" children={<p className="m-0">Clique aqui</p>} types={fileTypes} /> */}
-            <span className="small text-secondary">
-              Formatos suportados: {fileTypes.slice(",")}
+            <span className="small" style={{ color: "var(--text-secondary)" }}>
+              Formatos suportados: {fileTypes.join(", ")}
             </span>
-            <input type="file" className="col-5" onChange={handleFileChange} />
+            <input
+              type="file"
+              className="form-control col-8"
+              onChange={handleFileChange}
+              style={{
+                backgroundColor: "var(--input-bg)",
+                borderColor: "var(--input-border)",
+                color: "var(--text)",
+              }}
+            />
           </div>
 
-          <div className="border border-primary bg-primary bg-opacity-25 text-primary rounded-2 px-2">
-            Arquivo Atual: {nome || "Nenhum"}{" "}
+          <div
+            className="rounded-2 px-3 py-1"
+            style={{
+              border: "1px solid var(--primary)",
+              backgroundColor: "rgba(var(--primary-rgb), 0.25)",
+              color: "var(--primary)",
+            }}
+          >
+            Arquivo Atual: {nome.current || "Nenhum"}
           </div>
-          {/* <input type="file" className="col-9" onChange={handleFileChange} /> */}
         </div>
+
+        {/* Botão enviar */}
         <button
-          onClick={() => handleData(dataArquivo, tipo)}
-          className="btn btn-primary fw-bold "
+          type="button"
+          onClick={() => {
+            postProjeto(dataArquivo.current, tipo.current);
+          }}
+          className="btn fw-bold mb-4"
+          style={{
+            backgroundColor: "var(--primary)",
+            borderColor: "var(--primary)",
+            color: "#ffffff",
+          }}
         >
           Enviar Arquivo
         </button>
-
-        {/* <div className="d-flex flex-column align-items-center mt-5">
-        {/* <div className="d-flex flex-column align-items-center mt-5">
-        <p>Testando a IA!</p>
-        <p>Faça uma pergunta aleatória pra eu ver se tá pegando aqui</p>
-
-        {carregando ? <div className="spinner-border"> </div> : ""}
-        
-        {!erro ? (
-          <p
-            className="col-12 align-self-center"
-            style={{ whiteSpace: "pre-wrap" }}
-          >
-            {" "}
-            {resposta == ""
-            ? "O meu teste será exibido aqui."
-            : resposta.analiseCategorizada[0].categoria}
-          </p>
-          ) : (
-            <div className=" border rounded-3 px-3 border-danger bg-danger-subtle bg-opacity-50 text-danger my-3">
-            {erro}
-            </div>
-            )}
-
-        <input
-          type="text"
-          value={pergunta}
-          onChange={(e) => setPergunta(e.target.value)}
-          disabled={carregando}
-          className="col-7"
-          />
-
-          <button onClick={{}} disabled={carregando}>
-          {!carregando ? "Fazer pergunta" : "gerando resposta..."}
-          </button>
-          </div> */}
       </div>
-      <div className="d-flex flex-column align-items-center">
-        <span>Prévia: </span>
+
+      {/* Prévia */}
+      <div className="d-flex flex-column align-items-center mt-4">
+        <span className="fw-bold" style={{ color: "var(--text)" }}>
+          Prévia:
+        </span>
         <img
-          className="img-fluid col-3 mt-3 mb-5"
+          className="img-fluid col-12 col-md-6 mt-3 mb-5 rounded shadow"
           src={imagem || "https://placehold.co/1000x500"}
+          alt="Prévia do arquivo"
         />
       </div>
     </div>

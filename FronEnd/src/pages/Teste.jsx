@@ -146,7 +146,7 @@ const Teste = () => {
 
     // Depuração: verifique os valores no console
     console.log("Valores capturados - Nome:", nome, "Descrição:", descricao);
-
+  
     if (!nome.trim() || !descricao.trim()) {
       console.error("Nome ou descrição estão vazios. Preencha os campos.");
       return;
