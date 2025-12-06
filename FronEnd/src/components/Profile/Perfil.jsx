@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from "react";
+import { Toast } from "react-bootstrap";
 import apiUserService from "../../../services/usuario";
 
 const Perfil = () => {
   const [email, setEmail] = useState("");
   const [nome, setNome] = useState("");
   const [crea, setCrea] = useState("");
+  const [empresa, setEmpresa] = useState("");
   const [errors, setErrors] = useState({});
   const [currentUser, setCurrentUser] = useState(null);
+  const [showToast, setShowToast] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [initialValues, setInitialValues] = useState({});
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -38,8 +44,33 @@ const Perfil = () => {
 
     // Se não há erros, prosseguir
     if (Object.keys(newErrors).length === 0) {
-      console.log("Formulário válido:", { nome, email, crea });
-      // Adicionar a logica para mandar para API
+      console.log("ID do usuário:", currentUser?.id);
+      const updatedData = {
+        ...currentUser, // Envia todos os campos do usuário
+        nomeCompleto: nome,
+        email: email,
+        numeroCrea: crea,
+        empresa: empresa,
+        projetos: currentUser?.projetos || [], // Inclui projetos (array vazio se não existir)
+      };
+      console.log("Dados enviados:", updatedData);
+      const hasChanged =
+        nome !== initialValues.nome ||
+        email !== initialValues.email ||
+        crea !== initialValues.crea ||
+        empresa !== initialValues.empresa;
+      if (!hasChanged) {
+        setShowToast(true);
+        setIsEditing(false);
+        return;
+      }
+
+      try {
+        await apiUserService.putUser(currentUser.id, updatedData);
+      } catch (error) {
+        console.error("Erro ao salvar alterações:", error);
+        setShowErrorToast(true);
+      }
     }
   };
 
@@ -48,6 +79,17 @@ const Perfil = () => {
     try {
       const user = await apiUserService.getUserByToken();
       setCurrentUser(user);
+      if (user) {
+        const nome = user.nomeCompleto || "";
+        const email = user.email || "";
+        const crea = user.numeroCrea || "";
+        const empresa = user.empresa || "";
+        setNome(nome);
+        setEmail(email);
+        setCrea(crea);
+        setEmpresa(empresa);
+        setInitialValues({ nome, email, crea, empresa });
+      }
     } catch (error) {
       console.error("Erro ao obter usuário pelo token:", error);
     }
@@ -61,8 +103,36 @@ const Perfil = () => {
     <>
       <form
         onSubmit={handleSubmit}
-        className="col-11 col-md-8 shadow border-2 border rounded-3 p-4 pb-5 mb-5"
+        className="col-11 col-md-8 shadow border-2 border rounded-3 p-4 pb-5 mb-5 position-relative"
       >
+        {/* Toast de sucesso */}
+        <Toast
+          show={showToast}
+          onClose={() => setShowToast(false)}
+          delay={3000}
+          autohide
+          className="m-3 position-absolute top-0 end-0"
+          style={{ zIndex: 1050 }}
+        >
+          <Toast.Body className="bg-success text-white rounded">
+            As alterações foram salvas!
+          </Toast.Body>
+        </Toast>
+
+        {/* Toast de erro */}
+        <Toast
+          show={showErrorToast}
+          onClose={() => setShowErrorToast(false)}
+          delay={3000}
+          autohide
+          className="m-3 position-absolute top-0 end-0"
+          style={{ zIndex: 1050 }}
+        >
+          <Toast.Body className="bg-danger text-white rounded">
+            Erro ao salvar alterações. Tente novamente.
+          </Toast.Body>
+        </Toast>
+
         <div>
           <h5 className="fw-bold">Informações Pessoais</h5>
           <p>Atualize suas informações de perfil</p>
@@ -85,6 +155,7 @@ const Perfil = () => {
               }`}
               value={nome}
               onChange={(e) => setNome(e.target.value)}
+              disabled={!isEditing}
             />
             {errors.nome && (
               <div className="invalid-feedback d-block">{errors.nome}</div>
@@ -108,6 +179,7 @@ const Perfil = () => {
                 borderColor: "var(--input-border)",
                 color: "var(--text)",
               }}
+              disabled={!isEditing}
             />
             {errors.email && (
               <div className="invalid-feedback d-block">{errors.email}</div>
@@ -127,7 +199,9 @@ const Perfil = () => {
               type="text"
               maxLength={100}
               className={`form-control theme-input`}
-              // value={empresa}
+              value={empresa}
+              onChange={(e) => setEmpresa(e.target.value)}
+              disabled={!isEditing}
             />
           </div>
 
@@ -148,6 +222,7 @@ const Perfil = () => {
               }`}
               value={crea}
               onChange={(e) => setCrea(e.target.value)}
+              disabled={!isEditing}
             />
             {errors.crea && (
               <div className="invalid-feedback d-block">{errors.crea}</div>
@@ -155,10 +230,11 @@ const Perfil = () => {
           </div>
         </div>
         <button
-          type="submit"
+          type="button"
           className="btn btn-primary col-12 mt-5 fw-semibold"
+          onClick={isEditing ? handleSubmit : () => setIsEditing(true)}
         >
-          Salvar Alterações
+          {isEditing ? "Salvar Alterações" : "Editar"}
         </button>
       </form>
     </>

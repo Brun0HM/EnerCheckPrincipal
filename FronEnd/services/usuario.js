@@ -109,9 +109,18 @@ const loginUser = async (email, senha) => {
 // Método put para editar as informações do usuario
 const putUser = async (id, data) => {
   try {
-    return await api.put(`/api/Usuarios/${id}`, data);
+    const payload = { usuarios: data }; // Adiciona o wrapper "usuarios"
+    return await api.put(`/api/Usuarios/${id}`, payload);
   } catch (error) {
     console.error("Erro ao atualizar usuário:", error);
+    if (error.response) {
+      console.error(
+        "Status:",
+        error.response.status,
+        "Dados:",
+        error.response.data
+      );
+    }
     throw error;
   }
 };
