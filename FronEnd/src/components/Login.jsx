@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import "../App.css";
 import { useNavigate } from "react-router";
-import apiService from "../../services/api";
-
+import apiUserService from "../../services/usuario";
 const Login = () => {
   const navigate = useNavigate();
 
@@ -35,9 +34,9 @@ const Login = () => {
     // Se não há erros, prosseguir com o login
     if (Object.keys(newErrors).length === 0) {
       try {
-        await apiService.loginUser(email.trim(), senha);
+        await apiUserService.loginUser(email.trim(), senha);
         // Verificar se o usuário tem plano ativo
-        const user = await apiService.getUserByToken();
+        const user = await apiUserService.getUserByToken();
         if (user && user.plano && user.useReq > 0) {
           navigate("/dashboardGeral");
         } else {

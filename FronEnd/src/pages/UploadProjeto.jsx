@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import apiService from "../../services/api";
 import { useNavigate } from "react-router";
+import projetosService from "../../services/projetos";
 
 const UploadProjeto = () => {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const UploadProjeto = () => {
     const descricao = desc.current?.value || "";
 
     try {
-      await apiService.postProjetos(nome, descricao);
+      await projetosService.postProjetos(nome, descricao);
       // adiconar a logica de envio do arquivo para a analise da AI
       // await apiService.PostProjetoAnalisar(id, dataArquivo);
       localStorage.setItem("imagem", data);
@@ -40,7 +40,7 @@ const UploadProjeto = () => {
     }
   }
 
-  // Função anterior (remover quando for possivel)
+  // Função anterior (remover quando for possivel )
   // const handleData = async (data, formato) => {
   //   localStorage.setItem("imagem", data);
   //   localStorage.setItem("tipo", formato);

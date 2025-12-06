@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import apiUserService from "../../services/usuario";
 
 const Perfil = () => {
   const [email, setEmail] = useState("");
   const [nome, setNome] = useState("");
-  const [telefone, setTelefone] = useState("");
+  const [crea, setCrea] = useState("");
   const [errors, setErrors] = useState({});
+  const [currentUser, setCurrentUser] = useState(null);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -27,37 +29,33 @@ const Perfil = () => {
       newErrors.email = "Email inválido";
     }
 
-    // Validar telefone
-    if (!telefone.trim()) {
-      newErrors.telefone = "Telefone é obrigatório";
+    // Validar CREA
+    if (!crea.trim()) {
+      newErrors.crea = "CREA é obrigatório";
     }
 
     setErrors(newErrors);
 
     // Se não há erros, prosseguir
     if (Object.keys(newErrors).length === 0) {
-      console.log("Formulário válido:", { nome, email, telefone });
+      console.log("Formulário válido:", { nome, email, crea });
       // Adicionar a logica para mandar para API
     }
   };
 
-  // valida e coloca o () e o - no telefone enquanto digita
-  const formatPhone = (value) => {
-    const digits = value.replace(/\D/g, "").slice(0, 11);
+  // Função para obter o usuário logado pelo token
+  async function getUserLogado() {
+    try {
+      const user = await apiUserService.getUserByToken();
+      setCurrentUser(user);
+    } catch (error) {
+      console.error("Erro ao obter usuário pelo token:", error);
+    }
+  }
 
-    if (!digits) return "";
-    if (digits.length <= 2) return `(${digits}`;
-    if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
-    if (digits.length <= 10)
-      return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
-    // 11 digits (cell with leading 9)
-    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
-  };
-
-  const handleTelefoneChange = (e) => {
-    const formatted = formatPhone(e.target.value);
-    setTelefone(formatted);
-  };
+  useEffect(() => {
+    getUserLogado();
+  }, []);
 
   return (
     <>
@@ -79,7 +77,7 @@ const Perfil = () => {
                 borderColor: "var(--input-border)",
                 color: "var(--text)",
               }}
-              placeholder="Seu nome completo"
+              placeholder={currentUser?.nomeCompleto || "Seu Nome Completo"}
               type="text"
               maxLength={100}
               className={`form-control theme-input ${
@@ -100,7 +98,7 @@ const Perfil = () => {
               className={`w-100 form-control theme-input ${
                 errors.email ? "is-invalid" : ""
               }`}
-              placeholder="seu@email.com"
+              placeholder={currentUser?.email || "Seu Email"}
               type="email"
               value={email}
               maxLength={100}
@@ -125,7 +123,7 @@ const Perfil = () => {
                 borderColor: "var(--input-border)",
                 color: "var(--text)",
               }}
-              placeholder="Nome da Empresa"
+              placeholder={currentUser?.empresa || "Sua Empresa"}
               type="text"
               maxLength={100}
               className={`form-control theme-input`}
@@ -133,27 +131,26 @@ const Perfil = () => {
             />
           </div>
 
-          {/* Campo de Telefone */}
+          {/* Campo de CREA */}
           <div>
-            <span className="fw-semibold">Telefone</span>
+            <span className="fw-semibold">CREA</span>
             <input
               style={{
                 backgroundColor: "var(--input-bg)",
                 borderColor: "var(--input-border)",
                 color: "var(--text)",
               }}
-              placeholder="(00) 00000-0000"
-              type="tel"
-              inputMode="numeric"
-              maxLength={15}
+              placeholder={currentUser?.numeroCrea || "Seu CREA"}
+              type="text"
+              maxLength={5}
               className={`form-control theme-input ${
-                errors.telefone ? "is-invalid" : ""
+                errors.crea ? "is-invalid" : ""
               }`}
-              value={telefone}
-              onChange={handleTelefoneChange}
+              value={crea}
+              onChange={(e) => setCrea(e.target.value)}
             />
-            {errors.telefone && (
-              <div className="invalid-feedback d-block">{errors.telefone}</div>
+            {errors.crea && (
+              <div className="invalid-feedback d-block">{errors.crea}</div>
             )}
           </div>
         </div>

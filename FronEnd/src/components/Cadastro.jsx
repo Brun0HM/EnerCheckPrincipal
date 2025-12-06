@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router";
-import apiService from "../../services/api";
+import apiUserService from "../../services/usuario";
 import "../App.css";
 const Cadastro = () => {
   // Criar usuarios
@@ -14,7 +14,7 @@ const Cadastro = () => {
   async function handleCreateUser(event) {
     event.preventDefault();
     try {
-      await apiService.createUser(
+      await apiUserService.createUser(
         inputEmail.current.value,
         inputSenha.current.value,
         inputNomeCompleto.current.value,

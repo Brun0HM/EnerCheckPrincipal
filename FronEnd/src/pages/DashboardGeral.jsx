@@ -3,15 +3,14 @@ import { CardStatusProjetoDashboard } from "../components/CardStatusProjetoDashb
 import { ProjetosRecentes } from "../components/ProjetosRecentes";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
-import apiService from "../../services/api";
-
+import projetosService from "../../services/projetos";
 const DashboardGeral = () => {
   const [projetos, setProjetos] = useState([]);
 
   // Função para obter projetos da API
   async function getProjeto() {
     try {
-      const projeto = await apiService.getProjetos();
+      const projeto = await projetosService.getProjetos();
       setProjetos(projeto);
     } catch (error) {
       console.error("Erro ao obter projeto:", error);

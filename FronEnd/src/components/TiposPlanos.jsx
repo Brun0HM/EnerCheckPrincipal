@@ -1,13 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import apiService from "../../services/api";
+import planosService from "../../services/planos";
 
 const TiposPlanos = (props) => {
   const navigate = useNavigate();
   const handleEscolherPlano = async () => {
     try {
       // Chama putPlanos com o planoId passado como prop
-      await apiService.putPlanos(props.planoId);
+      await planosService.putPlanos(props.planoId);
       // Após sucesso, navega para a página de assinatura
       navigate("/comecarAssinatura");
     } catch (error) {

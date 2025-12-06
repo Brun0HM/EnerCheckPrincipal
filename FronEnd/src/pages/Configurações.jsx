@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navconfig from "../components/Navconfig";
 import Perfil from "../components/Perfil";
 import Segurança from "../components/Segurança";
 import Notificacoes from "../components/Notificacoes";
 import Assinaturas from "../components/Assinaturas";
+import apiService from "../../services/api";
 
 const Configurações = () => {
   const [activeComponent, setActiveComponent] = useState("perfil"); // Estado para controlar o componente ativo
+  const [currentUser, setCurrentUser] = useState(null);
 
   const renderComponent = () => {
     switch (activeComponent) {
@@ -22,6 +24,8 @@ const Configurações = () => {
         return null;
     }
   };
+
+
 
   return (
     <>
