@@ -33,7 +33,7 @@ const Notificacoes = () => {
         onClose={() => setShowToast(false)}
         delay={3000}
         autohide
-        className="m-3 position-absolute"
+        className="m-3 position-absolute top-0 end-0"
         style={{ zIndex: 1050 }}
       >
         <Toast.Body className="bg-success text-white rounded">
