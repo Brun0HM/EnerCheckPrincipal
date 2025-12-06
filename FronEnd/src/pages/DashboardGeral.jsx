@@ -7,6 +7,8 @@ import apiService from "../../services/api";
 
 const DashboardGeral = () => {
   const [projetos, setProjetos] = useState([]);
+
+  // Função para obter projetos da API
   async function getProjeto() {
     try {
       const projeto = await apiService.getProjetos();
@@ -43,7 +45,7 @@ const DashboardGeral = () => {
       style={{
         background: "var(--bg)",
         color: "var(--text)",
-        
+
         minHeight: "100vh",
         paddingTop: "3rem",
         paddingBottom: "2rem",
@@ -65,22 +67,22 @@ const DashboardGeral = () => {
             <CardStatusProjetoDashboard
               status={"Projetos Totais"}
               iconeStatus={"bi bi-file-earmark-text"}
-              num={"24"}
-              desc={"+2 desde o último mês"}
+              num={projetos.length.toString()}
+              desc={"Projetos cadastrados no sistema"}
             />
 
             <CardStatusProjetoDashboard
               status={"Aprovados"}
               iconeStatus={"bi bi-check2-circle"}
-              num={"18"}
-              desc={"75% de aprovação"}
+              num={Math.floor(projetos.length * 0.75).toString()}
+              desc={"Projetos aprovados com sucesso"}
             />
           </div>
           <div className="d-flex flex-fill gap-2 ">
             <CardStatusProjetoDashboard
               status={"Pendentes"}
               iconeStatus={"bi bi-exclamation-triangle"}
-              num={"6"}
+              num={Math.floor(projetos.length * 0.25).toString()}
               desc={"Aguardando revisão"}
             />
 
@@ -173,6 +175,7 @@ const DashboardGeral = () => {
               </p>
               <button
                 className="btn btn-outline fw-semibold rounded-3 w-100"
+                onClick={() => navigate("/dashboardProjeto")}
                 style={{
                   borderColor: "var(--primary)",
                   color: "var(--primary)",
