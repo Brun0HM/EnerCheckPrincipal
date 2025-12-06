@@ -59,7 +59,11 @@ const deleteProjetos = async (id) => {
 // Envia um projeto para análise do Gemini
 const postProjetoAnalisar = async (id, data) => {
   try {
-    return await api.post(`/api/Projetos/projeto/${id}/analisar`, data);
+    return await api.post(`/api/Projetos/projeto/${id}/analisar`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   } catch (error) {
     console.error("Erro ao analisar projeto:", error);
     throw error;

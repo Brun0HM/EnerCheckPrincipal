@@ -18,11 +18,13 @@ const InfoProjeto = () => {
     // Validação
     if (!nome.trim() || !descricao.trim()) {
       setShowToast(true);
-      showToast;
       return;
     }
     try {
-      await projetosService.postProjetos(nome, descricao);
+      const response = await projetosService.postProjetos(nome, descricao);
+      const id = response.data.projetoId;
+    //   console.log("Projeto criado com ID:", id);
+      localStorage.setItem("projetoId", id); // Salvar ID para usar no upload
       navigate("/uploadProjeto");
     } catch (error) {
       console.error("Erro ao criar projeto:", error);

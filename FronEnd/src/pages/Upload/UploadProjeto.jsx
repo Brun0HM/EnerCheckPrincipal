@@ -1,49 +1,52 @@
-import { useEffect, useRef } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
+import { Toast } from "react-bootstrap";
+import projetosService from "../../../services/projetos";
 
 const UploadProjeto = () => {
   const navigate = useNavigate();
+  const [showToast, setShowToast] = useState(false);
 
+  // Define os tipos de arquivos aceitos para upload
   const fileTypes = ["JPG", "PNG", "JPEG", "PDF"];
-  const nome = useRef("");
-  const dataArquivo = useRef(null);
-  const tipo = useRef("");
-  const imagem = localStorage.getItem("Imagem");
-  const fileToBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
+  const [imagem, setImagem] = useState(null);
+  const [arquivoSelecionado, setArquivoSelecionado] = useState(null);
+  const nome = useRef(""); // Nome do arquivo
 
-  const handleFileChange = async (e) => {
-    const arquivo = e.target.files[0];
-    const data = await fileToBase64(arquivo);
-    localStorage.setItem("Imagem", data);
-    nome.current = arquivo.name;
-    if (
-      data.startsWith("data:image/jpg") ||
-      data.startsWith("data:image/jpeg")
-    ) {
-      tipo.current = "image/jpeg";
-    } else if (data.startsWith("data:application/pdf")) {
-      tipo.current = "pdf";
-    } else if (data.startsWith("data:image/png")) {
-      tipo.current = "image/png";
+  // Função chamada quando o usuário seleciona um arquivo
+  const handleFileChange = (e) => {
+    const arquivo = e.target.files[0]; // Pega o primeiro arquivo selecionado
+    if (arquivo) {
+      nome.current = arquivo.name; // Salva o nome do arquivo
+      setArquivoSelecionado(arquivo);
+      // Cria URL para prévia
+      setImagem(URL.createObjectURL(arquivo));
     }
-    dataArquivo.current = data.split(",")[1];
   };
 
-  useEffect(() => {
-    console.log(
-      "Imagem inserida: ",
-      dataArquivo.current,
-      " Nome: ",
-      nome.current
-    );
-    console.log("Tipo de Imagem Inserida: ", tipo.current);
-  });
+  const enviarArquivo = async () => {
+    const id = localStorage.getItem("projetoId");
+    if (!id) {
+      console.error("ID do projeto não encontrado!");
+      setShowToast(true);
+      return;
+    }
+    if (!arquivoSelecionado) {
+      console.error("Arquivo não selecionado!");
+      setShowToast(true);
+      return;
+    }
+    const formData = new FormData();
+    formData.append("arquivo", arquivoSelecionado);
+    try {
+      await projetosService.postProjetoAnalisar(id, formData);
+      console.log("Arquivo enviado para análise!");
+      navigate("/dashboardProjeto");
+    } catch (error) {
+      console.error("Erro ao enviar arquivo:", error);
+      setShowToast(true);
+    }
+  };
 
   return (
     <div
@@ -55,6 +58,19 @@ const UploadProjeto = () => {
         paddingTop: "2rem",
       }}
     >
+      {/* Toast de notificação */}
+      <Toast
+        show={showToast}
+        onClose={() => setShowToast(false)}
+        delay={3000}
+        autohide
+        className="m-3 position-absolute top-0 end-0"
+        style={{ zIndex: 1050 }}
+      >
+        <Toast.Body className="bg-danger text-white rounded">
+          Erro ao enviar arquivo. Tente novamente.
+        </Toast.Body>
+      </Toast>
       <div
         className="container-fluid col-12 col-md-8 col-lg-6 my-5 d-flex flex-column justify-content-center align-items-center gap-4 rounded shadow"
         style={{
@@ -67,7 +83,7 @@ const UploadProjeto = () => {
           className="fs-2 fw-bold text-center mt-4"
           style={{ color: "var(--text)" }}
         >
-          Nova Análise - EnerCheckAI
+          Envie seu arquivo
         </h1>
 
         {/* Área de upload */}
@@ -119,9 +135,7 @@ const UploadProjeto = () => {
         {/* Botão enviar */}
         <button
           type="button"
-          onClick={() => {
-            navigate("/info-projeto");
-          }}
+          onClick={enviarArquivo}
           className="btn fw-bold mb-4"
           style={{
             backgroundColor: "var(--primary)",
@@ -129,21 +143,23 @@ const UploadProjeto = () => {
             color: "#ffffff",
           }}
         >
-          Próxima Etapa
+          Enviar Arquivo
         </button>
       </div>
 
       {/* Prévia */}
-      <div className="d-flex flex-column align-items-center mt-4">
-        <span className="fw-bold" style={{ color: "var(--text)" }}>
-          Prévia:
-        </span>
-        <img
-          className="img-fluid col-12 col-md-6 mt-3 mb-5 rounded shadow"
-          src={imagem || "https://placehold.co/1000x500"}
-          alt="Prévia do arquivo"
-        />
-      </div>
+      {imagem && (
+        <div className="d-flex flex-column align-items-center mt-4">
+          <span className="fw-bold" style={{ color: "var(--text)" }}>
+            Prévia:
+          </span>
+          <img
+            className="img-fluid col-12 col-md-6 mt-3 mb-5 rounded shadow"
+            src={imagem}
+            alt="Prévia do arquivo"
+          />
+        </div>
+      )}
     </div>
   );
 };
