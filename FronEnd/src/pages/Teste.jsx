@@ -14,6 +14,10 @@ const Teste = () => {
   const inputNumeroCrea = useRef();
   const inputEmpresa = useRef();
 
+  //salva informação dos usuarios para login
+  const inputLoginEmail = useRef();
+  const inputLoginSenha = useRef();
+
   // função que busca os usuarios na api
   async function getUsers() {
     try {
@@ -60,6 +64,8 @@ const Teste = () => {
     }
   }
 
+  
+
   // Chama a função getUsers assim que o componente é montado
   useEffect(() => {
     getUsers();
@@ -71,6 +77,19 @@ const Teste = () => {
 
   if (error) {
     return <p className="text-white">Ocorreu um erro.</p>;
+  }
+
+  //LOGA NESSA POHA
+  async function handleLogin(event) {
+    event.preventDefault();
+    try {
+      await apiService.loginUser(
+        inputLoginEmail.current.value,
+        inputLoginSenha.current.value
+      );
+    } catch (error) {
+      console.error("Erro ao logar usuário:", error);
+    }
   }
 
   return (
@@ -106,6 +125,11 @@ const Teste = () => {
           <input type="text" placeholder="Empresa" ref={inputEmpresa} />
           <button onClick={handleCreateUser}>Criar Usuario</button>
         </form>
+      </div>
+      <div>
+        <input type="text" ref={inputLoginEmail} placeholder="login email" />
+        <input type="text" ref={inputLoginSenha} placeholder="login senha" />
+        <button onClick={handleLogin}>logar na pqp</button>
       </div>
     </div>
   );

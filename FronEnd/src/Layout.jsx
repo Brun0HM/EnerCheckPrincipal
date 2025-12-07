@@ -26,6 +26,8 @@ const Layout = () => {
     "/dashboardGeral",
     "/configuracoes",
     "/teste",
+    "/uploadProjeto",
+    "/planos",
   ];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
@@ -34,6 +36,8 @@ const Layout = () => {
     "/dashboardGeral",
     "/dashboardProjeto",
     "/configuracoes",
+    "/uploadProjeto",
+    "/planos",
   ];
   const shouldShowDashboardNavbar = dashboardRoutes.includes(location.pathname);
 
@@ -43,7 +47,7 @@ const Layout = () => {
       {shouldShowDashboardNavbar && <DashboardNavbar />}
       <Routes>
         <Route path="/*" element={<App />} />
-        <Route path="/dashboardProjeto" element={<DashboardProjeto />}></Route>
+        <Route path="/dashboardProjeto" element={<DashboardProjeto />} />
         <Route path="/login" element={<Logar />} />
         <Route path="/cadastro" element={<Cadastrar />} />
         <Route path="/dashboardGeral" element={<DashBoardGeral />} />

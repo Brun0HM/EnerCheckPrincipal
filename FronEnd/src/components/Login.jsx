@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../App.css";
 import { useNavigate } from "react-router";
+import apiService from "../../services/api";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -8,21 +9,13 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState("");
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validatePassword = (password) => {
-    // Senha deve ter pelo menos 6 caracteres
-    return password.length >= 6;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  //Função que loga o usuario na API
+  async function handleLogin(event) {
+    event.preventDefault();
+    setApiError("");
     const newErrors = {};
-
     // Validar email
     if (!email.trim()) {
       newErrors.email = "Email é obrigatório";
@@ -41,33 +34,31 @@ const Login = () => {
 
     // Se não há erros, prosseguir com o login
     if (Object.keys(newErrors).length === 0) {
-      console.log("Login válido:", { email, senha });
-      // Navegar para o dashboard apenas se tudo estiver válido
-      navigate("/dashboardGeral");
+      try {
+        await apiService.loginUser(email.trim(), senha);
+        navigate("/planos");
+      } catch (error) {
+        console.error("Erro ao logar usuário:", error);
+        const status = error.response?.status;
+        if (status === 404) {
+          setApiError("Usuário não encontrado.");
+        } else if (status === 401) {
+          setApiError("Email ou senha inválidos.");
+        } else {
+          setApiError("Erro ao acessar o serviço. Tente novamente.");
+        }
+      }
     }
+  }
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
-  // Função para lidar com o clique do botão
-  const handleButtonClick = (e) => {
-    e.preventDefault();
-
-    const newErrors = {};
-
-
-    // Validar senha
-    if (!senha.trim()) {
-      newErrors.senha = "Senha é obrigatória";
-    } else if (!validatePassword(senha)) {
-      newErrors.senha = "Senha deve ter pelo menos 6 caracteres";
-    }
-
-    setErrors(newErrors);
-
-    // Se não há erros, prosseguir com o login
-    if (Object.keys(newErrors).length === 0) {
-      console.log("Login válido:", { email, senha });
-      navigate("/dashboardGeral");
-    }
+  const validatePassword = (password) => {
+    // Senha deve ter pelo menos 6 caracteres
+    return password.length >= 6;
   };
 
   return (
@@ -79,14 +70,15 @@ const Login = () => {
         color: "var(--text)",
       }}
     >
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleLogin}>
         <div className="d-flex flex-column">
           {/* Cabeçalho do formulário */}
           <div className="d-flex flex-column text-start mb-1">
             <h5 style={{ color: "var(--text)" }}>Entrar</h5>
             <p style={{ color: "var(--text-secondary)" }}>
-              Digite suas credenciais para acessar sua conta
+              Faça seu login em sua conta
             </p>
+            {apiError && <p className="text-danger m-0">{apiError}</p>}
           </div>
 
           {/* Campo de email */}
@@ -132,7 +124,6 @@ const Login = () => {
               <div className="invalid-feedback d-block">{errors.senha}</div>
             )}
           </div>
-
           {/* Opções adicionais */}
           <div className="d-flex justify-content-between mt-1">
             <div className="d-flex gap-1 align-items-center">
@@ -169,7 +160,6 @@ const Login = () => {
               borderColor: "var(--primary)",
               color: "#ffffff",
             }}
-            onClick={handleButtonClick}
           >
             Entrar
           </button>
