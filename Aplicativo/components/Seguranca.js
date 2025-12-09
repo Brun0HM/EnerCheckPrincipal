@@ -1,35 +1,27 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Pressable, ActivityIndicator, Alert } from 'react-native';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  TextInput, 
+  Pressable, 
+  ActivityIndicator, 
+  Alert, 
+  KeyboardAvoidingView, 
+  Platform, 
+  TouchableWithoutFeedback, 
+  Keyboard, 
+  ScrollView 
+} from 'react-native';
 import authAPI from '../api/Auth';
 
-const Seguranca = ({ theme, userData  }) => {
+const Seguranca = ({ theme, userData }) => {
   const [senhaAtual, setSenhaAtual] = useState('');
   const [novaSenha, setNovaSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-      const camposPreenchidos = senhaAtual.trim() !== '' && 
-                           novaSenha.trim() !== '' && 
-                           confirmarSenha.trim() !== '';
+  const [isLoading, setIsLoading] = useState(false);
 
-
-      const validarForcaSenha = (senha) => {
-    const temMaiuscula = /[A-Z]/.test(senha);
-    const temMinuscula = /[a-z]/.test(senha);
-    const temNumero = /[0-9]/.test(senha);
-    const temCaractereEspecial = /[!@#$%^&*(),.?":{}|<>]/.test(senha);
-    const tamanhoMinimo = senha.length >= 8;
-
-    return {
-      valida: temMaiuscula && temMinuscula && temNumero && temCaractereEspecial && tamanhoMinimo,
-      temMaiuscula,
-      temMinuscula,
-      temNumero,
-      temCaractereEspecial,
-      tamanhoMinimo
-    };
-  };
-
-const handleAlterarSenha = async () => {
+  const handleAlterarSenha = async () => {
     // Validação: verificar se userData tem email
     if (!userData?.email) {
       Alert.alert('Erro', 'Não foi possível identificar o email do usuário');
@@ -131,111 +123,120 @@ const handleAlterarSenha = async () => {
     }
   };
 
+  const validarForcaSenha = (senha) => {
+    const temMaiuscula = /[A-Z]/.test(senha);
+    const temMinuscula = /[a-z]/.test(senha);
+    const temNumero = /[0-9]/.test(senha);
+    const temCaractereEspecial = /[!@#$%^&*(),.?":{}|<>]/.test(senha);
+    const tamanhoMinimo = senha.length >= 8;
+
+    return {
+      valida: temMaiuscula && temMinuscula && temNumero && temCaractereEspecial && tamanhoMinimo,
+      temMaiuscula,
+      temMinuscula,
+      temNumero,
+      temCaractereEspecial,
+      tamanhoMinimo
+    };
+  };
+
   return (
-    <View style={[styles.container, { 
-      backgroundColor: theme.cardBg, 
-      borderColor: theme.cardBorder 
-    }]}>
-      <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.text }]}>
-          Alterar Senha
-        </Text>
-        <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
-          Mantenha sua conta segura com uma senha forte
-        </Text>
-      </View>
+    <KeyboardAvoidingView
+      style={[styles.container, { backgroundColor: theme.cardBg }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
+          <View style={styles.header}>
+            <Text style={[styles.title, { color: theme.text }]}>Alterar Senha</Text>
+            <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
+              Mantenha sua conta segura com uma senha forte
+            </Text>
+          </View>
 
-      <View style={styles.form}>
-        <View style={styles.inputGroup}>
-          <Text style={[styles.label, { color: theme.text }]}>
-            Senha Atual
-          </Text>
-          <TextInput
-            style={[styles.input, { 
-              backgroundColor: theme.inputBg,
-              borderColor: theme.inputBorder,
-              color: theme.text 
-            }]}
-            placeholder="Digite sua senha atual"
-            placeholderTextColor={theme.textSecondary}
-            value={senhaAtual}
-            onChangeText={setSenhaAtual}
-            secureTextEntry
-             editable={!isLoading}
-            autoCapitalize="none"
-          />
-        </View>
+          <View style={styles.form}>
+            <View style={styles.inputGroup}>
+              <Text style={[styles.label, { color: theme.text }]}>Senha Atual</Text>
+              <TextInput
+                style={[styles.input, { 
+                  backgroundColor: theme.inputBg,
+                  borderColor: theme.inputBorder,
+                  color: theme.text 
+                }]}
+                placeholder="Digite sua senha atual"
+                placeholderTextColor={theme.textSecondary}
+                value={senhaAtual}
+                onChangeText={setSenhaAtual}
+                secureTextEntry
+                editable={!isLoading}
+                autoCapitalize="none"
+                returnKeyType="next"
+              />
+            </View>
 
-        <View style={styles.inputGroup}>
-          <Text style={[styles.label, { color: theme.text }]}>
-            Nova Senha
-          </Text>
-          <TextInput
-            style={[styles.input, { 
-              backgroundColor: theme.inputBg,
-              borderColor: theme.inputBorder,
-              color: theme.text 
-            }]}
-            placeholder="Digite sua nova senha"
-            placeholderTextColor={theme.textSecondary}
-            value={novaSenha}
-            onChangeText={setNovaSenha}
-            secureTextEntry
-             editable={!isLoading}
-            autoCapitalize="none"
-          />
-            <Text style={[styles.helperText, { color: theme.textSecondary }]}>
-            Mínimo 8 caracteres, com maiúsculas, minúsculas, números e caracteres especiais
-          </Text>
-        </View>
+            <View style={styles.inputGroup}>
+              <Text style={[styles.label, { color: theme.text }]}>Nova Senha</Text>
+              <TextInput
+                style={[styles.input, { 
+                  backgroundColor: theme.inputBg,
+                  borderColor: theme.inputBorder,
+                  color: theme.text 
+                }]}
+                placeholder="Digite sua nova senha"
+                placeholderTextColor={theme.textSecondary}
+                value={novaSenha}
+                onChangeText={setNovaSenha}
+                secureTextEntry
+                editable={!isLoading}
+                autoCapitalize="none"
+                returnKeyType="next"
+              />
+              <Text style={[styles.helperText, { color: theme.textSecondary }]}>
+                Mínimo 8 caracteres, com maiúsculas, minúsculas, números e caracteres especiais
+              </Text>
+            </View>
 
-        <View style={styles.inputGroup}>
-          <Text style={[styles.label, { color: theme.text }]}>
-            Confirmar Nova Senha
-          </Text>
-          <TextInput
-            style={[styles.input, { 
-              backgroundColor: theme.inputBg,
-              borderColor: theme.inputBorder,
-              color: theme.text 
-            }]}
-            placeholder="Confirme sua nova senha"
-            placeholderTextColor={theme.textSecondary}
-            value={confirmarSenha}
-            onChangeText={setConfirmarSenha}
-            secureTextEntry
-               editable={!isLoading}
-            autoCapitalize="none"
-          />
-        </View>
-      </View>
+            <View style={styles.inputGroup}>
+              <Text style={[styles.label, { color: theme.text }]}>Confirmar Nova Senha</Text>
+              <TextInput
+                style={[styles.input, { 
+                  backgroundColor: theme.inputBg,
+                  borderColor: theme.inputBorder,
+                  color: theme.text 
+                }]}
+                placeholder="Confirme sua nova senha"
+                placeholderTextColor={theme.textSecondary}
+                value={confirmarSenha}
+                onChangeText={setConfirmarSenha}
+                secureTextEntry
+                editable={!isLoading}
+                autoCapitalize="none"
+                returnKeyType="done"
+              />
+            </View>
+          </View>
 
-{camposPreenchidos ? (
-        <Pressable
-          style={({ pressed }) => [
-            styles.saveButton,
-            { 
-              backgroundColor: theme.primary,
-              opacity: pressed || isLoading ? 0.8 : 1 
-            }
-          ]}
-          onPress={handleAlterarSenha}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <ActivityIndicator color="#ffffff" />
-          ) : (
-            <Text style={styles.saveButtonText}>Alterar Senha</Text>
-          )}
-        </Pressable>
-      ) : (
-        <View style={[styles.disabledButton, { backgroundColor: theme.inputBg }]}>
-          <Text style={[styles.disabledButtonText, { color: theme.textSecondary }]}>
-            Preencha todos os campos
-          </Text>
-        </View>
-      )}
-    </View>
+          <Pressable
+            style={({ pressed }) => [
+              styles.primaryButton,
+              { 
+                backgroundColor: theme.primary,
+                opacity: pressed || isLoading ? 0.8 : 1 
+              }
+            ]}
+            onPress={handleAlterarSenha}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <ActivityIndicator color="#ffffff" />
+            ) : (
+              <Text style={styles.primaryButtonText}>Alterar Senha</Text>
+            )}
+          </Pressable>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -243,66 +244,51 @@ export default Seguranca;
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    borderWidth: 2,
-    borderRadius: 12,
+    flex: 1,
+  },
+  scrollContent: {
     padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    flexGrow: 1,
   },
   header: {
-    marginBottom: 20,
+    marginBottom: 24,
   },
   title: {
-    fontSize: 20,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 4,
+    marginBottom: 8,
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 16,
   },
   form: {
-    gap: 16,
+    marginBottom: 24,
   },
   inputGroup: {
-    gap: 8,
+    marginBottom: 16,
   },
   label: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 14,
+    marginBottom: 4,
   },
   input: {
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 10,
     padding: 12,
     fontSize: 16,
   },
-    helperText: {  
+  helperText: {
     fontSize: 12,
     marginTop: 4,
   },
-  saveButton: {
-    marginTop: 32,
-    paddingVertical: 16,
-    borderRadius: 8,
+  primaryButton: {
+    paddingVertical: 14,
+    borderRadius: 12,
     alignItems: 'center',
   },
-  saveButtonText: {
+  primaryButtonText: {
     color: '#ffffff',
     fontSize: 16,
     fontWeight: '600',
-  },
-    disabledButton: { 
-    marginTop: 32,
-    paddingVertical: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  disabledButtonText: { 
-    fontSize: 14,
-    fontStyle: 'italic',
   },
 });

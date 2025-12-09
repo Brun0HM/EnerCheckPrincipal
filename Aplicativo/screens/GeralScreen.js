@@ -12,37 +12,56 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import CardStatusProjetoDashboard from '../components/CardStatusProjetoDashboard';
 import ProjetosRecentes from '../components/ProjetosRecentes';
 import { useTheme } from '../contexts/ThemeContext';
-import { usuariosAPI } from '../api/Usuarios'; 
+import { projetosAPI } from '../api/Projetos';
+
 
 export default function GeralScreen({route}) {
   const { theme, isLoaded } = useTheme();
   const navigation = useNavigation();
-  const [userData, setUserData] = useState(null);
+  const [projetos, setProjetos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-    useFocusEffect(
-    useCallback(() => {
-      console.log('🔄 GeralScreen - Recarregando dados...');
-      loadUserData();
-    }, [route?.params?.timestamp]) // Recarrega quando timestamp muda
-  );
 
-  const loadUserData = async () => {
-    try {
-      setIsLoading(true);
-      const user = await usuariosAPI.getUserByToken();
-      setUserData(user);
-      console.log('✅ Dados recarregados:', {
-        email: user?.email,
-        plano: user?.plano?.nome,
-        requisicoes: user?.userReq
-      });
-    } catch (error) {
-      console.error('Erro ao carregar dados:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  useEffect(() => {
+    const fetchProjetos = async () => {
+      try {
+        setIsLoading(true);
+        const projetosData = await projetosAPI.getMeusProjetos();
+        setProjetos(projetosData);
+        console.log('✅ Projetos carregados:', projetosData);
+      } catch (error) {
+        console.error('Erro ao carregar projetos:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProjetos();
+  }, []);
+
+  // Estatísticas dos projetos
+  const totalProjetos = projetos.length;
+
+  // Projetos aprovados
+  const projetosAprovados = projetos.filter(
+    (p) => p.status === 'aprovado' || p.status === 'concluído'
+  ).length;
+
+  // Porcentagem de aprovação
+  const porcentagemAprovados =
+    totalProjetos > 0 ? ((projetosAprovados / totalProjetos) * 100).toFixed(2) : 0;
+
+  // Projetos criados no último mês
+  const hoje = new Date();
+  const umMesAtras = new Date(hoje.getFullYear(), hoje.getMonth() - 1, hoje.getDate());
+  const projetosUltimoMes = projetos.filter(
+    (p) => new Date(p.dataInicio) >= umMesAtras
+  ).length;
+
+  // Projetos recentes
+  const projetosRecentes = projetos
+    .sort((a, b) => new Date(b.dataInicio) - new Date(a.dataInicio))
+    .slice(0, 3);
 
   if (!isLoaded) {
     return (
@@ -81,15 +100,15 @@ export default function GeralScreen({route}) {
             <CardStatusProjetoDashboard
               status="Projetos Totais"
               iconeStatus="bi bi-file-earmark-text"
-              num="24"
-              desc="+2 desde o último mês"
+              num={totalProjetos.toString()}
+              desc={`+${projetosUltimoMes} no último mês`}
               theme={currentTheme}
             />
             <CardStatusProjetoDashboard
               status="Aprovados"
               iconeStatus="bi bi-check2-circle"
-              num="18"
-              desc="75% de aprovação"
+              num={projetosAprovados.toString()}
+              desc={`${porcentagemAprovados}% de aprovação`}
               theme={currentTheme}
             />
           </View>
@@ -98,14 +117,14 @@ export default function GeralScreen({route}) {
             <CardStatusProjetoDashboard
               status="Pendentes"
               iconeStatus="bi bi-exclamation-triangle"
-              num="6"
+              num={projetos.filter((p) => p.status === 'pendente' || p.status === 'em análise').length.toString()}
               desc="Aguardando revisão"
               theme={currentTheme}
             />
             <CardStatusProjetoDashboard
               status="Economia"
               iconeStatus="bi bi-graph-up"
-              num="R$ 12.5k"
+              num={`R$ ${(totalProjetos * 2250).toLocaleString('pt-BR')}`}
               desc="Em custos evitados"
               theme={currentTheme}
             />
@@ -126,25 +145,15 @@ export default function GeralScreen({route}) {
             </Text>
           </View>
 
-          {/* Projetos */}
-          <ProjetosRecentes
-            nomeProjeto="Residencial Vila Belmiro"
-            tempoProjeto="2 dias atrás"
-            statusProjeto="Aprovado"
-            theme={currentTheme}
-          />
-          <ProjetosRecentes
-            nomeProjeto="Centro Comercial"
-            tempoProjeto="5 dias atrás"
-            statusProjeto="Aprovado"
-            theme={currentTheme}
-          />
-          <ProjetosRecentes
-            nomeProjeto="SENAI 721"
-            tempoProjeto="1 semana atrás"
-            statusProjeto="Aprovado"
-            theme={currentTheme}
-          />
+          {projetosRecentes.map((projeto, index) => (
+            <ProjetosRecentes
+              key={projeto.id || index}
+              nomeProjeto={projeto.nome}
+              tempoProjeto={new Date(projeto.dataInicio).toLocaleDateString('pt-BR')}
+              statusProjeto={projeto.status || 'pendente'}
+              theme={currentTheme}
+            />
+          ))}
         </View>
 
         {/* Cards de Ação */}
@@ -169,7 +178,7 @@ export default function GeralScreen({route}) {
                   opacity: pressed ? 0.8 : 1 
                 }
               ]}
-              onPress={() => navigation.navigate('UploadProjeto')}
+              onPress={() => navigation.navigate('CreateProjetoScreen')}
             >
               <Text style={styles.primaryButtonText}>Fazer Upload</Text>
             </Pressable>

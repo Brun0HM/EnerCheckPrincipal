@@ -7,6 +7,11 @@ import {
   Pressable,
   ActivityIndicator,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ScrollView,
 } from "react-native";
 import usuariosAPI from "../api/Usuarios";
 
@@ -151,7 +156,7 @@ const Perfil = ({ theme, userData, onUserUpdate }) => {
       };
 
       console.log(
-        "📦 Dados enviados para API:",
+        "Dados enviados para API:",
         JSON.stringify(dadosAtualizados, null, 2)
       );
 
@@ -159,7 +164,7 @@ const Perfil = ({ theme, userData, onUserUpdate }) => {
       const response = await usuariosAPI.updateUsuarioMe(dadosAtualizados);
 
       console.log(
-        "✅ Usuário atualizado com sucesso:",
+        " Usuário atualizado com sucesso:",
         JSON.stringify(response, null, 2)
       );
 
@@ -207,15 +212,13 @@ const Perfil = ({ theme, userData, onUserUpdate }) => {
   };
 
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          backgroundColor: theme.cardBg,
-          borderColor: theme.cardBorder,
-        },
-      ]}
+    <KeyboardAvoidingView
+      style={[styles.container, { backgroundColor: theme.cardBg }]}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
     >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
       <View style={styles.header}>
         <Text style={[styles.title, { color: theme.text }]}>
           Informações Pessoais
@@ -243,10 +246,11 @@ const Perfil = ({ theme, userData, onUserUpdate }) => {
             placeholderTextColor={theme.textSecondary}
             value={nomeCompleto}
             onChangeText={(text) => {
-              console.log("👤 Nome mudando para:", text);
+              console.log("Nome mudando para:", text);
               setNomeCompleto(text);
             }}
             editable={!isLoading}
+               returnKeyType="next"
           />
         </View>
 
@@ -269,8 +273,9 @@ const Perfil = ({ theme, userData, onUserUpdate }) => {
               setEmail(text);
             }}
             keyboardType="email-address"
-            autoCapitalize="none"
-            editable={!isLoading}
+            autoCapitalize="none" 
+            editable={!isLoading} 
+              returnKeyType="next"
           />
         </View>
 
@@ -298,6 +303,7 @@ const Perfil = ({ theme, userData, onUserUpdate }) => {
               setEmpresa(text);
             }}
             editable={!isLoading}
+               returnKeyType="next"
           />
         </View>
         
@@ -327,6 +333,7 @@ const Perfil = ({ theme, userData, onUserUpdate }) => {
             keyboardType="numeric" 
             maxLength={6} 
             editable={!isLoading}
+               returnKeyType="done"
           />
         </View>
       </View>
@@ -362,7 +369,9 @@ const Perfil = ({ theme, userData, onUserUpdate }) => {
           </Text>
         </View>
       )}
-    </View>
+          </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
