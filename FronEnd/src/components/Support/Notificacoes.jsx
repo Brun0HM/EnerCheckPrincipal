@@ -26,7 +26,7 @@ const Notificacoes = () => {
   };
 
   return (
-    <div className="col-11 col-md-8 shadow border-2 border rounded-3 p-4 pb-5 mb-5 position-relative">
+    <div className="col-11 col-md-8 rounded-3 p-4 pb-5 mb-5 position-relative">
       {/* Toast de notificação */}
       <Toast
         show={showToast}

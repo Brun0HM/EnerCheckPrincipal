@@ -111,7 +111,7 @@ const Perfil = () => {
     <>
       <form
         onSubmit={handleSubmit}
-        className="col-11 col-md-8 shadow border-2 border rounded-3 p-4 pb-5 mb-5 position-relative"
+        className="col-11 col-md-8  rounded-3 p-4 pb-5 mb-5 position-relative"
       >
         {/* Toast de sucesso */}
         <Toast
