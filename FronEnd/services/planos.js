@@ -6,7 +6,7 @@ const putPlanos = async (planoId, config = {}) => {
   if (!token) {
     throw new Error("Usuário não autenticado. Token ausente.");
   }
-  const url = "/api/Usuarios/usuario/add/plano";
+  const url = "/api/Usuarios/add/plano";
   try {
     const response = await api.put(url, planoId, {
       ...config,

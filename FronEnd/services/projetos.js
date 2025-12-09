@@ -8,7 +8,7 @@ const getProjetos = async () => {
   if (!token) {
     throw new Error("Usuário não autenticado. Token ausente.");
   }
-  const response = await api.get("/api/Projetos");
+  const response = await api.get("/api/Projetos/me");
   try {
     return response.data;
   } catch (error) {

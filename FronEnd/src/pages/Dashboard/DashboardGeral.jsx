@@ -24,10 +24,10 @@ const DashboardGeral = () => {
   const navigate = useNavigate();
 
   // Função para calcular o tempo relativo
-  const calcularTempo = (dataCriacao) => {
-    if (!dataCriacao) return "Data desconhecida";
+  const calcularTempo = (dataInicio) => {
+    if (!dataInicio) return "Data desconhecida";
     const agora = new Date();
-    const data = new Date(dataCriacao);
+    const data = new Date(dataInicio);
     const diff = agora - data;
     const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
     if (dias === 0) return "Hoje";
@@ -118,7 +118,9 @@ const DashboardGeral = () => {
               <ProjetosRecentes
                 key={projeto.id || index}
                 nomeProjeto={projeto.nome}
-                tempoProjeto={calcularTempo(projeto.dataInicio)}
+                tempoProjeto={new Date(projeto.dataInicio).toLocaleDateString(
+                  "pt-BR"
+                )}
                 statusProjeto={projeto.status || "pendente"}
               />
             ))
