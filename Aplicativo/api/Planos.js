@@ -1,5 +1,6 @@
 import api from "../services/api";
 
+// Buscar todos os planos
 const getAllPlanos = async () => {
   try {
     console.log('Buscando todos os planos...');
@@ -73,11 +74,14 @@ const updatePlano = async (planoId, planoData) => {
 //   }
 // };
 
+
+
 // Exportar funções
 export const planosAPI = {
   getAllPlanos,
   getPlanoById,
   updatePlano,
+
   // incrementarUsuarios,
 };
 

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ScrollView, View, Text, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import Navconfig from '../components/Navconfig';
@@ -8,22 +8,53 @@ import Seguranca from '../components/Seguranca';
 import Notificacoes from '../components/Notificacoes';
 import Assinaturas from '../components/Assinaturas';
 import { useTheme } from '../contexts/ThemeContext';
+import usuariosAPI from '../api/Usuarios';
 
 export default function SettingsScreen() {
   const [activeComponent, setActiveComponent] = useState("perfil");
+  const [userData, setUserData] = useState(null);
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
   const { theme, isLoaded } = useTheme();
   const navigation = useNavigation();
 
- 
+   useEffect(() => {
+    loadUserData();
+  }, []);
+
+  const loadUserData = async () => {
+    try {
+      setIsLoadingUser(true);
+      console.log('Carregando dados do usuário autenticado...');
+      
+      const user = await usuariosAPI.getUserByToken();
+      
+      if (user) {
+        setUserData(user);
+        console.log('Dados do usuário carregados:', {
+          id: user.id,
+          nome: user.nomeCompleto,
+          email: user.email,
+          empresa: user.empresa,
+          numeroCrea: user.numeroCrea
+        });
+      } else {
+        console.warn('Nenhum usuário encontrado');
+      }
+    } catch (error) {
+      console.error('Erro ao carregar dados do usuário:', error);
+    } finally {
+      setIsLoadingUser(false);
+    }
+  };
 
   if (!isLoaded) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Carregando tema...</Text>
+        <ActivityIndicator size="large" color="#0D6EFD" />
+        <Text style={{ marginTop: 10 }}>Carregando tema...</Text>
       </View>
     );
   }
-
   // Cores diretas baseadas no tema - mesmas das outras telas
   const currentTheme = {
     bg: theme === 'light' ? '#ffffff' : '#131313',
@@ -37,17 +68,27 @@ export default function SettingsScreen() {
   };
 
   const renderComponent = () => {
+       if (isLoadingUser) {
+      return (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={currentTheme.primary} />
+          <Text style={[styles.loadingText, { color: currentTheme.textSecondary }]}>
+            Carregando dados...
+          </Text>
+        </View>
+      );
+    }
     switch (activeComponent) {
       case "perfil":
-        return <Perfil theme={currentTheme} />;
+        return <Perfil theme={currentTheme} userData={userData}  onUserUpdate={loadUserData} />;
       case "seguranca":
-        return <Seguranca theme={currentTheme} />;
+        return <Seguranca theme={currentTheme}  userData={userData}/>;
       case "notificacoes":
         return <Notificacoes theme={currentTheme} />;
       case "assinatura":
         return <Assinaturas theme={currentTheme} navigation={navigation} />;
       default:
-        return <Perfil theme={currentTheme} />;
+        return <Perfil theme={currentTheme}    userData={userData}  onUserUpdate={loadUserData}/>;
     }
   };
 

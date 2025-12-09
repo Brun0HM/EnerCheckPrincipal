@@ -9,7 +9,9 @@ import {
   useColorScheme,
   Alert
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authAPI } from '../api/Auth';
+import usuariosAPI from '../api/Usuarios';
 
 export default function LoginScreen({ navigation, setIsAuthenticated }) {
   const [email, setEmail] = useState('');
@@ -48,6 +50,7 @@ export default function LoginScreen({ navigation, setIsAuthenticated }) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+  
   const handleLogin = async () => {
     if (!email.trim()) {
       Alert.alert('Erro', 'Por favor, digite seu email.');
@@ -67,55 +70,97 @@ export default function LoginScreen({ navigation, setIsAuthenticated }) {
     setIsLoading(true);
 
     try {
-      const credentials = {
-        email: email.trim(),
-        senha: password,
-      };
-
       console.log('Tentando fazer login...');
-      const result = await authAPI.login(credentials);
       
-      console.log('Login realizado:', result);
+      // 1. Fazer login e obter token
+      const loginResult = await authAPI.login(email.trim(), password);
       
-      if (result.token) {
-        console.log('Token recebido:', result.token);
+      console.log('Login realizado com sucesso');
+      
+      // 2. Extrair e validar token
+      const token = loginResult.token || loginResult.accessToken;
+      if (!token) {
+        throw new Error('Token não foi retornado pela API');
       }
-
-      Alert.alert(
-        'Sucesso', 
-        `Login realizado com sucesso!${rememberMe ? ' (Lembrar ativado)' : ''}`,
-        [
-          {
-            text: 'OK',
+      
+      console.log('Token recebido:', token.substring(0, 50) + '...');
+      
+      // 3. Buscar dados completos do usuário usando o token
+      console.log('Buscando dados do usuário...');
+      const userData = await usuariosAPI.getUserByToken();
+      
+      if (!userData) {
+        throw new Error('Não foi possível obter dados do usuário');
+      }
+      
+      console.log('Dados do usuário:', userData);
+      
+      // 4. Salvar token e dados no AsyncStorage
+      try {
+        await AsyncStorage.setItem('userToken', token);
+        await AsyncStorage.setItem('userData', JSON.stringify(userData));
+        console.log('Dados salvos no AsyncStorage');
+      } catch (storageError) {
+        console.error(' Erro ao salvar no AsyncStorage:', storageError);
+        throw new Error('Erro ao salvar dados localmente');
+      }
+      
+      // 5. Verificar se o usuário tem plano vinculado
+      const temPlano = userData.plano && userData.plano !== null;
+      
+      console.log('Usuário tem plano?', temPlano);
+      
+      // 6. Autenticar no sistema
+      if (setIsAuthenticated) {
+        setIsAuthenticated(true);
+      }
+      
+      // 7. Redirecionar baseado na existência de plano
+      if (!temPlano) {
+        // Usuário sem plano - redirecionar para escolher plano
+        console.log('Redirecionando para seleção de plano...');
+        Alert.alert(
+          'Bem-vindo(a)!',
+          'Por favor, escolha um plano para continuar.',
+          [{
+            text: 'Escolher Plano',
             onPress: () => {
-              if (setIsAuthenticated) {
-                setIsAuthenticated(true);
-              }
+              navigation.navigate('Planos', {
+                userToken: token,
+                userData: userData
+              });
             }
-          }
-        ]
-      );
+          }]
+        );
+      } else {
+        // Usuário com plano - a navegação para o Dashboard será feita automaticamente
+        console.log('Login concluído! Usuário autenticado com plano.');
+      }
       
     } catch (error) {
       console.error('Erro no login:', error);
+      console.error('Detalhes:', error?.response?.data);
       
       let errorMessage = 'Erro ao fazer login. Tente novamente.';
       
-      if (error.message) {
-        errorMessage = error.message;
-      } else if (error.errors) {
-  
-        const firstError = Object.values(error.errors)[0];
-        if (Array.isArray(firstError) && firstError.length > 0) {
-          errorMessage = firstError[0];
-        }
-      } else if (error.status === 401) {
+      if (error?.message === 'Token não foi retornado pela API') {
+        errorMessage = 'Erro na autenticação. Token não recebido.';
+      } else if (error?.message === 'Não foi possível obter dados do usuário') {
+        errorMessage = 'Erro ao carregar dados do usuário.';
+      } else if (error?.message?.includes('AsyncStorage')) {
+        errorMessage = 'Erro ao salvar dados. Tente novamente.';
+      } else if (error?.response?.status === 401) {
         errorMessage = 'Email ou senha incorretos.';
-      } else if (error.status === 400) {
-        errorMessage = 'Dados inválidos. Verifique email e senha.';
+      } else if (error?.response?.status === 404) {
+        errorMessage = 'Usuário não encontrado.';
+      } else if (error?.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
       }
       
       Alert.alert('Erro no Login', errorMessage);
+      
     } finally {
       setIsLoading(false);
     }

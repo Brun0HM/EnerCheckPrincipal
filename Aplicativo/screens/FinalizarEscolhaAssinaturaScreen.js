@@ -123,11 +123,9 @@ export default function FinalizarEscolhaAssinaturaScreen({setIsAuthenticated }) 
         `Seu plano ${planData.title} foi ativado com sucesso!`,
         [{
           text: 'Começar a Usar',
-          onPress: () => navigation.navigate('Home', {
-            userToken,
-            userData,
-            planData
-          })
+          onPress: () =>{
+             setIsAuthenticated(true);
+          }
         }]
       );
 

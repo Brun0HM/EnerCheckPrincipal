@@ -52,10 +52,10 @@ export default function PlanosScreen() {
         console.log('Buscando planos...');
         
         const planosData = await planosAPI.getAllPlanos();
-        const planosAtivos = planosData.filter(plano => plano.ativo);
+     
         
-        setPlanos(planosAtivos);
-        console.log('Planos carregados:', planosAtivos.length);
+        setPlanos(planosData);
+        console.log('Planos carregados:', planosData.length);
         
       } catch (error) {
         console.error('Erro ao carregar planos:', error);
@@ -165,7 +165,6 @@ export default function PlanosScreen() {
         precoNumerico: planoSelecionado.preco,
         quantidadeReq: planoSelecionado.quantidadeReq,
         quantidadeUsers: planoSelecionado.quantidadeUsers,
-        ativo: planoSelecionado.ativo,
         itens: getItensPorNome(planName) // Relacionar itens pelo nome
       };
 
