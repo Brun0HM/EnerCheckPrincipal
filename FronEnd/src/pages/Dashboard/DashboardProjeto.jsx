@@ -119,16 +119,18 @@ const DashboardProjeto = () => {
                   </div>
                 ))}
 
-                {/* <div className="col-12 col-md-4">
-                
-              <InfoGeralContainer
-                topico={"Pontuação Geral"}
-                iconeTopico={"bi-speedometer2"}
-                corNumero={"danger"}
-                pontuacaoGeral={analise.analiseCategorizada?.[1]?.percentualConformidade || "Carregando..."}
-                comentario={comentarioGeral}
-              />
-          </div> */}
+                <div className="col-12 col-md-4">
+                  <InfoGeralContainer
+                    topico={"Pontuação Geral"}
+                    iconeTopico={"bi-speedometer2"}
+                    corNumero={"danger"}
+                    pontuacaoGeral={
+                      analise.analiseCategorizada?.[1]
+                        ?.percentualConformidade || "Carregando..."
+                    }
+                    comentario={comentarioGeral}
+                  />
+                </div>
               </div>
 
               {/* Seção de análise detalhada */}
@@ -140,26 +142,22 @@ const DashboardProjeto = () => {
                   />
                 </div>
 
-                {/* 
-              <div className="col-12 col-lg-6">
-                <ContainerChecagem
-                categoria={"Circuitos de Força"}
-                descricao={"Análise dos circuitos de força e dimensionamento"}
+                <div className="col-12 col-lg-6">
+                  <ContainerChecagem
+                    categoria={"Circuitos de Força"}
+                    descricao={
+                      "Análise dos circuitos de força e dimensionamento"
+                    }
                   />
-              </div>
-              <div className="col-12 col-lg-6">
-                <ContainerChecagem
-                  categoria={"Proteção e Segurança"}
-                  descricao={
-                    "Verificação de dispositivos de proteção (DR, disjuntores)"
-                  }
-
-
-
-
-            
-                />
-              </div> */}
+                </div>
+                <div className="col-12 col-lg-6">
+                  <ContainerChecagem
+                    categoria={"Proteção e Segurança"}
+                    descricao={
+                      "Verificação de dispositivos de proteção (DR, disjuntores)"
+                    }
+                  />
+                </div>
               </div>
 
               {/* Card de ações rápidas */}

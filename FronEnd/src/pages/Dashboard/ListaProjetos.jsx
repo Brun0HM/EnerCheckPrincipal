@@ -255,7 +255,7 @@ const ListaProjetos = () => {
         ) : (
           <div className="row g-3">
             {projetosFiltrados.map((projeto) => (
-              <div key={projeto.id} className="col-12 col-md-6 col-lg-4">
+              <div key={projeto.projetoId} className="col-12 col-md-6 col-lg-4">
                 <div
                   className="p-4 rounded-4 border shadow h-100 theme-card"
                   style={{
@@ -264,7 +264,7 @@ const ListaProjetos = () => {
                     cursor: "pointer",
                     transition: "all 0.3s ease",
                   }}
-                  onClick={() => handleProjetoClick(projeto.id)}
+                  onClick={() => handleProjetoClick(projeto.projetoId)}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = "translateY(-5px)";
                     e.currentTarget.style.boxShadow =
@@ -353,7 +353,7 @@ const ListaProjetos = () => {
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleProjetoClick(projeto.id);
+                        handleProjetoClick(projeto.projetoId);
                       }}
                     >
                       Ver Detalhes
