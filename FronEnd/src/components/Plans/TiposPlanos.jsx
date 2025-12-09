@@ -8,6 +8,8 @@ const TiposPlanos = (props) => {
     try {
       // Chama putPlanos com o planoId passado como prop
       await planosService.putPlanos(props.planoId);
+      // Gera o registro de plano pago
+      await planosService.gerarPlanoPago(props.planoId);
       // Após sucesso, navega para a página de assinatura
       navigate("/comecarAssinatura");
     } catch (error) {

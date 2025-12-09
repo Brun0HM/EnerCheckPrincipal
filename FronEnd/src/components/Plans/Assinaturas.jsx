@@ -1,10 +1,13 @@
 import React from "react";
 import apiUserService from "../../../services/usuario";
+import planosService from "../../../services/planos";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { ProjetosRecentes } from "../Dashboard/ProjetosRecentes";
 const Assinaturas = () => {
   const navigate = useNavigate();
   const [plano, setPlano] = useState(null);
+  const [historicoPagamentos, setHistoricoPagamentos] = useState([]);
 
   async function planoAtual() {
     try {
@@ -16,8 +19,25 @@ const Assinaturas = () => {
     }
   }
 
+  async function historico() {
+    try {
+      const historico = await planosService.historicoPagamento();
+      setHistoricoPagamentos(historico);
+      console.log("Histórico de pagamentos:", historico);
+    } catch (error) {
+      console.error("Erro ao obter histórico de pagamento:", error);
+      throw error;
+    }
+  }
+
+  // Ordenar historico de pagamento por data decrescente e pegar os 3 últimos
+  const UltimosPagamentos = historicoPagamentos
+    .sort((a, b) => new Date(b.dataPagamento) - new Date(a.dataPagamento))
+    .slice(0, 3);
+
   useEffect(() => {
     planoAtual();
+    historico();
   }, []);
 
   return (
@@ -83,56 +103,44 @@ const Assinaturas = () => {
       <div className="mt-4 mb-3">
         <h5 className="fw-semibold">Histórico de Pagamentos</h5>
         <div className="d-flex flex-column gap-3">
-          <div className="d-flex justify-content-between align-items-center border border-1 rounded-4 px-3 py-3">
-            <div>
-              <h6 className="mb-0 fw-semibold">R$149,00</h6>
-              <h6 className="m-0 fw-light">15 Jan 2025</h6>
+          {UltimosPagamentos.length === 0 ? (
+            <div className="d-flex justify-content-between align-items-center border border-1 rounded-4 px-3 py-3">
+              <p className="m-0">Nenhum pagamento encontrado.</p>
             </div>
-            <span
-              className="px-2 py-1 rounded-5 fw-semibold"
-              style={{
-                backgroundColor: "#a0f8a496",
-                color: "var(--text)",
-                fontSize: 12,
-              }}
-            >
-              Pago
-            </span>
-          </div>
-
-          <div className="d-flex justify-content-between align-items-center border border-1 rounded-4 px-3 py-3">
-            <div>
-              <h6 className="mb-0 fw-semibold">R$149,00</h6>
-              <h6 className="m-0 fw-light">15 Jan 2025</h6>
-            </div>
-            <span
-              className="px-2 py-1 rounded-5 fw-semibold"
-              style={{
-                backgroundColor: "#a0f8a496",
-                color: "var(--text)",
-                fontSize: 12,
-              }}
-            >
-              Pago
-            </span>
-          </div>
-
-          <div className="d-flex justify-content-between align-items-center border border-1 rounded-4 px-3 py-3">
-            <div>
-              <h6 className="mb-0 fw-semibold">R$149,00</h6>
-              <h6 className="m-0 fw-light">15 Jan 2025</h6>
-            </div>
-            <span
-              className="px-2 py-1 rounded-5 fw-semibold"
-              style={{
-                backgroundColor: "#a0f8a496",
-                color: "var(--text)",
-                fontSize: 12,
-              }}
-            >
-              Pago
-            </span>
-          </div>
+          ) : (
+            UltimosPagamentos.map((pagamento, index) => (
+              <div
+                key={pagamento.id || index}
+                className="d-flex justify-content-between align-items-center border border-1 rounded-4 px-3 py-3"
+              >
+                <div>
+                  <h6 className="mb-0 fw-semibold">
+                    R$ {pagamento.valorTotal}
+                  </h6>
+                  <h6 className="m-0 fw-light">
+                    {new Date(pagamento.dataPagamento).toLocaleDateString(
+                      "pt-BR",
+                      {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      }
+                    )}
+                  </h6>
+                </div>
+                <span
+                  className="px-2 py-1 rounded-5 fw-semibold"
+                  style={{
+                    backgroundColor: "#a0f8a496",
+                    color: "var(--text)",
+                    fontSize: 12,
+                  }}
+                >
+                  Pago
+                </span>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>

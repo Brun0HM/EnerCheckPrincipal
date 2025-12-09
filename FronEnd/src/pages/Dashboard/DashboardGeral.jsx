@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import projetosService from "../../../services/projetos";
 const DashboardGeral = () => {
+  const navigate = useNavigate();
   const [projetos, setProjetos] = useState([]);
 
   // Função para obter projetos da API
@@ -20,20 +21,6 @@ const DashboardGeral = () => {
   useEffect(() => {
     getProjeto();
   }, []);
-
-  const navigate = useNavigate();
-
-  // Função para calcular o tempo relativo
-  const calcularTempo = (dataInicio) => {
-    if (!dataInicio) return "Data desconhecida";
-    const agora = new Date();
-    const data = new Date(dataInicio);
-    const diff = agora - data;
-    const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
-    if (dias === 0) return "Hoje";
-    if (dias === 1) return "1 dia atrás";
-    return `${dias} dias atrás`;
-  };
 
   // Ordenar projetos por data decrescente e pegar os 3 últimos
   const projetosRecentes = projetos

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import apiService from "../../../services/api";
-
+import apiUserService from "../../../services/usuario";
 const ResumoPedido = () => {
   const [currentUser, setCurrentUser] = useState(null);
 
   // Função para obter o usuário logado pelo token
   async function getUserToken() {
     try {
-      const user = await apiService.getUserByToken();
+      const user = await apiUserService.getUserByToken();
       setCurrentUser(user);
     } catch (error) {
       console.error("Erro ao obter usuário pelo token:", error);
