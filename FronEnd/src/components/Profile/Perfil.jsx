@@ -11,6 +11,7 @@ const Perfil = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [showErrorToast, setShowErrorToast] = useState(false);
+  const [showWarningToast, setShowWarningToast] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [initialValues, setInitialValues] = useState({});
 
@@ -44,16 +45,6 @@ const Perfil = () => {
 
     // Se não há erros, prosseguir
     if (Object.keys(newErrors).length === 0) {
-      console.log("ID do usuário:", currentUser?.id);
-      const updatedData = {
-        ...currentUser, // Envia todos os campos do usuário
-        nomeCompleto: nome,
-        email: email,
-        numeroCrea: crea,
-        empresa: empresa,
-        projetos: currentUser?.projetos || [], // Inclui projetos (array vazio se não existir)
-      };
-      console.log("Dados enviados:", updatedData);
       const hasChanged =
         nome !== initialValues.nome ||
         email !== initialValues.email ||
@@ -65,8 +56,25 @@ const Perfil = () => {
         return;
       }
 
+      console.log("ID do usuário:", currentUser?.id);
+      const updatedData = {
+        Id: currentUser?.id,
+        Email: email,
+        NomeCompleto: nome,
+        NumeroCrea: crea,
+        Empresa: empresa,
+        Senha: currentUser?.senha || "",
+        Plano: currentUser?.plano || null,
+        Projetos: currentUser?.projetos || [],
+        UseReq: currentUser?.useReq || 0,
+      };
+      console.log("Dados enviados:", updatedData);
+
       try {
         await apiUserService.putUser(currentUser.id, updatedData);
+        setShowToast(true);
+        setIsEditing(false);
+        setInitialValues({ nome, email, crea, empresa });
       } catch (error) {
         console.error("Erro ao salvar alterações:", error);
         setShowErrorToast(true);
@@ -130,6 +138,19 @@ const Perfil = () => {
         >
           <Toast.Body className="bg-danger text-white rounded">
             Erro ao salvar alterações. Tente novamente.
+          </Toast.Body>
+        </Toast>
+        {/* Toast de alerta de mudança para começar a editar */}
+        <Toast
+          show={showWarningToast}
+          onClose={() => setShowWarningToast(false)}
+          delay={3000}
+          autohide
+          className="m-3 position-absolute top-0 end-0"
+          style={{ zIndex: 1050 }}
+        >
+          <Toast.Body className="bg-warning text-white rounded">
+            Você entrou no modo de edição.
           </Toast.Body>
         </Toast>
 
@@ -232,7 +253,14 @@ const Perfil = () => {
         <button
           type="button"
           className="btn btn-primary col-12 mt-5 fw-semibold"
-          onClick={isEditing ? handleSubmit : () => setIsEditing(true)}
+          onClick={
+            isEditing
+              ? handleSubmit
+              : () => {
+                  setIsEditing(true);
+                  setShowWarningToast(true);
+                }
+          }
         >
           {isEditing ? "Salvar Alterações" : "Editar"}
         </button>
