@@ -14,12 +14,14 @@ const Perfil = ({ theme, userData, onUserUpdate }) => {
   const [nomeCompleto, setNomeCompleto] = useState("");
   const [email, setEmail] = useState("");
   const [empresa, setEmpresa] = useState("");
+  const [crea, setCrea] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const [originalData, setOriginalData] = useState({
     nomeCompleto: "",
     email: "",
     empresa: "",
+    numeroCrea:"",
   });
 
   useEffect(() => {
@@ -27,23 +29,26 @@ const Perfil = ({ theme, userData, onUserUpdate }) => {
       const nome = userData.nomeCompleto || "";
       const emailUser = userData.email || "";
       const empresaUser = userData.empresa || "";
+      const numeroCrea = userData.numeroCrea || "";
 
       setNomeCompleto(nome);
       setEmail(emailUser);
       setEmpresa(empresaUser);
+      setCrea(numeroCrea)
 
       // Salvar dados originais
       setOriginalData({
         nomeCompleto: nome,
         email: emailUser,
         empresa: empresaUser,
+        numeroCrea: numeroCrea
       });
 
       console.log("📋 Dados do usuário carregados no Perfil:", {
         nome,
         email: emailUser,
         empresa: empresaUser,
-        numeroCrea: userData.numeroCrea,
+        numeroCrea,
       });
     }
   }, [userData]);
@@ -72,15 +77,25 @@ const Perfil = ({ theme, userData, onUserUpdate }) => {
         original: originalData.empresa,
         mudou: empresa !== originalData.empresa,
       },
+      crea: {
+        atual: crea,
+        original: originalData.numeroCrea,
+        mudou: crea !== originalData.numeroCrea,
+      },
     });
 
     return changed;
-  }, [nomeCompleto, email, empresa, originalData]);
+  }, [nomeCompleto, email, empresa, crea, originalData]);
 
   // Validação de email
   const validarEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
+  };
+  // Validação do CREA
+  const validarCrea = (crea) => {
+    const regex = /^\d{6}$/; // CREA deve ter exatamente 6 dígitos
+    return regex.test(crea); // Retorna true se for válido
   };
 
   const handleSalvar = async () => {
@@ -100,6 +115,16 @@ const Perfil = ({ theme, userData, onUserUpdate }) => {
       return;
     }
 
+    if (!crea.trim()) {
+      Alert.alert("Erro", "Número CREA é obrigatório");
+      return;
+    }
+    if (!validarCrea(crea)) {
+      Alert.alert("Erro", "Número CREA inválido. Deve conter exatamente 6 dígitos.");
+      return;
+    }
+  
+
     if (!userData?.numeroCrea) {
       Alert.alert("Erro", "Número CREA não encontrado");
       return;
@@ -108,20 +133,20 @@ const Perfil = ({ theme, userData, onUserUpdate }) => {
     setIsLoading(true);
 
     try {
-      console.log("💾 Salvando alterações do usuário...");
-      console.log("📋 ID do usuário:", userData.id);
-      console.log("📝 Dados a atualizar:", {
+      console.log("Salvando alterações do usuário...");
+      console.log("ID do usuário:", userData.id);
+      console.log("Dados a atualizar:", {
         nomeCompleto,
         email,
         empresa,
-        numeroCrea: userData.numeroCrea,
+        numeroCrea,
       });
 
       // Preparar dados para atualização (ordem conforme documentação)
       const dadosAtualizados = {
         email: email.trim(),
         nomeCompleto: nomeCompleto.trim(),
-        numeroCrea: userData.numeroCrea,
+        numeroCrea: crea.trim(),
         empresa: empresa.trim(),
       };
 
@@ -143,17 +168,18 @@ const Perfil = ({ theme, userData, onUserUpdate }) => {
         nomeCompleto: nomeCompleto.trim(),
         email: email.trim(),
         empresa: empresa.trim(),
+        numeroCrea: crea.trim(),
       });
 
       Alert.alert("Sucesso", "Alterações salvas com sucesso!");
 
       // Notificar componente pai para recarregar dados
       if (onUserUpdate) {
-        console.log("🔄 Recarregando dados do usuário...");
+        console.log("Recarregando dados do usuário...");
         onUserUpdate();
       }
     } catch (error) {
-      console.error("❌ Erro ao salvar alterações:", error);
+      console.error("Erro ao salvar alterações:", error);
 
       let mensagemErro = "Não foi possível salvar as alterações";
 
@@ -163,7 +189,7 @@ const Perfil = ({ theme, userData, onUserUpdate }) => {
       } else if (error?.response?.status === 400) {
         mensagemErro = "Dados inválidos. Verifique os campos.";
         console.error(
-          "❌ Detalhes erro 400:",
+          "Detalhes erro 400:",
           JSON.stringify(error.response.data, null, 2)
         );
       } else if (error?.response?.status === 409) {
@@ -239,7 +265,7 @@ const Perfil = ({ theme, userData, onUserUpdate }) => {
             placeholderTextColor={theme.textSecondary}
             value={email}
             onChangeText={(text) => {
-              console.log("📧 Email mudando para:", text);
+              console.log("Email mudando para:", text);
               setEmail(text);
             }}
             keyboardType="email-address"
@@ -264,13 +290,42 @@ const Perfil = ({ theme, userData, onUserUpdate }) => {
             value={empresa}
             onChangeText={(text) => {
               console.log(
-                "🏢 Empresa mudando de:",
+                "Empresa mudando de:",
                 `"${empresa}"`,
                 "para:",
                 `"${text}"`
               );
               setEmpresa(text);
             }}
+            editable={!isLoading}
+          />
+        </View>
+        
+        <View style={styles.inputGroup}>
+          <Text style={[styles.label, { color: theme.text }]}>Crea</Text>
+          <TextInput
+            style={[
+              styles.input,
+              {
+                backgroundColor: theme.inputBg,
+                borderColor: theme.inputBorder,
+                color: theme.text,
+              },
+            ]}
+            placeholder="Número Crea"
+            placeholderTextColor={theme.textSecondary}
+            value={crea}
+            onChangeText={(text) => {
+              console.log(
+                "Crea mudando de:",
+                `"${crea}"`,
+                "para:",
+                `"${text}"`
+              );
+              setCrea(text);
+            }}
+            keyboardType="numeric" 
+            maxLength={6} 
             editable={!isLoading}
           />
         </View>
@@ -287,6 +342,7 @@ const Perfil = ({ theme, userData, onUserUpdate }) => {
           ]}
           onPress={handleSalvar}
           disabled={isLoading}
+          
         >
           {isLoading ? (
             <ActivityIndicator color="#ffffff" />

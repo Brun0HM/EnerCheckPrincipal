@@ -16,6 +16,8 @@ import { Ionicons } from '@expo/vector-icons';
 export default function ProjetoScreen() {
   const { theme,  isLoaded } = useTheme(); // Usando ThemeContext
   const [analise, setAnalise] = useState('');
+  const [projetos, setProjetos] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Estados para comentários (baseado no DashboardProjeto.jsx original)
   const [comentarioGeral, setComentarioGeral] = useState("");
