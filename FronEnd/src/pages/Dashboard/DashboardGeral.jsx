@@ -122,7 +122,7 @@ const DashboardGeral = () => {
                 key={projeto.id || index}
                 nomeProjeto={projeto.nome}
                 tempoProjeto={new Date(projeto.dataInicio).toLocaleDateString(
-                  "pt-BR"
+                  "pt-BR",
                 )}
                 statusProjeto={projeto.status || "pendente"}
               />
