@@ -74,13 +74,13 @@ const Header = () => {
                     </li>
                     <li
                       className="nav-item"
-                      onClick={() => navigate("/dashboardProjeto")}
+                      onClick={() => navigate("/projetos")}
                     >
                       <a
                         className="text-decoration-none mx-3 nav-link"
                         style={{ color: "var(--text)" }}
                       >
-                        DashBoard Projetos
+                        Projetos
                       </a>
                     </li>
                     <li
