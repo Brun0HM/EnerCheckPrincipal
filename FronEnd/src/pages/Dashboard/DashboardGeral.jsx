@@ -122,7 +122,7 @@ const DashboardGeral = () => {
                 key={projeto.id || index}
                 nomeProjeto={projeto.nome}
                 tempoProjeto={new Date(projeto.dataInicio).toLocaleDateString(
-                  "pt-BR",
+                  "pt-BR"
                 )}
                 statusProjeto={projeto.status || "pendente"}
               />
@@ -179,7 +179,7 @@ const DashboardGeral = () => {
               </p>
               <button
                 className="btn btn-outline fw-semibold rounded-3 w-100"
-                onClick={() => navigate("/dashboardProjeto")}
+                onClick={() => navigate("/projetos ")}
                 style={{
                   borderColor: "var(--primary)",
                   color: "var(--primary)",

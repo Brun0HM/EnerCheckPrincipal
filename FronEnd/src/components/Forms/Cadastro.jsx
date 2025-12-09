@@ -209,8 +209,8 @@ const Cadastro = () => {
       try {
         await handleCreateUser(e); // Aguardar a criação do usuário
         // Após criar, fazer login automático e redirecionar baseado no plano
-        await apiService.loginUser(formData.email, formData.senha);
-        const user = await apiService.getUserByToken();
+        await apiUserService.loginUser(formData.email, formData.senha);
+        const user = await apiUserService.getUserByToken();
         if (user && user.plano && user.useReq > 0) {
           navigate("/dashboardGeral");
         } else {
