@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   ScrollView,
   View,
@@ -7,7 +7,11 @@ import {
   Pressable,
   StyleSheet,
   useColorScheme,
-  Alert
+  Alert,
+    KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authAPI } from '../api/Auth';
@@ -46,129 +50,177 @@ export default function LoginScreen({ navigation, setIsAuthenticated }) {
 
   const theme = themes[colorScheme] || themes.light;
 
+ useEffect(() => {
+    loadSavedCredentials();
+  }, []);
+
+  const loadSavedCredentials = async () => {
+    try {
+      const savedEmail = await AsyncStorage.getItem('rememberedEmail');
+      const savedPassword = await AsyncStorage.getItem('rememberedPassword');
+      const savedRememberMe = await AsyncStorage.getItem('rememberMe');
+
+      if (savedRememberMe === 'true' && savedEmail) {
+        setEmail(savedEmail);
+        setRememberMe(true);
+        
+        // Se tiver senha salva, preenche também
+        if (savedPassword) {
+          setPassword(savedPassword);
+        }
+        
+        console.log('Credenciais carregadas:', savedEmail);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar credenciais salvas:', error);
+    }
+  };
+
+  const saveCredentials = async () => {
+    try {
+      if (rememberMe) {
+        await AsyncStorage.setItem('rememberedEmail', email.trim());
+        await AsyncStorage.setItem('rememberedPassword', password);
+        await AsyncStorage.setItem('rememberMe', 'true');
+        console.log('Credenciais salvas');
+      } else {
+        // Remover credenciais salvas se desmarcou
+        await AsyncStorage.removeItem('rememberedEmail');
+        await AsyncStorage.removeItem('rememberedPassword');
+        await AsyncStorage.removeItem('rememberMe');
+        console.log('Credenciais removidas');
+      }
+    } catch (error) {
+      console.error('Erro ao salvar credenciais:', error);
+    }
+  };
+
   const validarEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
   
   const handleLogin = async () => {
-    if (!email.trim()) {
-      Alert.alert('Erro', 'Por favor, digite seu email.');
-      return;
+  if (!email.trim()) {
+    Alert.alert('Erro', 'Por favor, digite seu email.');
+    return;
+  }
+
+  if (!validarEmail(email)) {
+    Alert.alert('Erro', 'Por favor, digite um email válido.');
+    return;
+  }
+
+  if (!password.trim()) {
+    Alert.alert('Erro', 'Por favor, digite sua senha.');
+    return;
+  }
+
+  setIsLoading(true);
+
+  try {
+    console.log('Tentando fazer login...');
+    
+    // 1. Fazer login e obter token
+    const loginResult = await authAPI.login(email.trim(), password);
+    
+    console.log('Login realizado com sucesso');
+     await saveCredentials();
+    
+    // 2. Extrair e validar token
+    const token = loginResult.token || loginResult.accessToken;
+    if (!token) {
+      throw new Error('Token não foi retornado pela API');
     }
-
-    if (!validarEmail(email)) {
-      Alert.alert('Erro', 'Por favor, digite um email válido.');
-      return;
+    
+    console.log('Token recebido:', token.substring(0, 50) + '...');
+    
+    // 3. Buscar dados completos do usuário usando o token
+    console.log('Buscando dados do usuário...');
+    const userData = await usuariosAPI.getUserByToken();
+    
+    if (!userData) {
+      throw new Error('Não foi possível obter dados do usuário');
     }
-
-    if (!password.trim()) {
-      Alert.alert('Erro', 'Por favor, digite sua senha.');
-      return;
-    }
-
-    setIsLoading(true);
-
+    
+    console.log('Dados do usuário:', userData);
+    
+    // 4. Salvar token e dados no AsyncStorage
     try {
-      console.log('Tentando fazer login...');
-      
-      // 1. Fazer login e obter token
-      const loginResult = await authAPI.login(email.trim(), password);
-      
-      console.log('Login realizado com sucesso');
-      
-      // 2. Extrair e validar token
-      const token = loginResult.token || loginResult.accessToken;
-      if (!token) {
-        throw new Error('Token não foi retornado pela API');
-      }
-      
-      console.log('Token recebido:', token.substring(0, 50) + '...');
-      
-      // 3. Buscar dados completos do usuário usando o token
-      console.log('Buscando dados do usuário...');
-      const userData = await usuariosAPI.getUserByToken();
-      
-      if (!userData) {
-        throw new Error('Não foi possível obter dados do usuário');
-      }
-      
-      console.log('Dados do usuário:', userData);
-      
-      // 4. Salvar token e dados no AsyncStorage
-      try {
-        await AsyncStorage.setItem('userToken', token);
-        await AsyncStorage.setItem('userData', JSON.stringify(userData));
-        console.log('Dados salvos no AsyncStorage');
-      } catch (storageError) {
-        console.error(' Erro ao salvar no AsyncStorage:', storageError);
-        throw new Error('Erro ao salvar dados localmente');
-      }
-      
-      // 5. Verificar se o usuário tem plano vinculado
-      const temPlano = userData.plano && userData.plano !== null;
-      
-      console.log('Usuário tem plano?', temPlano);
-      
-      // 6. Autenticar no sistema
+      await AsyncStorage.setItem('userToken', token);
+      await AsyncStorage.setItem('userData', JSON.stringify(userData));
+      console.log('Dados salvos no AsyncStorage');
+    } catch (storageError) {
+      console.error('Erro ao salvar no AsyncStorage:', storageError);
+      throw new Error('Erro ao salvar dados localmente');
+    }
+    
+    // 5. Verificar se o usuário tem plano vinculado
+    const temPlano = userData.plano && userData.plano !== null;
+    
+    console.log('Usuário tem plano?', temPlano);
+    
+    // 6. Redirecionar baseado na existência de plano
+    if (!temPlano) {
+      // Usuário sem plano - NÃO autenticar ainda, apenas navegar para Planos
+      console.log('Usuário sem plano - Redirecionando para seleção de plano...');
+      Alert.alert(
+        'Bem-vindo(a)!',
+        'Por favor, escolha um plano para continuar.',
+        [{
+          text: 'Escolher Plano',
+          onPress: () => {
+            navigation.navigate('Planos', {
+              userToken: token,
+              userData: userData
+            });
+          }
+        }]
+      );
+    } else {
+      // Usuário com plano - AGORA SIM autenticar e ir para Dashboard
+      console.log('Login concluído! Usuário autenticado com plano:', userData.plano.nome);
       if (setIsAuthenticated) {
         setIsAuthenticated(true);
       }
-      
-      // 7. Redirecionar baseado na existência de plano
-      if (!temPlano) {
-        // Usuário sem plano - redirecionar para escolher plano
-        console.log('Redirecionando para seleção de plano...');
-        Alert.alert(
-          'Bem-vindo(a)!',
-          'Por favor, escolha um plano para continuar.',
-          [{
-            text: 'Escolher Plano',
-            onPress: () => {
-              navigation.navigate('Planos', {
-                userToken: token,
-                userData: userData
-              });
-            }
-          }]
-        );
-      } else {
-        // Usuário com plano - a navegação para o Dashboard será feita automaticamente
-        console.log('Login concluído! Usuário autenticado com plano.');
-      }
-      
-    } catch (error) {
-      console.error('Erro no login:', error);
-      console.error('Detalhes:', error?.response?.data);
-      
-      let errorMessage = 'Erro ao fazer login. Tente novamente.';
-      
-      if (error?.message === 'Token não foi retornado pela API') {
-        errorMessage = 'Erro na autenticação. Token não recebido.';
-      } else if (error?.message === 'Não foi possível obter dados do usuário') {
-        errorMessage = 'Erro ao carregar dados do usuário.';
-      } else if (error?.message?.includes('AsyncStorage')) {
-        errorMessage = 'Erro ao salvar dados. Tente novamente.';
-      } else if (error?.response?.status === 401) {
-        errorMessage = 'Email ou senha incorretos.';
-      } else if (error?.response?.status === 404) {
-        errorMessage = 'Usuário não encontrado.';
-      } else if (error?.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-      
-      Alert.alert('Erro no Login', errorMessage);
-      
-    } finally {
-      setIsLoading(false);
     }
-  };
-
+    
+  } catch (error) {
+    console.error('Erro no login:', error);
+    console.error('Detalhes:', error?.response?.data);
+    
+    let errorMessage = 'Erro ao fazer login. Tente novamente.';
+    
+    if (error?.message === 'Token não foi retornado pela API') {
+      errorMessage = 'Erro na autenticação. Token não recebido.';
+    } else if (error?.message === 'Não foi possível obter dados do usuário') {
+      errorMessage = 'Erro ao carregar dados do usuário.';
+    } else if (error?.message?.includes('AsyncStorage')) {
+      errorMessage = 'Erro ao salvar dados. Tente novamente.';
+    } else if (error?.response?.status === 401) {
+      errorMessage = 'Email ou senha incorretos.';
+    } else if (error?.response?.status === 404) {
+      errorMessage = 'Usuário não encontrado.';
+    } else if (error?.response?.data?.message) {
+      errorMessage = error.response.data.message;
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+    
+    Alert.alert('Erro no Login', errorMessage);
+    
+  } finally {
+    setIsLoading(false);
+  }
+};
   return (
-    <View style={[styles.container, { backgroundColor: theme.bg }]}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <KeyboardAvoidingView 
+      style={[styles.container, { backgroundColor: theme.bg }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ScrollView contentContainerStyle={styles.scrollContent}   keyboardShouldPersistTaps="handled">
         {/* Cabeçalho */}
         <View style={styles.header}>
           <Text style={[styles.title, { color: theme.text }]}>EnerCheck</Text>
@@ -205,6 +257,7 @@ export default function LoginScreen({ navigation, setIsAuthenticated }) {
             keyboardType="email-address"
             autoCapitalize="none" 
             editable={!isLoading} 
+              returnKeyType="next"
           />
 
           {/* Campo Senha */}
@@ -223,6 +276,7 @@ export default function LoginScreen({ navigation, setIsAuthenticated }) {
             secureTextEntry
             value={password}
             onChangeText={setPassword}
+            returnKeyType="done"
           />
 
           {/* Lembrar de mim + Esqueceu senha */}
@@ -281,7 +335,8 @@ export default function LoginScreen({ navigation, setIsAuthenticated }) {
           </Pressable>
         </View>
       </ScrollView>
-    </View>
+    </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 

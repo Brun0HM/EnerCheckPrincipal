@@ -8,6 +8,10 @@ import {
   StyleSheet,
   useColorScheme,
   Alert,
+  Platform,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+    Keyboard 
 } from 'react-native';
 import { usuariosAPI } from '../api/Usuarios';
 import { authAPI } from '../api/Auth';
@@ -233,8 +237,16 @@ const validarEmail = (email) => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.bg }]}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+   <KeyboardAvoidingView
+      style={[styles.container, { backgroundColor: theme.bg }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView 
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+        >
         <View style={styles.header}>
           <Text style={[styles.title, { color: theme.text }]}>EnerCheck</Text>
           <Text style={[styles.subtitle, { color: theme.textSecondary }]}>Crie sua conta</Text>
@@ -261,6 +273,7 @@ const validarEmail = (email) => {
               theme={theme} 
               style={{ flex: 1, marginRight: 8 }}
               error={errors.nome}
+                returnKeyType="next"
             />
             <Input 
               label="Sobrenome *" 
@@ -270,6 +283,7 @@ const validarEmail = (email) => {
               theme={theme} 
               style={{ flex: 1, marginLeft: 8 }}
               error={errors.sobrenome}
+                returnKeyType="next"
             />
           </View>
 
@@ -282,6 +296,7 @@ const validarEmail = (email) => {
             keyboardType="email-address" 
             theme={theme}
             error={errors.email}
+              returnKeyType="next"
           />
 
           {/* Empresa (opcional) */}
@@ -291,6 +306,7 @@ const validarEmail = (email) => {
             onChangeText={setEmpresa} 
             placeholder="Sua empresa" 
             theme={theme}
+              returnKeyType="next"
           />
 
           {/* CREA obrigatório */}
@@ -303,6 +319,7 @@ const validarEmail = (email) => {
             maxLength={6}
             theme={theme}
             error={errors.numeroCrea}
+              returnKeyType="next"
           />
 
           {/* Senha */}
@@ -314,6 +331,7 @@ const validarEmail = (email) => {
             secureTextEntry 
             theme={theme}
             error={errors.senha}
+              returnKeyType="next"
           />
 
           {/* Indicador de força da senha */}
@@ -335,6 +353,7 @@ const validarEmail = (email) => {
             secureTextEntry 
             theme={theme}
             error={errors.confirmarSenha}
+              returnKeyType="next"
           />
 
           {/* Checkbox termos */}
@@ -397,7 +416,8 @@ const validarEmail = (email) => {
           </Pressable>
         </View>
       </ScrollView>
-    </View>
+   </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 

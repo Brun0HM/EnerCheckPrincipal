@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ScrollView, View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Navconfig from '../components/Navconfig';
 import Perfil from '../components/Perfil';
 import Seguranca from '../components/Seguranca';
@@ -17,9 +17,12 @@ export default function SettingsScreen() {
   const { theme, isLoaded } = useTheme();
   const navigation = useNavigation();
 
-   useEffect(() => {
-    loadUserData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      console.log('🔄 SettingsScreen - Recarregando dados...');
+      loadUserData();
+    }, [])
+  );
 
   const loadUserData = async () => {
     try {
@@ -34,8 +37,9 @@ export default function SettingsScreen() {
           id: user.id,
           nome: user.nomeCompleto,
           email: user.email,
-          empresa: user.empresa,
-          numeroCrea: user.numeroCrea
+          numeroCrea: user.numeroCrea,
+          plano: user.plano?.nome,
+          requisicoes: user.userReq
         });
       } else {
         console.warn('Nenhum usuário encontrado');
@@ -86,7 +90,7 @@ export default function SettingsScreen() {
       case "notificacoes":
         return <Notificacoes theme={currentTheme} />;
       case "assinatura":
-        return <Assinaturas theme={currentTheme} navigation={navigation} />;
+        return <Assinaturas theme={currentTheme} navigation={navigation}  userData={userData}/>;
       default:
         return <Perfil theme={currentTheme}    userData={userData}  onUserUpdate={loadUserData}/>;
     }

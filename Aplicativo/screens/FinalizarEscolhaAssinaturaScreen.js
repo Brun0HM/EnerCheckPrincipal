@@ -112,22 +112,39 @@ export default function FinalizarEscolhaAssinaturaScreen({setIsAuthenticated }) 
       await usuariosAPI.vincularPlano(planData.planoId);
       console.log('Plano vinculado ao usuário');
 
-  
-      // console.log('Incrementando usuários do plano...');
-      // await planosAPI.incrementarUsuarios(planData.planoId);
-      // console.log('Usuários do plano incrementados');
-
-   
       Alert.alert(
         'Pagamento Realizado! 🎉',
         `Seu plano ${planData.title} foi ativado com sucesso!`,
         [{
           text: 'Começar a Usar',
-          onPress: () =>{
-             setIsAuthenticated(true);
+          onPress: async () => {
+            if (setIsAuthenticated) {
+              // Primeiro acesso
+              setIsAuthenticated(true);
+            } else {
+            console.log('✅ Atualizando dados e voltando ao Dashboard...');
+            
+            // 1. Atualizar dados no AsyncStorage
+            const updatedUser = await usuariosAPI.getUserByToken();
+            await AsyncStorage.setItem('userData', JSON.stringify(updatedUser));
+            console.log('✅ Dados atualizados');
+            
+            // 2. Voltar ao Dashboard
+            // Usa getParent() para acessar o TabNavigator
+            const tabNavigator = navigation.getParent();
+            
+            // Vai para a tab Geral
+            tabNavigator?.navigate('Geral', {
+              reload: true,
+              timestamp: Date.now()
+            });
+            
+            // Remove todas as telas do stack atual (volta para raiz do stack)
+            navigation.popToTop();
           }
-        }]
-      );
+        }
+      }]
+    );
 
     } catch (error) {
       console.error('Erro no pagamento:', error);

@@ -105,8 +105,11 @@ const logout = async () => {
     console.log('Fazendo logout...');
     
     // Limpar tokens do AsyncStorage
-    await AsyncStorage.removeItem('Token');
+  await AsyncStorage.removeItem('Token');
     await AsyncStorage.removeItem('refreshToken');
+    await AsyncStorage.removeItem('userToken');
+    await AsyncStorage.removeItem('userData');
+    
     
     // Remover header de autorização
     delete api.defaults.headers.common['Authorization'];

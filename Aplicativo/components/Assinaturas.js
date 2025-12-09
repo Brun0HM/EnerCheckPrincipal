@@ -1,8 +1,26 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const Assinaturas = ({ theme, navigation }) => {
+const Assinaturas = ({ theme, userData, navigation }) => {
+
+   if (!userData) {
+    return (
+      <View style={[styles.container, { 
+        backgroundColor: theme.cardBg, 
+        borderColor: theme.cardBorder 
+      }]}>
+        <ActivityIndicator size="large" color={theme.primary} />
+        <Text style={[styles.loadingText, { color: theme.textSecondary }]}>
+          Carregando dados da assinatura...
+        </Text>
+      </View>
+    );
+  }
+
+   const plano = userData.plano;
+  const temPlano = plano && plano !== null;
+
   const handleAlterarPlano = () => {
     navigation.navigate('Planos');
     
@@ -39,10 +57,10 @@ const Assinaturas = ({ theme, navigation }) => {
     }]}>
       <View style={styles.header}>
         <Text style={[styles.title, { color: theme.text }]}>
-          Plano Atual
+         {temPlano ? 'Plano Atual' : 'Nenhum Plano Ativo'}
         </Text>
         <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
-          Gerencie sua assinatura e método de pagamento
+         {temPlano ? 'Gerencie sua assinatura e método de pagamento' : 'Escolha um plano para começar'}
         </Text>
       </View>
 
@@ -51,15 +69,15 @@ const Assinaturas = ({ theme, navigation }) => {
         <View style={styles.planHeader}>
           <View>
             <Text style={[styles.planName, { color: theme.text }]}>
-              Plano Pro
+               Plano {plano.nome}
             </Text>
             <Text style={[styles.planPrice, { color: theme.text }]}>
-              R$ 149/mês
+                R$ {plano.preco?.toFixed(2).replace('.', ',')}/mês
             </Text>
           </View>
-          <View style={styles.activeBadge}>
+          {/* <View style={styles.activeBadge}>
             <Text style={styles.activeText}>Ativo</Text>
-          </View>
+          </View> */}
         </View>
 
         <Text style={[styles.nextBilling, { color: theme.textSecondary }]}>
@@ -136,9 +154,9 @@ const Assinaturas = ({ theme, navigation }) => {
         </Text>
         
         <View style={styles.historyList}>
-          <PaymentHistory valor="149,00" data="15 Jan 2025" status="Pago" />
-          <PaymentHistory valor="149,00" data="15 Dez 2024" status="Pago" />
-          <PaymentHistory valor="149,00" data="15 Nov 2024" status="Pago" />
+          <PaymentHistory valor={plano.preco?.toFixed(2).replace('.', ',')} data="15 Jan 2025" status="Pago" />
+          <PaymentHistory valor={plano.preco?.toFixed(2).replace('.', ',')} data="15 Dez 2024" status="Pago" />
+          <PaymentHistory valor={plano.preco?.toFixed(2).replace('.', ',')} data="15 Nov 2024" status="Pago" />
         </View>
       </View>
     </View>
