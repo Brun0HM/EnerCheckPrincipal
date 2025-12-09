@@ -26,6 +26,22 @@ const DashboardGeral = () => {
   const projetosRecentes = projetos
     .sort((a, b) => new Date(b.dataInicio) - new Date(a.dataInicio))
     .slice(0, 3);
+
+  // Calcular estatísticas dos projetos
+  const totalProjetos = projetos.length;
+  const projetosAprovados = projetos.filter(
+    (p) => p.status === "aprovado" || p.status === "concluído"
+  ).length;
+  const projetosPendentes = projetos.filter(
+    (p) => p.status === "pendente" || p.status === "em análise"
+  ).length;
+
+  // Calcular economia estimada (baseado em R$ 1500-3000 por projeto)
+  const economiaMedia = 2250; // Média de economia por projeto
+  const economiaTotal =
+    totalProjetos > 0
+      ? (totalProjetos * economiaMedia).toLocaleString("pt-BR")
+      : "0";
   return (
     <div
       style={{
@@ -53,14 +69,14 @@ const DashboardGeral = () => {
             <CardStatusProjetoDashboard
               status={"Projetos Totais"}
               iconeStatus={"bi bi-file-earmark-text"}
-              num={projetos.length.toString()}
+              num={totalProjetos.toString()}
               desc={"Projetos cadastrados no sistema"}
             />
 
             <CardStatusProjetoDashboard
               status={"Aprovados"}
               iconeStatus={"bi bi-check2-circle"}
-              num={Math.floor(projetos.length * 0.75).toString()}
+              num={projetosAprovados.toString()}
               desc={"Projetos aprovados com sucesso"}
             />
           </div>
@@ -68,14 +84,14 @@ const DashboardGeral = () => {
             <CardStatusProjetoDashboard
               status={"Pendentes"}
               iconeStatus={"bi bi-exclamation-triangle"}
-              num={Math.floor(projetos.length * 0.25).toString()}
+              num={projetosPendentes.toString()}
               desc={"Aguardando revisão"}
             />
 
             <CardStatusProjetoDashboard
               status={"Economia"}
               iconeStatus={"bi bi-graph-up"}
-              num={"R$ 12.5k"}
+              num={`R$ ${economiaTotal}`}
               desc={"Em custos evitados"}
             />
           </div>
