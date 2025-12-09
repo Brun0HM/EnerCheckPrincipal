@@ -1,29 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { 
-  ScrollView, 
-  View, 
-  Text, 
-  StyleSheet 
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation, useRoute} from '@react-navigation/native';
-import ResumoPedido from '../components/ResumoPedido';
-import MetodoPagamento from '../components/MetodoPagamento';
-import CreditCardForm from '../components/CreditCardForm';
-import Pix from '../components/Pix';
-import Boleto from '../components/Boleto';
-import { useTheme } from '../contexts/ThemeContext';
-import { Alert } from 'react-native';
-import {planosAPI} from '../api/Planos.js'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { usuariosAPI } from '../api/Usuarios';
-import authAPI from '../api/Auth';
+import React, { useEffect, useState } from "react";
+import { ScrollView, View, Text, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import ResumoPedido from "../components/ResumoPedido";
+import MetodoPagamento from "../components/MetodoPagamento";
+import CreditCardForm from "../components/CreditCardForm";
+import Pix from "../components/Pix";
+import Boleto from "../components/Boleto";
+import { useTheme } from "../contexts/ThemeContext";
+import { Alert } from "react-native";
+import { planosAPI } from "../api/Planos.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { usuariosAPI } from "../api/Usuarios";
+import authAPI from "../api/Auth";
+import { planosPagosAPI } from "../api/PlanoPago.js";
 
-export default function FinalizarEscolhaAssinaturaScreen({setIsAuthenticated }) {
+export default function FinalizarEscolhaAssinaturaScreen({
+  setIsAuthenticated,
+}) {
   const { theme } = useTheme();
   const route = useRoute();
   const navigation = useNavigation();
-  
+
   const [activeCard, setActiveCard] = useState(false);
   const [activeBoleto, setActiveBoleto] = useState(false);
   const [activePix, setActivePix] = useState(false);
@@ -31,124 +29,126 @@ export default function FinalizarEscolhaAssinaturaScreen({setIsAuthenticated }) 
   const [userToken, setUserToken] = useState(null);
   const [userData, setUserData] = useState(null);
 
-
   useEffect(() => {
     const loadData = async () => {
       try {
         // Pegar dados dos params ou AsyncStorage
-        let token = route.params?.userToken || await AsyncStorage.getItem('userToken');
+        let token =
+          route.params?.userToken || (await AsyncStorage.getItem("userToken"));
         let user = route.params?.userData;
         let planFromParams = route.params?.planData;
-        
+
         if (!user) {
-          const userDataString = await AsyncStorage.getItem('userData');
+          const userDataString = await AsyncStorage.getItem("userData");
           if (userDataString) user = JSON.parse(userDataString);
         }
 
-        console.log('Dados recebidos:');
-        console.log('Usuário:', user?.email);
-        console.log('Plano ID:', planFromParams?.planoId);
+        console.log("Dados recebidos:");
+        console.log("Usuário:", user?.email);
+        console.log("Plano ID:", planFromParams?.planoId);
 
-      
         if (planFromParams?.planoId) {
-          console.log('Buscando dados completos do plano...');
-          
-          const planoCompleto = await planosAPI.getPlanoById(token, planFromParams.planoId);
-          
+          console.log("Buscando dados completos do plano...");
+
+          const planoCompleto = await planosAPI.getPlanoById(
+            token,
+            planFromParams.planoId
+          );
+
           // Merge dados dos params com dados da API
           const planDataCompleto = {
             ...planFromParams,
             ...planoCompleto,
             title: planFromParams.title || planoCompleto.nome,
-            itens: planFromParams.itens // Manter itens do params (já relacionados)
+            itens: planFromParams.itens, // Manter itens do params (já relacionados)
           };
-          
+
           setPlanData(planDataCompleto);
-          console.log('Dados do plano completos:', planDataCompleto);
+          console.log("Dados do plano completos:", planDataCompleto);
         } else {
           setPlanData(planFromParams);
         }
 
         // Configurar autenticação
         if (token) authAPI.setAuthToken(token);
-        
+
         setUserToken(token);
         setUserData(user);
-
       } catch (error) {
-        console.error('Erro ao carregar dados:', error);
-        Alert.alert('Erro', 'Erro ao carregar dados.', [
-          { text: 'Voltar', onPress: () => navigation.goBack() }
+        console.error("Erro ao carregar dados:", error);
+        Alert.alert("Erro", "Erro ao carregar dados.", [
+          { text: "Voltar", onPress: () => navigation.goBack() },
         ]);
       }
     };
 
     loadData();
   }, []);
-  
 
-  
   // Cores diretas baseadas no tema
   const currentTheme = {
-    bg: theme === 'light' ? '#ffffff' : '#131313',
-    text: theme === 'light' ? '#131313' : '#ffffff',
-    textSecondary: theme === 'light' ? '#606060' : '#b8bcc8',
-    primary: '#0D6EFD',
-    cardBg: theme === 'light' ? '#ffffff' : '#2a2a2a',
-    cardBorder: theme === 'light' ? '#e0e0e0' : '#3a3a3a',
-    inputBg: theme === 'light' ? '#f8f9fa' : '#2d2d2d',
-    inputBorder: theme === 'light' ? '#ced4da' : '#555555',
+    bg: theme === "light" ? "#ffffff" : "#131313",
+    text: theme === "light" ? "#131313" : "#ffffff",
+    textSecondary: theme === "light" ? "#606060" : "#b8bcc8",
+    primary: "#0D6EFD",
+    cardBg: theme === "light" ? "#ffffff" : "#2a2a2a",
+    cardBorder: theme === "light" ? "#e0e0e0" : "#3a3a3a",
+    inputBg: theme === "light" ? "#f8f9fa" : "#2d2d2d",
+    inputBorder: theme === "light" ? "#ced4da" : "#555555",
   };
-
-
 
   const handlePaymentSuccess = async () => {
     try {
-      console.log('Processando pagamento...');
-      console.log('Plano:', planData?.nome);
-      console.log('Usuário:', userData?.email);
+      console.log("Processando pagamento...");
+      console.log("Plano:", planData?.nome);
+      console.log("Usuário:", userData?.email);
 
-      console.log('Vinculando plano ao usuário...');
+      console.log("Vinculando plano ao usuário...");
       await usuariosAPI.vincularPlano(planData.planoId);
-      console.log('Plano vinculado ao usuário');
+      console.log("Plano vinculado ao usuário");
+      await planosPagosAPI.postPlanosPagos(planData.planoId);
 
       Alert.alert(
-        'Pagamento Realizado! 🎉',
+        "Pagamento Realizado! 🎉",
         `Seu plano ${planData.title} foi ativado com sucesso!`,
-        [{
-          text: 'Começar a Usar',
-          onPress: async () => {
-            if (setIsAuthenticated) {
-              // Primeiro acesso
-              setIsAuthenticated(true);
-            } else {
-            console.log('✅ Atualizando dados e voltando ao Dashboard...');
-            
-            // 1. Atualizar dados no AsyncStorage
-            const updatedUser = await usuariosAPI.getUserByToken();
-            await AsyncStorage.setItem('userData', JSON.stringify(updatedUser));
-            console.log('✅ Dados atualizados');
-            
-            // 2. Voltar ao Dashboard
-            // Usa getParent() para acessar o TabNavigator
-            const tabNavigator = navigation.getParent();
-            
-            // Vai para a tab Geral
-            tabNavigator?.navigate('Geral', {
-              reload: true,
-              timestamp: Date.now()
-            });
-            
-            // Remove todas as telas do stack atual (volta para raiz do stack)
-            navigation.popToTop();
-          }
-        }
-      }]
-    );
+        [
+          {
+            text: "Começar a Usar",
+            onPress: async () => {
+              if (setIsAuthenticated) {
+                // Primeiro acesso
+                setIsAuthenticated(true);
+              } else {
+                console.log("✅ Atualizando dados e voltando ao Dashboard...");
 
+                // 1. Atualizar dados no AsyncStorage
+                const updatedUser = await usuariosAPI.getUserByToken();
+                await AsyncStorage.setItem(
+                  "userData",
+                  JSON.stringify(updatedUser)
+                );
+                console.log("✅ Dados atualizados");
+
+                // 2. Voltar ao Dashboard
+                // Usa getParent() para acessar o TabNavigator
+                const tabNavigator = navigation.getParent();
+
+                // Vai para a tab Geral
+                tabNavigator?.navigate("Geral", {
+                  reload: true,
+                  timestamp: Date.now(),
+                });
+
+                // Remove todas as telas do stack atual (volta para raiz do stack)
+                navigation.popToTop();
+              }
+            },
+          },
+        ]
+      );
     } catch (error) {
-      console.error('Erro no pagamento:', error);
-      Alert.alert('Erro', 'Erro ao processar pagamento. Tente novamente.');
+      console.error("Erro no pagamento:", error);
+      Alert.alert("Erro", "Erro ao processar pagamento. Tente novamente.");
     }
   };
 
@@ -170,22 +170,26 @@ export default function FinalizarEscolhaAssinaturaScreen({setIsAuthenticated }) 
     setActiveCard(false);
   };
   const getTokenStatus = () => {
-    if (!userData) return '';
+    if (!userData) return "";
     return `Logado como: ${userData.email}`;
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: currentTheme.bg }]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: currentTheme.bg }]}
+    >
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Cabeçalho */}
         <View style={styles.header}>
           <Text style={[styles.title, { color: currentTheme.text }]}>
             Finalize a sua Assinatura
           </Text>
-          <Text style={[styles.subtitle, { color: currentTheme.textSecondary }]}>
+          <Text
+            style={[styles.subtitle, { color: currentTheme.textSecondary }]}
+          >
             Complete os dados de pagamento para começar a usar o EnerCheck
           </Text>
-            {userData && (
+          {userData && (
             <Text style={[styles.userStatus, { color: currentTheme.primary }]}>
               {getTokenStatus()}
             </Text>
@@ -195,15 +199,25 @@ export default function FinalizarEscolhaAssinaturaScreen({setIsAuthenticated }) 
         {/* Layout Principal */}
         <View style={styles.mainContent}>
           {/* Seção de Pagamento */}
-          <View style={[styles.paymentSection, { 
-            backgroundColor: currentTheme.cardBg, 
-            borderColor: currentTheme.cardBorder 
-          }]}>
+          <View
+            style={[
+              styles.paymentSection,
+              {
+                backgroundColor: currentTheme.cardBg,
+                borderColor: currentTheme.cardBorder,
+              },
+            ]}
+          >
             <View style={styles.sectionHeader}>
               <Text style={[styles.sectionTitle, { color: currentTheme.text }]}>
                 Informações de Pagamento
               </Text>
-              <Text style={[styles.sectionSubtitle, { color: currentTheme.textSecondary }]}>
+              <Text
+                style={[
+                  styles.sectionSubtitle,
+                  { color: currentTheme.textSecondary },
+                ]}
+              >
                 Escolha o método de pagamento e preencha os dados
               </Text>
             </View>
@@ -241,37 +255,30 @@ export default function FinalizarEscolhaAssinaturaScreen({setIsAuthenticated }) 
             />
 
             {/* Divider */}
-            <View style={[styles.divider, { backgroundColor: currentTheme.text }]} />
+            <View
+              style={[styles.divider, { backgroundColor: currentTheme.text }]}
+            />
 
             {/* Formulários de Pagamento */}
             {activeCard && (
-              <CreditCardForm 
-                theme={currentTheme} 
+              <CreditCardForm
+                theme={currentTheme}
                 onPayment={handlePaymentSuccess}
               />
             )}
 
             {activePix && (
-              <Pix 
-                theme={currentTheme} 
-                onPayment={handlePaymentSuccess}
-              />
+              <Pix theme={currentTheme} onPayment={handlePaymentSuccess} />
             )}
 
             {activeBoleto && (
-              <Boleto 
-                theme={currentTheme} 
-                onPayment={handlePaymentSuccess}
-              />
+              <Boleto theme={currentTheme} onPayment={handlePaymentSuccess} />
             )}
           </View>
 
           {/* Resumo do Pedido */}
           <View style={styles.summarySection}>
-            <ResumoPedido 
-              theme={currentTheme} 
-              planData={planData}
-            />
+            <ResumoPedido theme={currentTheme} planData={planData} />
           </View>
         </View>
       </ScrollView>
@@ -288,24 +295,24 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 32,
   },
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 16,
     lineHeight: 40,
   },
   subtitle: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: 24,
     paddingHorizontal: 16,
   },
   mainContent: {
-    flexDirection: 'column',
+    flexDirection: "column",
     gap: 16,
   },
   paymentSection: {
@@ -313,7 +320,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     flex: 1,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -324,7 +331,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 4,
   },
   sectionSubtitle: {
@@ -333,7 +340,7 @@ const styles = StyleSheet.create({
   },
   methodsTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 12,
   },
   divider: {
@@ -342,8 +349,8 @@ const styles = StyleSheet.create({
   },
   summarySection: {
     // Para layouts maiores, pode ser posicionado ao lado
-    alignSelf: 'center',
-    width: '100%',
+    alignSelf: "center",
+    width: "100%",
     maxWidth: 400,
   },
 });
