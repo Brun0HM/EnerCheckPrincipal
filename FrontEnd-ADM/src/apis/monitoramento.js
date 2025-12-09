@@ -32,7 +32,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        const refreshToken = localStorage.getItem("refreshToken");
+        const refreshToken = localStorage.getItem("RefreshToken");
 
         const response = await api.post("/Usuario/refresh", {
           refreshToken: refreshToken,
@@ -45,17 +45,24 @@ api.interceptors.response.use(
       } catch (refreshError) {
         console.error("O refresh token falhou: ", refreshError);
         localStorage.clear();
-        window.location.href = "/";
+        
       }
     }
   }
 );
 
 const getProjetos = async () => {
-  const response = api.get("/Projetos");
-  const listaCompleta = response.data;
+  try {
+    const response = api.get("/Projetos");
 
-  return listaCompleta;
+    if(response) {
+      const listaCompleta = response.data; 
+      return listaCompleta
+    }
+  } catch (error) {
+    console.error("Erro ao Listar Projetos: ", error)
+  }
+
 };
 
 const apiProjetos = {
@@ -64,62 +71,4 @@ const apiProjetos = {
 
 export default apiProjetos;
 
-// const projetos = [
-//     {
-//         nome: "Projeto Residencial Vila Nova",
-//         email: "maria@exemplo.com",
-//         tipoProjeto: "Projeto Residencial",
-//         id: "#231",
-//         tipoConta: "Pro",
-//         dataInicio: "28-12-2023 13:30",
-//         dataFim: "15-01-2024 14:30",
-//         statusProjeto: "Concluído",
-//         descricao: "projeto elétrico Residencial Vila Nova",
-//     },
-//     {
-//         nome: "ProjetoComercial EnerCheck Jaketa",
-//         email: "joao@exemplo.com",
-//         tipoProjeto: "Projeto Comercial",
-//         id: "#323",
-//         tipoConta: "Básico",
-//         dataInicio: "15-01-2024 14:25",
-//         dataFim: "Não concluído",
-//         statusProjeto: "Processando",
-//         descricao: "projeto elétrico Jaketa",
-//     },
-//     {
-//         nome: "Projeto Industrial PlastBras EnerCheck",
-//         email: "ana@exemplo.com",
-//         tipoProjeto: "Projeto Industrial",
-//         id: "#123",
-//         tipoConta: "Empresas",
-//         dataInicio: "28-12-2023 07:30",
-//         dataFim: "05-01-2024 16:45",
-//         statusProjeto: "Concluído",
-//         descricao: "projeto elétrico industrial PlastBras",
-//     },
-//     {
-//         nome: "Projeto Residencial Centro",
-//         email: "carlos@exemplo.com",
-//         tipoProjeto: "Projeto Residencial",
-//         id: "#456",
-//         tipoConta: "Pro",
-//         dataInicio: "10-01-2024 09:15",
-//         dataFim: "Não concluído",
-//         statusProjeto: "Erro",
-//         descricao: "projeto elétrico residencial centro da cidade",
-//     },
-//     {
-//         nome: "Projeto Comercial Shopping",
-//         email: "lucia@exemplo.com",
-//         tipoProjeto: "Projeto Comercial",
-//         id: "#789",
-//         tipoConta: "Empresas",
-//         dataInicio: "20-01-2024 11:00",
-//         dataFim: "Não concluído",
-//         statusProjeto: "Processando",
-//         descricao: "projeto elétrico para shopping center",
-//     }
-// ];
-
-// export default projetos;
+// 

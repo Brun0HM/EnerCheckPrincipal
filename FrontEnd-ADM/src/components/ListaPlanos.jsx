@@ -4,8 +4,8 @@ import { ComponenteLista } from "./ComponenteLista";
 import VisualizarLista from "./VisualizarLista";
 import DeleteModal from "./DeleteModal";
 import Editar from "./Editar";
-import apiService from "../../../FronEnd/services/api";
 import { toast, ToastContainer } from "react-toastify";
+import apiPlanos from "../apis/planos";
 
 export const ListaPlanos = (props) => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -21,6 +21,7 @@ export const ListaPlanos = (props) => {
   const handleView = (item) => {
     setSelectedItem(item);
     setShowModalView(true);
+
   };
   const handleCloseModalView = () => {
     setSelectedItem(null);
@@ -39,9 +40,9 @@ export const ListaPlanos = (props) => {
     setShowModalEdit(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     
-  const alerta = () => toast.success("Usuário deletado com sucesso.",{
+  const alerta = () => toast.success("Plano deletado com sucesso.",{
     position: "bottom-right",
     className: "bg-success text-light",
     autoClose: 3000,
@@ -49,13 +50,13 @@ export const ListaPlanos = (props) => {
     const id = selectedItem.planoId;
     if (id) {
       try {
-        apiService.deletePlano(id);
         console.log(`Excluindo item com ID: ${id}`);
+        await apiPlanos.deletePlano(id);
         setShowModalDelete(false);
-        window.location.reload();
         alerta();
+        
       } catch (error) {
-        console.log("Erro ao deletar plano: " + error);
+        console.log("Erro ao deletar plano: " , error);
       }
     } else {
       console.log("não foi possível obter o ID do plano para exclusão.");
@@ -105,8 +106,8 @@ export const ListaPlanos = (props) => {
               t1info={plano.preco}
               topic2={"Requisições"}
               t2info={plano.quantidadeReq}
-              topic3={"Ativo?"}
-              t3info={plano.ativo ? "Sim" : "Não"}
+              topic3={"Usuários cadastrados"}
+              t3info={plano.quantidadeUsers > 0 ? plano.quantidadeUsers : <span className="alert alert-warning py-0 px-2">Sem usuários</span>}
               view={() => handleView(plano)} // nesses handles, o .map vai passar o plano COMPLETO
               delete={() => handleDelete(plano)} // é bom comentar isso pq eu fiquei perdido desde o inicio tentando entender
               editar={() => handleEdit(plano)}

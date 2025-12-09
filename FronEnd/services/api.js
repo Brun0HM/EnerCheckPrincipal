@@ -51,7 +51,7 @@ api.interceptors.response.use(
       } catch (refreshError) {
         console.error("O refresh token falhou: ", refreshError);
         localStorage.clear();
-        window.location.href = "/";
+        
       }
     }
   }
@@ -159,14 +159,7 @@ const loginUser = async (email, senha) => {
 //--------------------------------------------------------------------------------------------
 // 2. Planos --------------------------------------------------------------------------------
 
-const deletePlano = async (planoId) => {
-  if (String.length(planoId) === 0)
-    try {
-      const response = await api.delete(`/api/Planos/${planoId}`);
-      console.log("Plano deletado com sucesso.");
-      return response.data;
-    } catch (error) {}
-};
+
 
 // Exporta as funções que o componente usará
 const apiService = {
@@ -174,7 +167,7 @@ const apiService = {
   createUser,
   deleteUser,
   loginUser,
-  deletePlano,
+
 };
 
 export default apiService;

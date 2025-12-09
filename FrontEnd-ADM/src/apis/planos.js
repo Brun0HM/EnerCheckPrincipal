@@ -10,6 +10,56 @@ const api = axios.create({
   timeout: 10000,
 });
 
+
+api.interceptors.request.use(
+  (config) => {
+    console.log("Interceptor de requisição chamado!");
+    const token = localStorage.getItem("Token");
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => {
+    console.error("Erro no interceptor de resposta ", error);
+    return Promise.reject(error);
+  }
+);
+
+api.interceptors.response.use(
+  (response) => {
+    console.log("Interceptor de resposta chamado!");
+
+    return response;
+  },
+  async (error) => {
+    console.error("Erro no interceptor de resposta");
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        const refreshToken = localStorage.getItem("refreshToken");
+
+        const response = await api.post("/Usuario/refresh", {
+          refreshToken: refreshToken,
+        });
+
+        const novoToken = response.data.accessToken;
+        localStorage.setItem("Token", novoToken);
+        originalRequest.headers["Authorization"] = `Bearer ${novoToken}`;
+        return api(originalRequest);
+      } catch (refreshError) {
+        console.error("O refresh token falhou: ", refreshError);
+        localStorage.clear();
+        window.location.href = "/";
+      }
+    }
+  }
+);
+
+
 const listagemPlanos = async () => {
   try {
     const response = await api.get("/Planos");
@@ -50,10 +100,22 @@ const listaPlanosId = async (id) => {
   return planoBuscado;
 };
 
+const deletePlano = async (planoId) => {
+  if (!planoId)
+    try {
+      const response = await api.delete(`/api/Planos/${planoId}`);
+      console.log("Plano deletado com sucesso.");
+      return response.data;
+    } catch (error) {
+      console.error("Deu ruim. ", error)
+    }
+};
+
 const apiPlanos = {
   listagemPlanos,
   criarPlano,
-  listaPlanosId
+  listaPlanosId,
+  deletePlano
 }
 
 export default apiPlanos

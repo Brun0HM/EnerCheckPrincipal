@@ -2,7 +2,7 @@ import React from "react";
 
 const DeleteModal = ({
   onClose,
-  onConfirm,
+  endpointDelete,
   title = "Certeza que deseja excluir o cadastro?",
 }) => {
  
@@ -25,7 +25,7 @@ const DeleteModal = ({
             <div className="d-flex justify-content-center align-items-center border-bottom pb-2">
               <button
                 className="btn btn-danger text-light rounded-2 me-5"
-                onClick={onConfirm}
+                onClick={endpointDelete}
               >
                 Excluir
               </button>

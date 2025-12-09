@@ -1,12 +1,13 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Search from "../components/Search";
 import ListaProjetos from "../components/ListaProjetos";
 import { ContainerLista } from "../components/ContainerLista";
-import monitoramento from "../apis/monitoramento";
+import apiProjetos from "../apis/monitoramento";
+
 
 const GerenciamentoIa = () => {
   const [activeFilter, setActiveFilter] = useState(null);
-
+  const [projetos, setProjetos] = useState([])
   // Função para converter data string em objeto Date
   const parseDate = (dateString) => {
     const [day, month, year] = dateString.split('-');
@@ -15,7 +16,7 @@ const GerenciamentoIa = () => {
 
   // Função para filtrar e ordenar dados
   const filteredData = useMemo(() => {
-    let data = [...monitoramento];
+    let data = [...projetos];
 
     if (!activeFilter) return data;
 
@@ -46,6 +47,10 @@ const GerenciamentoIa = () => {
   const handleFilterChange = (filter) => {
     setActiveFilter(filter);
   };
+
+  useEffect(() => {
+    
+  }, [])
 
   return (
     <>
