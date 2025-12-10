@@ -7,6 +7,7 @@ import {
   Pressable,
   RefreshControl,
   ActivityIndicator,
+ Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,6 +17,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import { projetosAPI } from '../api/Projetos';
 import { useFocusEffect, useRoute } from '@react-navigation/native';
+import * as Print from 'expo-print'; 
 
 export default function ProjetoScreen() {
   const { theme, isLoaded } = useTheme();
@@ -26,9 +28,7 @@ export default function ProjetoScreen() {
   const [refreshing, setRefreshing] = useState(false);
 
   // Estados para comentários
-  const [comentarioGeral, setComentarioGeral] = useState("");
-  const [comentConform, setComentConform] = useState("");
-  const [comentInstalacao, setComentInstalacao] = useState("");
+  const [conformidadeGeral, setConformidadeGeral] = useState('');
 
   // Pontuações dos diferentes aspectos do projeto (valores fake)
   const pontuacaoGeral = 10;
@@ -50,58 +50,49 @@ export default function ProjetoScreen() {
     try {
       setIsLoading(true);
       console.log('🔄 ProjetoScreen - Carregando dados...');
-      
+
       // Verificar se foi passado um projetoId via route params
       const projetoIdRoute = route.params?.projetoId;
-      
+
       // Caso tenha sido passado via params, salvar no AsyncStorage
       if (projetoIdRoute) {
         await AsyncStorage.setItem('projetoSelecionadoId', projetoIdRoute.toString());
         console.log('Projeto recebido via params:', projetoIdRoute);
       }
-      
+
       // Buscar ID do projeto selecionado do AsyncStorage
       const projetoId = await AsyncStorage.getItem('projetoSelecionadoId');
-      
+
       if (!projetoId) {
-        console.log('⚠️ Nenhum projeto selecionado');
+        console.log('Nenhum projeto selecionado');
         setProjetoSelecionado(null);
         setIsLoading(false);
         return;
       }
-      
-      // Buscar todos os projetos e encontrar o selecionado
-      const projetosData = await projetosAPI.getMeusProjetos();
-      
-      // Normalizar projetos (garantir que todos tenham ID)
-      const projetosNormalizados = projetosData.map((p, index) => ({
-        ...p,
-        id: p.id || p.projetoId || p.ProjetoId || index,
-      }));
-      
-      const projetoEncontrado = projetosNormalizados.find(
-        p => p.id.toString() === projetoId.toString()
-      );
-      
-      if (projetoEncontrado) {
-        setProjetoSelecionado(projetoEncontrado);
-        console.log('Projeto carregado:', projetoEncontrado.nome);
+
+      // Buscar detalhes do projeto pelo ID
+      const projeto = await projetosAPI.getProjetoById(projetoId);
+
+      if (projeto) {
+        setProjetoSelecionado(projeto);
+        console.log('Projeto carregado:', projeto.nome);
+
+        // Parse da análise categorizada
+        if (projeto.analise) {
+          const parsedAnalise = JSON.parse(projeto.analise);
+          setAnalise(parsedAnalise);
+          console.log('Análise carregada:', parsedAnalise);
+        } else {
+          setAnalise(null);
+          console.log('Nenhuma análise encontrada para o projeto.');
+        }
       } else {
         console.log('Projeto não encontrado com ID:', projetoId);
         setProjetoSelecionado(null);
       }
-      
-      // Carregar análise do AsyncStorage (quando houver)
-      const analiseData = await AsyncStorage.getItem("Analise");
-      if (analiseData) {
-        const parsedAnalise = JSON.parse(analiseData);
-        setAnalise(parsedAnalise);
-        console.log('Análise carregada:', parsedAnalise);
-      }
-      
     } catch (error) {
-      console.error('Erro ao carregar dados:', error);
-      setProjetoSelecionado(null);
+      console.error('Erro ao carregar dados do projeto:', error);
+      Alert.alert('Erro', 'Não foi possível carregar os dados do projeto.');
     } finally {
       setIsLoading(false);
     }
@@ -119,6 +110,93 @@ export default function ProjetoScreen() {
     }, [route.params])
   );
 
+
+
+  const handleDownloadPDF = async () => {
+    try {
+      if (!analise) {
+        Alert.alert('Erro', 'Nenhuma análise disponível para gerar o relatório.');
+        return;
+      }
+
+      // Formatar a análise em HTML
+      const htmlContent = `
+        <html>
+          <head>
+            <style>
+              body { font-family: Arial, sans-serif; padding: 20px; }
+              h1 { color: #0D6EFD; }
+              h2 { color: #333; }
+              p { margin: 5px 0; }
+              .categoria { margin-top: 20px; }
+              .conformidades, .naoConformidades { margin-left: 20px; }
+            </style>
+          </head>
+          <body>
+            <h1>Relatório de Análise</h1>
+            ${analise.analiseCategorizada.map(categoria => `
+              <div class="categoria">
+                <h2>${categoria.categoria} (${categoria.percentualConformidade}%)</h2>
+                <h3>Conformidades:</h3>
+                <div class="conformidades">
+                  ${categoria.conformidades.map(c => `
+                    <p><strong>${c.item}:</strong> ${c.observacao}</p>
+                  `).join('')}
+                </div>
+                <h3>Não Conformidades ou Verificar:</h3>
+                <div class="naoConformidades">
+                  ${categoria.naoConformidadesOuVerificar.map(nc => `
+                    <p><strong>${nc.item}:</strong> ${nc.observacao}</p>
+                  `).join('')}
+                </div>
+              </div>
+            `).join('')}
+          </body>
+        </html>
+      `;
+
+      // Gerar o PDF
+      const { uri } = await Print.printToFileAsync({ html: htmlContent });
+
+      // Exibir mensagem de sucesso
+      Alert.alert('Relatório Gerado', `O relatório foi salvo em: ${uri}`);
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+      Alert.alert('Erro', 'Não foi possível gerar o relatório.');
+    }
+  };
+
+  const handleReprocessar = async () => {
+    try {
+      if (!imagemSalva) {
+        Alert.alert('Erro', 'Nenhuma imagem foi salva para reprocessar.');
+        return;
+      }
+  
+      setCarregando(true);
+  
+      // Criar FormData com a imagem salva
+      const formData = new FormData();
+      formData.append('arquivo', {
+        uri: `data:${tipoSalvo};base64,${imagemSalva}`,
+        type: tipoSalvo,
+        name: nomeSalvo || 'planta.jpg',
+      });
+  
+      // Reenviar para a API
+      const novaAnalise = await projetosAPI.postProjetoAnalisar(projetoId, formData);
+  
+      // Atualizar a análise na tela
+      setAnalise(novaAnalise);
+      Alert.alert('Sucesso', 'A análise foi reprocessada com sucesso!');
+    } catch (error) {
+      console.error('Erro ao reprocessar análise:', error);
+      Alert.alert('Erro', 'Não foi possível reprocessar a análise.');
+    } finally {
+      setCarregando(false);
+    }
+  };
+
   // Pull to refresh
   const onRefresh = async () => {
     setRefreshing(true);
@@ -128,40 +206,32 @@ export default function ProjetoScreen() {
 
   // Funções para trocar comentários baseado nas pontuações
   useEffect(() => {
-    if (pontuacaoGeral <= 20) {
-      setComentarioGeral("Erros críticos a serem revisados");
-    } else if (pontuacaoGeral <= 50) {
-      setComentarioGeral("Razoável, ajustes necessários");
-    } else if (pontuacaoGeral >= 90) {
-      setComentarioGeral("Excelente conformidade");
-    } else if (pontuacaoGeral >= 70) {
-      setComentarioGeral("Conformidade padrão, há pontos a melhorar");
-    }
-  }, [pontuacaoGeral]);
+    if (analise?.analiseCategorizada) {
+      const totalConformidade = analise.analiseCategorizada.reduce(
+        (acc, categoria) => acc + categoria.percentualConformidade,
+        0
+      );
+      const mediaConformidade =
+        analise.analiseCategorizada.length > 0
+          ? totalConformidade / analise.analiseCategorizada.length
+          : 0;
 
-  useEffect(() => {
-    if (pontuacaoConformidade <= 20) {
-      setComentConform("Erros críticos a serem revisados");
-    } else if (pontuacaoConformidade <= 50) {
-      setComentConform("Razoável, ajustes necessários");
-    } else if (pontuacaoConformidade >= 90) {
-      setComentConform("Excelente conformidade");
-    } else if (pontuacaoConformidade >= 70) {
-      setComentConform("Conformidade padrão, há pontos a melhorar");
+      if (mediaConformidade >= 90) {
+        setConformidadeGeral('Alta Conformidade');
+      } else if (mediaConformidade >= 50) {
+        setConformidadeGeral('Conformidade Moderada');
+      } else {
+        setConformidadeGeral('Baixa Conformidade');
+      }
     }
-  }, [pontuacaoConformidade]);
+  }, [analise]);
 
-  useEffect(() => {
-    if (pontuacaoInstalacao <= 30) {
-      setComentInstalacao("Erros críticos a serem revisados");
-    } else if (pontuacaoInstalacao <= 50) {
-      setComentInstalacao("Razoável, ajustes necessários");
-    } else if (pontuacaoInstalacao >= 90) {
-      setComentInstalacao("Excelente conformidade");
-    } else if (pontuacaoInstalacao >= 70) {
-      setComentInstalacao("Conformidade padrão, há pontos a melhorar");
-    }
-  }, [pontuacaoInstalacao]);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchDados();
+    }, [route.params])
+  );
+
 
   if (!isLoaded) {
     return (
@@ -189,6 +259,8 @@ export default function ProjetoScreen() {
     );
   }
 
+  
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: currentTheme.bg }]}>
       <ScrollView 
@@ -210,7 +282,7 @@ export default function ProjetoScreen() {
             </Text>
           </View>
         ) : (
-          <>
+          <View>
             {/* Cabeçalho com informações do projeto */}
             <View style={styles.header}>
               <Text style={[styles.title, { color: currentTheme.text }]}>
@@ -233,54 +305,36 @@ export default function ProjetoScreen() {
               )}
             </View>
 
-            {/* Seção de Informações Gerais */}
-            <View style={styles.infoSection}>
-              <View style={styles.infoRow}>
-                <InfoGeralContainer
-                  topico="Pontuação Geral"
-                  iconeTopico="speedometer-outline"
-                  pontuacaoGeral={pontuacaoGeral}
-                  corNumero="danger"
-                  comentario={comentarioGeral}
-                  theme={currentTheme}
-                />
-              </View>
+                 {/* Informações Gerais */}
+          <View style={styles.infoSection}>
+          {analise?.analiseCategorizada?.map((categoria, index) => (
+              <InfoGeralContainer
+                key={index}
+                topico={categoria.categoria}
+                iconeTopico="analytics-outline"
+                pontuacaoGeral={categoria.percentualConformidade}
+                corNumero={
+                  categoria.percentualConformidade >= 70
+                    ? 'success'
+                    : categoria.percentualConformidade >= 50
+                    ? 'warning'
+                    : 'danger'
+                }
+                comentario={`Conformidade geral: ${categoria.percentualConformidade}%`}
+                theme={currentTheme}
+              />
+            ))}
 
-              <View style={styles.infoRow}>
-                <InfoGeralContainer
-                  topico="Conformidade NBR"
-                  iconeTopico="shield-checkmark-outline"
-                  pontuacaoGeral={pontuacaoConformidade}
-                  corNumero="success"
-                  comentario={comentConform}
-                  theme={currentTheme}
-                />
-              </View>
-
-              <View style={styles.infoRow}>
-                <InfoGeralContainer
-                  topico="Instalação"
-                  iconeTopico="construct-outline"
-                  pontuacaoGeral={pontuacaoInstalacao}
-                  corNumero="warning"
-                  comentario={comentInstalacao}
-                  theme={currentTheme}
-                />
-              </View>
-            </View>
-
-            {/* Análise Detalhada */}
-            <ContainerChecagem
-              categoria="Circuitos de Força"
-              descricao="Análise dos circuitos de força e dimensionamento"
-              theme={currentTheme}
-            />
-
-            <ContainerChecagem
-              categoria="Proteção e Segurança"
-              descricao="Verificação de dispositivos de proteção (DR, disjuntores)"
-              theme={currentTheme}
-            />
+            {/* Checagem Detalhada */}
+            {analise?.analiseCategorizada?.map((categoria, index) => (
+              <ContainerChecagem
+                key={index}
+                categoria={categoria.categoria}
+                descricao={`Conformidade geral: ${categoria.percentualConformidade}%`}
+                theme={currentTheme}
+              />
+            ))}
+          </View>
 
             {/* Card de Ações Disponíveis */}
             <View style={[styles.actionCard, { 
@@ -300,7 +354,7 @@ export default function ProjetoScreen() {
                       opacity: pressed ? 0.8 : 1 
                     }
                   ]}
-                  onPress={() => alert('Baixando relatório...')}
+                  onPress={() => handleDownloadPDF(analise)}
                 >
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Ionicons name="download" size={18} color="#ffffff" style={{ marginRight: 8 }} />
@@ -316,7 +370,7 @@ export default function ProjetoScreen() {
                       opacity: pressed ? 0.8 : 1 
                     }
                   ]}
-                  onPress={() => alert('Reprocessando projeto...')}
+                  onPress={handleReprocessar}
                 >
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Ionicons name="refresh" size={18} color={currentTheme.primary} style={{ marginRight: 8 }} />
@@ -327,7 +381,7 @@ export default function ProjetoScreen() {
                 </Pressable>
               </View>
             </View>
-          </>
+          </View>
         )}
       </ScrollView>
     </SafeAreaView>

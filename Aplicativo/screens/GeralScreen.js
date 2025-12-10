@@ -26,14 +26,16 @@ export default function GeralScreen({ route }) {
     try {
       setIsLoading(true);
       console.log("Carregando projetos...");
+  
+      // Chamar a API para buscar os projetos
       const projetosData = await projetosAPI.getMeusProjetos();
-
+  
       // Normalizar projetos para garantir que todos tenham um campo 'id'
       const projetosNormalizados = projetosData.map((p, index) => ({
         ...p,
         id: p.id || p.projetoId || p.ProjetoId || p._id || index,
       }));
-
+  
       setProjetos(projetosNormalizados);
       console.log(
         "Projetos carregados:",
@@ -41,7 +43,19 @@ export default function GeralScreen({ route }) {
         "projetos"
       );
     } catch (error) {
-      console.error("Erro ao carregar projetos:", error);
+      if (error.response?.status === 403) {
+        console.error("Erro 403: Acesso negado ao carregar projetos.");
+        Alert.alert(
+          "Erro",
+          "Você não tem permissão para acessar os projetos. Verifique suas credenciais."
+        );
+      } else {
+        console.error("Erro ao carregar projetos:", error);
+        Alert.alert(
+          "Erro",
+          "Não foi possível carregar os projetos. Tente novamente mais tarde."
+        );
+      }
     } finally {
       setIsLoading(false);
     }
@@ -138,7 +152,7 @@ export default function GeralScreen({ route }) {
       }
 
       await AsyncStorage.setItem("projetoSelecionadoId", projetoId.toString());
-      console.log("✅ Projeto selecionado:", projetoId, projeto.nome);
+      console.log("Projeto selecionado:", projetoId, projeto.nome);
       navigation.navigate("Projetos", { projetoId: projetoId });
     } catch (error) {
       console.error("Erro ao selecionar projeto:", error);

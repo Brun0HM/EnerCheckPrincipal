@@ -184,10 +184,13 @@ export default function UploadProjetoScreen() {
         const data = await fileToBase64(arquivo.uri);
         
         if (data) {
-          await AsyncStorage.setItem("Imagem", data);
-          setNome(arquivo.name);
-          setImagem(data);
-          
+          await AsyncStorage.setItem('Imagem', data);
+        await AsyncStorage.setItem('Formato', arquivo.mimeType || 'application/octet-stream');
+        await AsyncStorage.setItem('Nome', arquivo.name);
+
+        setNome(arquivo.name);
+        setImagem(data);
+
           // Determinar tipo baseado no MIME type
           let tipoArquivo = '';
           if (data.startsWith("data:image/jpg") || data.startsWith("data:image/jpeg")) {

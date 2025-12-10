@@ -5,9 +5,25 @@ const getMeusProjetos = async () => {
   try {
     console.log('Carregando projetos do usuário logado...');
     const response = await api.get('/api/Projetos/me');
-    return response.data; // Retorna a lista de projetos
+    return response.data;
   } catch (error) {
+    if (error.response?.status === 403) {
+      console.error('Erro 403: Acesso negado ao carregar projetos.');
+    }
     console.error('Erro ao carregar projetos do usuário:', error?.response?.data || error);
+    throw error?.response?.data || error;
+  }
+};
+const getProjetoById = async (id) => {
+  try {
+    console.log(`Carregando detalhes do projeto com ID ${id}...`);
+    const response = await api.get(`/api/Projetos/${id}`);
+    return response.data;
+  } catch (error) {
+    if (error.response?.status === 403) {
+      console.error('Erro 403: Acesso negado ao carregar detalhes do projeto.');
+    }
+    console.error('Erro ao carregar detalhes do projeto:', error?.response?.data || error);
     throw error?.response?.data || error;
   }
 };
@@ -47,6 +63,7 @@ export const projetosAPI = {
   getMeusProjetos,
   postProjetos,
   postProjetoAnalisar,
+  getProjetoById,
 };
 
 export default projetosAPI;
