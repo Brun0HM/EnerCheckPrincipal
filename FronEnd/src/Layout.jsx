@@ -2,6 +2,9 @@ import React from "react";
 import { Routes, Route, useLocation } from "react-router";
 import App from "./App.jsx";
 import DashboardProjeto from "./pages/Dashboard/DashboardProjeto";
+import DashboardProjeto1 from "./pages/Dashboard/DashboardProjeto1";
+import DashboardProjeto2 from "./pages/Dashboard/DashboardProjeto2";
+import DashboardProjeto3 from "./pages/Dashboard/DashboardProjeto3";
 import Logar from "./pages/Auth/Logar";
 import Cadastrar from "./pages/Auth/Cadastrar";
 import Header from "./components/Layout/Header";
@@ -25,6 +28,9 @@ const Layout = () => {
     "/login",
     "/cadastro",
     "/dashboardProjeto",
+    "/dashboardProjeto1",
+    "/dashboardProjeto2",
+    "/dashboardProjeto3",
     "/dashboardGeral",
     "/configuracoes",
     "/teste",
@@ -39,6 +45,9 @@ const Layout = () => {
   const dashboardRoutes = [
     "/dashboardGeral",
     "/dashboardProjeto",
+    "/dashboardProjeto1",
+    "/dashboardProjeto2",
+    "/dashboardProjeto3",
     "/configuracoes",
     "/uploadProjeto",
     "/planos",
@@ -53,6 +62,9 @@ const Layout = () => {
       <Routes>
         <Route path="/*" element={<App />} />
         <Route path="/dashboardProjeto/:id" element={<DashboardProjeto />} />
+        <Route path="/dashboardProjeto1" element={<DashboardProjeto1 />} />
+        <Route path="/dashboardProjeto2" element={<DashboardProjeto2 />} />
+        <Route path="/dashboardProjeto3" element={<DashboardProjeto3 />} />
         <Route path="/login" element={<Logar />} />
         <Route path="/cadastro" element={<Cadastrar />} />
         <Route path="/dashboardGeral" element={<DashBoardGeral />} />

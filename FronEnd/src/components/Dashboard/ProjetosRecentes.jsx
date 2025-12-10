@@ -1,5 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router";
+
 export const ProjetosRecentes = (props) => {
+  const navigate = useNavigate();
+
   /**
    * Define a cor do badge baseada no status
    * Adapta as cores para funcionarem em ambos os temas
@@ -44,6 +48,12 @@ export const ProjetosRecentes = (props) => {
     }
   };
 
+  const handleClick = () => {
+    if (props.indice !== undefined) {
+      navigate(`/dashboardProjeto${props.indice + 1}`);
+    }
+  };
+
   return (
     <div
       className="d-flex align-items-center justify-content-between p-3 rounded-4 border mt-3 theme-card"
@@ -52,7 +62,9 @@ export const ProjetosRecentes = (props) => {
         borderColor: "var(--input-border)",
         color: "var(--text)",
         transition: "all 0.3s ease",
+        cursor: "pointer",
       }}
+      onClick={handleClick}
     >
       {/* Informações do projeto */}
       <div>

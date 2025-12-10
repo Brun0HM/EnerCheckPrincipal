@@ -125,6 +125,7 @@ const DashboardGeral = () => {
                   "pt-BR"
                 )}
                 statusProjeto={projeto.status || "pendente"}
+                indice={index}
               />
             ))
           )}
