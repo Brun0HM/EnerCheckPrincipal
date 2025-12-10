@@ -1,19 +1,24 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router";
 import App from "./App.jsx";
-import DashboardProjeto from "./pages/DashboardProjeto";
-import Logar from "./pages/Logar";
-import Cadastrar from "./pages/Cadastrar";
-import Header from "./components/Header";
-import DashBoardGeral from "./pages/DashboardGeral";
-import Planos from "./pages/Planos";
-import Tema from "./pages/TesteTheme";
-import Footer from "./components/Footer";
-import FinalizarEscolhaAssinatura from "./pages/FinalizarEscolhaAssinatura.jsx";
-import DashboardNavbar from "./components/DashboardNavbar";
-import UploadProjeto from "./pages/UploadProjeto.jsx";
-import Configurações from "./pages/Configurações.jsx";
-import Teste from "./pages/Teste.jsx";
+import DashboardProjeto from "./pages/Dashboard/DashboardProjeto";
+import DashboardProjeto1 from "./pages/Dashboard/DashboardProjeto1";
+import DashboardProjeto2 from "./pages/Dashboard/DashboardProjeto2";
+import DashboardProjeto3 from "./pages/Dashboard/DashboardProjeto3";
+import Logar from "./pages/Auth/Logar";
+import Cadastrar from "./pages/Auth/Cadastrar";
+import Header from "./components/Layout/Header";
+import DashBoardGeral from "./pages/Dashboard/DashboardGeral";
+import Planos from "./pages/Plans/Planos";
+import Tema from "./pages/Test/TesteTheme";
+import Footer from "./components/Layout/Footer";
+import FinalizarEscolhaAssinatura from "./pages/Plans/FinalizarEscolhaAssinatura.jsx";
+import DashboardNavbar from "./components/Layout/DashboardNavbar";
+import UploadProjeto from "./pages/Upload/UploadProjeto.jsx";
+import Configurações from "./pages/Settings/Configurações.jsx";
+import Teste from "./pages/Test/Teste.jsx";
+import InfoProjeto from "./pages/Upload/InfoProjeto.jsx";
+import ListaProjetos from "./pages/Dashboard/ListaProjetos.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -23,11 +28,16 @@ const Layout = () => {
     "/login",
     "/cadastro",
     "/dashboardProjeto",
+    "/dashboardProjeto1",
+    "/dashboardProjeto2",
+    "/dashboardProjeto3",
     "/dashboardGeral",
     "/configuracoes",
     "/teste",
     "/uploadProjeto",
     "/planos",
+    "/novoProjeto",
+    "/projetos",
   ];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
@@ -35,9 +45,13 @@ const Layout = () => {
   const dashboardRoutes = [
     "/dashboardGeral",
     "/dashboardProjeto",
+    "/dashboardProjeto1",
+    "/dashboardProjeto2",
+    "/dashboardProjeto3",
     "/configuracoes",
     "/uploadProjeto",
     "/planos",
+    "/projetos",
   ];
   const shouldShowDashboardNavbar = dashboardRoutes.includes(location.pathname);
 
@@ -47,7 +61,10 @@ const Layout = () => {
       {shouldShowDashboardNavbar && <DashboardNavbar />}
       <Routes>
         <Route path="/*" element={<App />} />
-        <Route path="/dashboardProjeto" element={<DashboardProjeto />} />
+        <Route path="/dashboardProjeto/:id" element={<DashboardProjeto />} />
+        <Route path="/dashboardProjeto1" element={<DashboardProjeto1 />} />
+        <Route path="/dashboardProjeto2" element={<DashboardProjeto2 />} />
+        <Route path="/dashboardProjeto3" element={<DashboardProjeto3 />} />
         <Route path="/login" element={<Logar />} />
         <Route path="/cadastro" element={<Cadastrar />} />
         <Route path="/dashboardGeral" element={<DashBoardGeral />} />
@@ -60,6 +77,8 @@ const Layout = () => {
         <Route path="/uploadProjeto" element={<UploadProjeto />} />
         <Route path="/configuracoes" element={<Configurações />} />
         <Route path="/Teste" element={<Teste />} />
+        <Route path="/novoProjeto" element={<InfoProjeto />} />
+        <Route path="/projetos" element={<ListaProjetos />} />
       </Routes>
       {!shouldHideNavbar && <Footer />}
     </>
