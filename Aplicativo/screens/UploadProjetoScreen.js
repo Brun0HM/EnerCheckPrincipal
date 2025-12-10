@@ -6,30 +6,63 @@ import {
   ScrollView,
   Pressable,
   Image,
-  ActivityIndicator
+  ActivityIndicator,
+  Alert
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, CommonActions } from '@react-navigation/native';
 import * as DocumentPicker from 'expo-document-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
-// import { analisarPlanta } from '../services/enerCheckIa'; // Descomente quando implementar
+import { projetosAPI } from '../api/Projetos';
 
 export default function UploadProjetoScreen() {
   const { theme, isLoaded } = useTheme();
   const navigation = useNavigation();
+  const route = useRoute();
+
+  const projetoId = route.params?.projetoId;
 
   const fileTypes = ["JPG", "PNG", "JPEG", "PDF"];
 
-  const [nome, setNome] = useState();
-  const [erro, setErro] = useState();
+  const [nome, setNome] = useState('');
+  const [erro, setErro] = useState('');
   const [carregando, setCarregando] = useState(false);
   const [dataArquivo, setDataArquivo] = useState(null);
-  const [resposta, setResposta] = useState([]);
+  const [resposta, setResposta] = useState(null);
   const [tipo, setTipo] = useState("");
+  const [imagem, setImagem] = useState('');
 
+  useEffect(() => {
+    
+    const limparDadosAntigos = async () => {
+      
+      try {
+        await AsyncStorage.multiRemove(['Imagem', 'Formato', 'Analise']);
+        setNome('');
+        setImagem('');
+        setDataArquivo(null);
+        setTipo('');
+        setResposta(null);
+        setErro('');
+      } catch (error) {
+        console.error('Erro ao limpar dados antigos:', error);
+      }
+    };
 
+    limparDadosAntigos();
+  }, []);
+
+  useEffect(() => {
+    console.log('UploadProjetoScreen montado');
+    console.log('ProjetoId recebido via params:', projetoId);
+    console.log('Todos os params:', route.params);
+    
+    if (!projetoId) {
+      console.warn('⚠️ ATENÇÃO: ProjetoId não foi recebido!');
+    }
+  }, [projetoId]);
 
   if (!isLoaded) {
     return (
@@ -68,23 +101,71 @@ export default function UploadProjetoScreen() {
     }
   };
 
-  const handleAnalisePlanta = async (imagem, tipo) => {
+  const handleAnalisePlanta = async () => {
+    if (!projetoId) {
+      Alert.alert('Erro', 'ID do projeto não encontrado. Por favor, crie um projeto primeiro.');
+      return;
+    }
+
+    if (!dataArquivo || !tipo) {
+      Alert.alert('Erro', 'Por favor, selecione uma imagem antes de analisar.');
+      return;
+    }
+
     setCarregando(true);
     setErro("");
 
     try {
-      // Simulação da análise (substitua pela implementação real)
-      // const response = await analisarPlanta(imagem, tipo);
+      // Criar FormData para enviar o arquivo
+      const formData = new FormData();
       
-      // Simulação por agora
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      const mockResponse = { resultado: "Análise simulada concluída" };
+      formData.append('arquivo', {
+        uri: `data:${tipo};base64,${dataArquivo}`,
+        type: tipo,
+        name: nome || 'planta.jpg'
+      });
+
+      console.log('Enviando análise para o projeto:', projetoId);
       
-      setResposta(mockResponse);
-      await AsyncStorage.setItem("Analise", JSON.stringify(mockResponse));
+      // Chamar a API de análise
+      const analiseResponse = await projetosAPI.postProjetoAnalisar(projetoId, formData);
+      
+      setResposta(analiseResponse);
+      await AsyncStorage.setItem("Analise", JSON.stringify(analiseResponse));
+
+      // Após análise bem-sucedida, limpar dados e navegar
+      Alert.alert(
+        'Sucesso',
+        'Análise concluída com sucesso! O projeto foi enviado para revisão.',
+        [
+          {
+            text: 'OK',
+            onPress: async () => {
+              // Limpar todos os dados
+              await AsyncStorage.multiRemove(['Imagem', 'Formato', 'Analise']);
+              
+              // Navegar para GeralScreen (Tab Geral) e resetar o stack
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: 'Geral',
+                      state: {
+                        routes: [{ name: 'GeralMain' }],
+                      },
+                    },
+                  ],
+                })
+              );
+            },
+          },
+        ]
+      );
     } catch (error) {
-      setErro("Houve um erro ao analisar a planta: " + error);
-      console.log(erro);
+      console.error('Erro ao analisar projeto:', error);
+      setErro("Houve um erro ao analisar a planta: " + (error.message || error));
+      Alert.alert('Erro', 'Não foi possível analisar o projeto. Tente novamente.');
     } finally {
       setCarregando(false);
     }
@@ -95,7 +176,7 @@ export default function UploadProjetoScreen() {
       // Usar DocumentPicker para selecionar arquivo
       const result = await DocumentPicker.getDocumentAsync({
         type: ['image/*', 'application/pdf'],
-        copyToCacheDirectory: false,
+        copyToCacheDirectory: true,
       });
 
       if (!result.canceled && result.assets[0]) {
@@ -105,43 +186,32 @@ export default function UploadProjetoScreen() {
         if (data) {
           await AsyncStorage.setItem("Imagem", data);
           setNome(arquivo.name);
+          setImagem(data);
           
           // Determinar tipo baseado no MIME type
+          let tipoArquivo = '';
           if (data.startsWith("data:image/jpg") || data.startsWith("data:image/jpeg")) {
-            setTipo("image/jpeg");
+            tipoArquivo = "image/jpeg";
           } else if (data.startsWith("data:application/pdf")) {
-            setTipo("application/pdf");
+            tipoArquivo = "application/pdf";
           } else if (data.startsWith("data:image/png")) {
-            setTipo("image/png");
+            tipoArquivo = "image/png";
           }
           
-          await AsyncStorage.setItem("Formato", tipo);
-          setDataArquivo(data.split(",")[1]);
+          setTipo(tipoArquivo);
+          await AsyncStorage.setItem("Formato", tipoArquivo);
+          
+          // Extrair apenas a parte base64 (sem o prefixo data:type;base64,)
+          const base64Data = data.split(",")[1];
+          setDataArquivo(base64Data);
         }
       }
     } catch (error) {
       console.error('Erro ao selecionar arquivo:', error);
       setErro('Erro ao selecionar arquivo');
+      Alert.alert('Erro', 'Não foi possível selecionar o arquivo. Tente novamente.');
     }
   };
-
-  // Carregar imagem do AsyncStorage
-  const [imagem, setImagem] = useState('');
-  
-  useEffect(() => {
-    const loadImagem = async () => {
-      try {
-        const savedImage = await AsyncStorage.getItem("Imagem");
-        if (savedImage) {
-          setImagem(savedImage);
-        }
-      } catch (error) {
-        console.error('Erro ao carregar imagem:', error);
-      }
-    };
-    
-    loadImagem();
-  }, []);
 
   useEffect(() => {
     console.log("Array na página de upload: ", resposta);
@@ -159,7 +229,22 @@ export default function UploadProjetoScreen() {
               styles.backButton,
               { opacity: pressed ? 0.7 : 1 }
             ]}
-            onPress={() => navigation.goBack()}
+            onPress={() => {
+              Alert.alert(
+                'Cancelar Upload',
+                'Tem certeza que deseja cancelar? Os dados não serão salvos.',
+                [
+                  { text: 'Não', style: 'cancel' },
+                  {
+                    text: 'Sim',
+                    onPress: async () => {
+                      await AsyncStorage.multiRemove(['Imagem', 'Formato', 'Analise']);
+                      navigation.goBack();
+                    },
+                  },
+                ]
+              );
+            }}
           >
             <Ionicons 
               name="arrow-back" 
@@ -239,7 +324,7 @@ export default function UploadProjetoScreen() {
               opacity: (pressed || carregando) ? 0.6 : 1 
             }
           ]}
-          onPress={() => handleAnalisePlanta(dataArquivo, tipo)}
+          onPress={handleAnalisePlanta}
           disabled={carregando}
         >
           <Text style={styles.analyzeButtonText}>
@@ -255,7 +340,7 @@ export default function UploadProjetoScreen() {
         )}
 
         {/* Mensagem de Sucesso/Erro */}
-        {erro === "" && !carregando && resposta.length > 0 ? (
+        {erro === "" && !carregando && resposta ? (
           <View style={[styles.successContainer, { 
             backgroundColor: currentTheme.success + '20',
             borderColor: currentTheme.success 
@@ -382,6 +467,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   errorContainer: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
     marginVertical: 8,
   },
   errorText: {

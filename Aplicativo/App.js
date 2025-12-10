@@ -17,6 +17,8 @@ import FinalizarEscolhaAssinaturaScreen from "./screens/FinalizarEscolhaAssinatu
 import UploadProjetoScreen from "./screens/UploadProjetoScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+import CreateProjetoScreen from "./screens/CreateProjetoScreen";
+import ProjetosTotaisScreen from "./screens/ProjetosTotaisScreen";
 
 // Importa o Context Provider
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
@@ -176,14 +178,30 @@ const GeralStack = () => {
           headerShown: false  // Desabilita o header do Stack para usar o do Tab
         }}
       />
+       <Stack.Screen 
+        name="CreateProjetoScreen" // Adicione a tela aqui
+        component={CreateProjetoScreen}
+        options={{ 
+          title: 'Criar Projeto',
+          headerShown: true // Mostra o header para esta tela
+        }}
+      />
       <Stack.Screen 
-        name="UploadProjeto" 
+        name="UploadProjetoScreen" 
         component={UploadProjetoScreen}
         options={{ 
           title: 'Upload Projeto',
-          headerShown: false
+          headerShown: true
         }}
       />
+      <Stack.Screen 
+  name="ProjetosTotaisScreen" 
+  component={ProjetosTotaisScreen}
+  options={{ 
+    title: 'Todos os Projetos',
+    headerShown: true
+  }}
+/>
     </Stack.Navigator>
   );
 };

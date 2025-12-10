@@ -6,7 +6,6 @@ import { FileUploader } from "react-drag-drop-files";
 
 const UploadProjeto = () => {
   const navigate = useNavigate();
-  const navigate = useNavigate();
 
   const fileTypes = ["JPG", "PNG", "JPEG", "PDF"];
 
