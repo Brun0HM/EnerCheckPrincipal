@@ -1,14 +1,14 @@
 import React from "react";
 import "./App.css";
-import Motivos from "./components/Motivos";
-import Depoimentos from "./components/Depoimentos";
+import Motivos from "./components/Home/Motivos";
+import Depoimentos from "./components/Home/Depoimentos";
 import "./styles/main.scss";
 import pesso1 from "./assets/FotoPerfilPessoa01.png";
 import pesso2 from "./assets/FotoPerfilPessoa02.png";
 import pesso3 from "./assets/FotoPerfilPessoa03.png";
 import Print from "./assets/Print.png";
 import { useNavigate } from "react-router";
-import ScrollAnimation from "./components/ScrollAnimation";
+import ScrollAnimation from "./components/Home/ScrollAnimation";
 
 const App = () => {
   const navigate = useNavigate();
