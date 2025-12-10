@@ -52,7 +52,14 @@ export default function CreateProjetoScreen() {
   
       // Criar o projeto
       const response = await projetosAPI.postProjetos(nome, descricao);
-      const projetoId = response.ProjetoId; // Supondo que o ID do projeto está na resposta
+       const projetoId = response.ProjetoId || 
+                        response.projetoId || 
+                        response.id || 
+                        response.Id ||
+                        response.data?.ProjetoId ||
+                        response.data?.projetoId ||
+                        response.data?.id ||
+                        response.data?.Id;
       Alert.alert('Sucesso', 'Projeto criado com sucesso!', [
         {
           text: 'OK',

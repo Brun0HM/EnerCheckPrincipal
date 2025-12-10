@@ -4,7 +4,9 @@ import {
   View, 
   Text, 
   StyleSheet,
-  Pressable
+  Pressable,
+  RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -12,34 +14,27 @@ import { InfoGeralContainer } from '../components/InfoGeralContainer';
 import { ContainerChecagem } from '../components/ContainerChecagem';
 import { useTheme } from '../contexts/ThemeContext'; 
 import { Ionicons } from '@expo/vector-icons';
+import { projetosAPI } from '../api/Projetos';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
 
 export default function ProjetoScreen() {
-  const { theme,  isLoaded } = useTheme(); // Usando ThemeContext
-  const [analise, setAnalise] = useState('');
-  const [projetos, setProjetos] = useState([]);
+  const { theme, isLoaded } = useTheme();
+  const route = useRoute();
+  const [projetoSelecionado, setProjetoSelecionado] = useState(null);
+  const [analise, setAnalise] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  // Estados para comentários (baseado no DashboardProjeto.jsx original)
+  // Estados para comentários
   const [comentarioGeral, setComentarioGeral] = useState("");
   const [comentConform, setComentConform] = useState("");
   const [comentInstalacao, setComentInstalacao] = useState("");
 
-  // Pontuações dos diferentes aspectos do projeto (valores de exemplo)
+  // Pontuações dos diferentes aspectos do projeto (valores fake)
   const pontuacaoGeral = 10;
   const pontuacaoConformidade = 90;
   const pontuacaoInstalacao = 50;
 
-
-
-  if (!isLoaded) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Carregando tema...</Text>
-      </View>
-    );
-  }
-
-  // Cores diretas baseadas no tema - mesmas do GeralScreen para consistência
   const currentTheme = {
     bg: theme === 'light' ? '#ffffff' : '#131313',
     text: theme === 'light' ? '#131313' : '#ffffff',
@@ -51,8 +46,88 @@ export default function ProjetoScreen() {
     inputBorder: theme === 'light' ? '#ced4da' : '#555555',
   };
 
+  const fetchDados = async () => {
+    try {
+      setIsLoading(true);
+      console.log('🔄 ProjetoScreen - Carregando dados...');
+      
+      // Verificar se foi passado um projetoId via route params
+      const projetoIdRoute = route.params?.projetoId;
+      
+      // Caso tenha sido passado via params, salvar no AsyncStorage
+      if (projetoIdRoute) {
+        await AsyncStorage.setItem('projetoSelecionadoId', projetoIdRoute.toString());
+        console.log('Projeto recebido via params:', projetoIdRoute);
+      }
+      
+      // Buscar ID do projeto selecionado do AsyncStorage
+      const projetoId = await AsyncStorage.getItem('projetoSelecionadoId');
+      
+      if (!projetoId) {
+        console.log('⚠️ Nenhum projeto selecionado');
+        setProjetoSelecionado(null);
+        setIsLoading(false);
+        return;
+      }
+      
+      // Buscar todos os projetos e encontrar o selecionado
+      const projetosData = await projetosAPI.getMeusProjetos();
+      
+      // Normalizar projetos (garantir que todos tenham ID)
+      const projetosNormalizados = projetosData.map((p, index) => ({
+        ...p,
+        id: p.id || p.projetoId || p.ProjetoId || index,
+      }));
+      
+      const projetoEncontrado = projetosNormalizados.find(
+        p => p.id.toString() === projetoId.toString()
+      );
+      
+      if (projetoEncontrado) {
+        setProjetoSelecionado(projetoEncontrado);
+        console.log('Projeto carregado:', projetoEncontrado.nome);
+      } else {
+        console.log('Projeto não encontrado com ID:', projetoId);
+        setProjetoSelecionado(null);
+      }
+      
+      // Carregar análise do AsyncStorage (quando houver)
+      const analiseData = await AsyncStorage.getItem("Analise");
+      if (analiseData) {
+        const parsedAnalise = JSON.parse(analiseData);
+        setAnalise(parsedAnalise);
+        console.log('Análise carregada:', parsedAnalise);
+      }
+      
+    } catch (error) {
+      console.error('Erro ao carregar dados:', error);
+      setProjetoSelecionado(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Recarregar dados sempre que a tela ganhar foco
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('📱 ProjetoScreen ganhou foco - Recarregando dados...');
+      fetchDados();
+      
+      return () => {
+        console.log('📱 ProjetoScreen perdeu foco');
+      };
+    }, [route.params])
+  );
+
+  // Pull to refresh
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchDados();
+    setRefreshing(false);
+  };
+
   // Funções para trocar comentários baseado nas pontuações
-  const trocarComentario = () => {
+  useEffect(() => {
     if (pontuacaoGeral <= 20) {
       setComentarioGeral("Erros críticos a serem revisados");
     } else if (pontuacaoGeral <= 50) {
@@ -62,9 +137,9 @@ export default function ProjetoScreen() {
     } else if (pontuacaoGeral >= 70) {
       setComentarioGeral("Conformidade padrão, há pontos a melhorar");
     }
-  };
+  }, [pontuacaoGeral]);
 
-  const trocarComentConform = () => {
+  useEffect(() => {
     if (pontuacaoConformidade <= 20) {
       setComentConform("Erros críticos a serem revisados");
     } else if (pontuacaoConformidade <= 50) {
@@ -74,9 +149,9 @@ export default function ProjetoScreen() {
     } else if (pontuacaoConformidade >= 70) {
       setComentConform("Conformidade padrão, há pontos a melhorar");
     }
-  };
+  }, [pontuacaoConformidade]);
 
-  const trocarComentInst = () => {
+  useEffect(() => {
     if (pontuacaoInstalacao <= 30) {
       setComentInstalacao("Erros críticos a serem revisados");
     } else if (pontuacaoInstalacao <= 50) {
@@ -86,147 +161,174 @@ export default function ProjetoScreen() {
     } else if (pontuacaoInstalacao >= 70) {
       setComentInstalacao("Conformidade padrão, há pontos a melhorar");
     }
-  };
-
-  useEffect(() => {
-    // Carregar dados salvos no AsyncStorage
-    loadStoredData();
-    
-    // Definir comentários baseados nas pontuações
-    trocarComentario();
-    trocarComentConform();
-    trocarComentInst();
-  }, []);
-
-  // Atualizar comentários quando pontuações mudarem
-  useEffect(() => {
-    trocarComentario();
-  }, [pontuacaoGeral]);
-
-  useEffect(() => {
-    trocarComentConform();
-  }, [pontuacaoConformidade]);
-
-  useEffect(() => {
-    trocarComentInst();
   }, [pontuacaoInstalacao]);
 
-  const loadStoredData = async () => {
-    try {
-      const analiseData = await AsyncStorage.getItem("Analise");
-      if (analiseData) setAnalise(analiseData);
-      console.log('Dados carregados:', { analiseData });
-    } catch (error) {
-      console.error('Erro ao carregar dados:', error);
-    }
-  };
+  if (!isLoaded) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0D6EFD" />
+        <Text>Carregando tema...</Text>
+      </View>
+    );
+  }
+
+  // Tela quando nenhum projeto está selecionado
+  if (!isLoading && !projetoSelecionado) {
+    return (
+      <SafeAreaView style={[styles.container, { backgroundColor: currentTheme.bg }]}>
+        <View style={styles.emptyStateContainer}>
+          <Ionicons name="folder-open-outline" size={80} color={currentTheme.textSecondary} />
+          <Text style={[styles.emptyStateTitle, { color: currentTheme.text }]}>
+            Nenhum Projeto Selecionado
+          </Text>
+          <Text style={[styles.emptyStateSubtitle, { color: currentTheme.textSecondary }]}>
+            Selecione um projeto na tela inicial para visualizar seus detalhes
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: currentTheme.bg }]}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Cabeçalho */}
-        <View style={styles.header}>
-          <Text style={[styles.title, { color: currentTheme.text }]}>Dashboard do Projeto</Text>
-          <Text style={[styles.subtitle, { color: currentTheme.textSecondary }]}>
-            Análise detalhada de conformidade e instalação elétrica
-          </Text>
-        </View>
-
-        {/* Seção de Informações Gerais */}
-        <View style={styles.infoSection}>
-          <View style={styles.infoRow}>
-            <InfoGeralContainer
-              topico="Pontuação Geral"
-              iconeTopico="speedometer-outline"
-              pontuacaoGeral={pontuacaoGeral}
-              corNumero="danger"
-              comentario={comentarioGeral}
-              theme={currentTheme}
-            />
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={currentTheme.primary}
+            colors={[currentTheme.primary]}
+          />
+        }
+      >
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={currentTheme.primary} />
+            <Text style={[styles.loadingText, { color: currentTheme.textSecondary }]}>
+              Carregando projeto...
+            </Text>
           </View>
-
-          <View style={styles.infoRow}>
-            <InfoGeralContainer
-              topico="Conformidade NBR"
-              iconeTopico="shield-checkmark-outline"
-              pontuacaoGeral={pontuacaoConformidade}
-              corNumero="success"
-              comentario={comentConform}
-              theme={currentTheme}
-            />
-          </View>
-
-          <View style={styles.infoRow}>
-            <InfoGeralContainer
-              topico="Instalação"
-              iconeTopico="construct-outline"
-              pontuacaoGeral={pontuacaoInstalacao}
-              corNumero="warning"
-              comentario={comentInstalacao}
-              theme={currentTheme}
-            />
-          </View>
-        </View>
-
-        {/* Análise Detalhada */}
-        <ContainerChecagem
-          categoria="Circuitos de Força"
-          descricao="Análise dos circuitos de força e dimensionamento"
-          theme={currentTheme}
-        />
-
-        <ContainerChecagem
-          categoria="Proteção e Segurança"
-          descricao="Verificação de dispositivos de proteção (DR, disjuntores)"
-          theme={currentTheme}
-        />
-
-        {/* Card de Ações Disponíveis */}
-        <View style={[styles.actionCard, { 
-          backgroundColor: currentTheme.cardBg, 
-          borderColor: currentTheme.cardBorder 
-        }]}>
-          <Text style={[styles.actionTitle, { color: currentTheme.text }]}>
-            Ações Disponíveis
-          </Text>
-          
-          <View style={styles.buttonContainer}>
-            <Pressable
-              style={({ pressed }) => [
-                styles.primaryButton,
-                { 
-                  backgroundColor: currentTheme.primary,
-                  opacity: pressed ? 0.8 : 1 
-                }
-              ]}
-              onPress={() => alert('Baixando relatório...')}
-            >
-               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Ionicons name="download" size={18} color="#ffffff" style={{ marginRight: 8 }} />
-                <Text style={styles.primaryButtonText}>Baixar Relatório</Text>
-              </View>
-            </Pressable>
-
-            <Pressable
-              style={({ pressed }) => [
-                styles.secondaryButton,
-                { 
-                  borderColor: currentTheme.primary,
-                  opacity: pressed ? 0.8 : 1 
-                }
-              ]}
-              onPress={() => alert('Reprocessando projeto...')}
-            >
-             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Ionicons name="refresh" size={18} color={currentTheme.primary} style={{ marginRight: 8 }} />
-                <Text style={[styles.secondaryButtonText, { color: currentTheme.primary }]}>
-                  Reprocessar
+        ) : (
+          <>
+            {/* Cabeçalho com informações do projeto */}
+            <View style={styles.header}>
+              <Text style={[styles.title, { color: currentTheme.text }]}>
+                {projetoSelecionado?.nome || 'Dashboard do Projeto'}
+              </Text>
+              <Text style={[styles.subtitle, { color: currentTheme.textSecondary }]}>
+                Análise detalhada de conformidade e instalação elétrica
+              </Text>
+                    {/* Descrição do projeto */}
+              {projetoSelecionado?.descricao && (
+                <Text style={[styles.description, { color: currentTheme.text }]}>
+                Descrição do projeto: {projetoSelecionado.descricao}
                 </Text>
-              </View>
-            </Pressable>
-          </View>
-        </View>
+              )}
+              {projetoSelecionado && (
+                <Text style={[styles.projetoInfo, { color: currentTheme.textSecondary }]}>
+                  ID: {projetoSelecionado.id} • Criado em{' '}
+                  {new Date(projetoSelecionado.dataInicio || projetoSelecionado.dataCriacao).toLocaleDateString('pt-BR')}
+                </Text>
+              )}
+            </View>
 
+            {/* Seção de Informações Gerais */}
+            <View style={styles.infoSection}>
+              <View style={styles.infoRow}>
+                <InfoGeralContainer
+                  topico="Pontuação Geral"
+                  iconeTopico="speedometer-outline"
+                  pontuacaoGeral={pontuacaoGeral}
+                  corNumero="danger"
+                  comentario={comentarioGeral}
+                  theme={currentTheme}
+                />
+              </View>
+
+              <View style={styles.infoRow}>
+                <InfoGeralContainer
+                  topico="Conformidade NBR"
+                  iconeTopico="shield-checkmark-outline"
+                  pontuacaoGeral={pontuacaoConformidade}
+                  corNumero="success"
+                  comentario={comentConform}
+                  theme={currentTheme}
+                />
+              </View>
+
+              <View style={styles.infoRow}>
+                <InfoGeralContainer
+                  topico="Instalação"
+                  iconeTopico="construct-outline"
+                  pontuacaoGeral={pontuacaoInstalacao}
+                  corNumero="warning"
+                  comentario={comentInstalacao}
+                  theme={currentTheme}
+                />
+              </View>
+            </View>
+
+            {/* Análise Detalhada */}
+            <ContainerChecagem
+              categoria="Circuitos de Força"
+              descricao="Análise dos circuitos de força e dimensionamento"
+              theme={currentTheme}
+            />
+
+            <ContainerChecagem
+              categoria="Proteção e Segurança"
+              descricao="Verificação de dispositivos de proteção (DR, disjuntores)"
+              theme={currentTheme}
+            />
+
+            {/* Card de Ações Disponíveis */}
+            <View style={[styles.actionCard, { 
+              backgroundColor: currentTheme.cardBg, 
+              borderColor: currentTheme.cardBorder 
+            }]}>
+              <Text style={[styles.actionTitle, { color: currentTheme.text }]}>
+                Ações Disponíveis
+              </Text>
+              
+              <View style={styles.buttonContainer}>
+                <Pressable
+                  style={({ pressed }) => [
+                    styles.primaryButton,
+                    { 
+                      backgroundColor: currentTheme.primary,
+                      opacity: pressed ? 0.8 : 1 
+                    }
+                  ]}
+                  onPress={() => alert('Baixando relatório...')}
+                >
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Ionicons name="download" size={18} color="#ffffff" style={{ marginRight: 8 }} />
+                    <Text style={styles.primaryButtonText}>Baixar Relatório</Text>
+                  </View>
+                </Pressable>
+
+                <Pressable
+                  style={({ pressed }) => [
+                    styles.secondaryButton,
+                    { 
+                      borderColor: currentTheme.primary,
+                      opacity: pressed ? 0.8 : 1 
+                    }
+                  ]}
+                  onPress={() => alert('Reprocessando projeto...')}
+                >
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Ionicons name="refresh" size={18} color={currentTheme.primary} style={{ marginRight: 8 }} />
+                    <Text style={[styles.secondaryButtonText, { color: currentTheme.primary }]}>
+                      Reprocessar
+                    </Text>
+                  </View>
+                </Pressable>
+              </View>
+            </View>
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -238,7 +340,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 20,
-    paddingBottom: 100, // Espaço para tab bar flutuante
+    paddingBottom: 100,
   },
   header: {
     marginBottom: 24,
@@ -250,6 +352,39 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
+    lineHeight: 24,
+    marginBottom: 4,
+  },
+  projetoInfo: {
+    fontSize: 12,
+    marginTop: 4,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 60,
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 14,
+  },
+  emptyStateContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+  emptyStateTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 24,
+    textAlign: 'center',
+  },
+  emptyStateSubtitle: {
+    fontSize: 16,
+    marginTop: 12,
+    textAlign: 'center',
     lineHeight: 24,
   },
   infoSection: {

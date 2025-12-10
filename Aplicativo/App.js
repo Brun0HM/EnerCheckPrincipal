@@ -18,6 +18,7 @@ import UploadProjetoScreen from "./screens/UploadProjetoScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import CreateProjetoScreen from "./screens/CreateProjetoScreen";
+import ProjetosTotaisScreen from "./screens/ProjetosTotaisScreen";
 
 // Importa o Context Provider
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
@@ -193,6 +194,14 @@ const GeralStack = () => {
           headerShown: true
         }}
       />
+      <Stack.Screen 
+  name="ProjetosTotaisScreen" 
+  component={ProjetosTotaisScreen}
+  options={{ 
+    title: 'Todos os Projetos',
+    headerShown: true
+  }}
+/>
     </Stack.Navigator>
   );
 };
