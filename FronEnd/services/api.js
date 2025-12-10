@@ -75,7 +75,8 @@ const getUser = async () => {
         email: user.email,
         crea: user.numeroCrea,
         empresa: user.empresa,
-        plano: user.plano
+        plano: user.plano,
+        planoAtivo: user.planoAtivo
       }));
 
       return listaSimples;
@@ -121,7 +122,7 @@ const loginUser = async (email, senha) => {
 
     // Ajuste conforme a estrutura real da sua API (token, accessToken, data.token etc.)
     const token =
-      response.data?.token || response.data?.accessToken || response.data;
+    response.data?.accessToken;
     const refreshToken = response.data?.refreshToken;
     console.log("Login bem-sucedido!");
     console.log("Token Bearer:", token);
@@ -159,7 +160,21 @@ const loginUser = async (email, senha) => {
 //--------------------------------------------------------------------------------------------
 // 2. Planos --------------------------------------------------------------------------------
 
+// 3. Projetos ------------------------------------------------------------------------------
 
+
+const getProjetos =  async () => {
+
+  try {
+    const response = await api.get("/api/Projetos")
+    if (response)
+      return response.data;
+  } catch (error) {
+
+    console.log("Erro ao listar projetos: " + error)
+  }
+
+}
 
 // Exporta as funções que o componente usará
 const apiService = {
@@ -167,6 +182,7 @@ const apiService = {
   createUser,
   deleteUser,
   loginUser,
+  getProjetos,
 
 };
 

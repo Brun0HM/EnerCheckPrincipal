@@ -1,19 +1,53 @@
+import React, { useEffect, useState } from "react";
 
-import React, { useState } from "react";
-import monitoramento from "../apis/monitoramento";
 import { ComponenteLista } from "./ComponenteLista";
 import VisualizarLista from "./VisualizarLista";
 import DeleteModal from "./DeleteModal";
 import Editar from "./Editar";
+import apiService from "../../../FronEnd/services/api";
 
-const ListaProjetos = ({ paginatedData, filteredData}) => {
+const ListaProjetos = ({ paginatedData, filteredData }) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModalView, setShowModalView] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
+  const [projetos, setProjetos] = useState([]);
+  const [carregando, setCarregando] = useState(false)
+  const getProjetos = async () => {
+    setCarregando(true)
+    try {
+      const dados = await apiService.getProjetos();
+      if (Array.isArray(dados)) {
+        console.log("os projetinho: " , dados)
+      } 
+    } catch (error) {
+      console.log(("ah deu erro ai: ", error))
+    } finally {
+      setCarregando(false)
+    }
 
+  };
+
+  const formatarData = (data) => {
+    if (!data) return "Data inválida"; // Verifica se a data é válida
+    const dataObj = new Date(data); // Converte a string em um objeto Date
+    return new Intl.DateTimeFormat("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hourCycle: "h12"
+    }).format(dataObj); // Formata a data no padrão brasileiro (DD/MM/AAAA)
+  };
+
+  useEffect(() => {
+    getProjetos();
+    
+  }, []);
   // Usar dados filtrados se fornecidos, senão usar dados paginados, senão usar todos os dados
-  const dataToRender = filteredData || paginatedData || monitoramento;
+  const dataToRender = filteredData || paginatedData;
 
   const handleView = (item) => {
     setSelectedItem(item);
@@ -46,49 +80,64 @@ const ListaProjetos = ({ paginatedData, filteredData}) => {
 
   return (
     <>
-      <div className="d-flex flex-column gap-2 rounded-4" style={{ maxHeight: "500px" }}>
-        {dataToRender.map((item) => (
-          <ComponenteLista
-            key={item.id}
-            nome={item.nome}
-            desc={item.email}
-            display1={"d-lg-block d-none"}
-            topic1={"Tipo Projeto"}
-            t1info={item.tipoProjeto}
-            topic2={"Tipo Conta"}
-            t2info={item.tipoConta}
-            topic3={"Data Início"}
-            t3info={item.dataInicio}
-            topic4={"Status"}
-            t4info={item.statusProjeto}
-            view={() => handleView(item)}
-            delete={() => handleDelete(item)}
-            sumiu={item.sumiu}
-            editar={() => handleEdit(item)}
-          />
-        ))}
-      </div>
+    {carregando ? <div className="d-flex flex-column align-items-center text-center gap-3 mt-5">
+            <div
+              style={{ width: "5rem", height: "5rem" }}
+              className="spinner-border text-primary align-self-center fs-2"
+            >
+              {" "}
+            </div>
+            <p>Carregando Informações...</p>
+          </div> 
+          :  <div
+          className="d-flex flex-column gap-2 rounded-4"
+          style={{ maxHeight: "500px" }}
+        >
+          {dataToRender.map((item) => (
+          
+            <ComponenteLista
+              key={item.id}
+              nome={item.nome}
+              desc={item.email}
+              display1={"d-lg-block d-none"}
+              topic1={"Descrição"}
+              t1info={item.descricao}
+              topic3={"Data Início"}
+              t3info={formatarData(item.dataInicio)}
+              topic4={"Status"}
+              t4info={item.status}
+              view={() => handleView(item)}
+              delete={() => handleDelete(item)}
+              sumiu={item.sumiu}
+              editar={() => handleEdit(item)}
+            />
+          ))}
+        </div> }
+      
 
       {showModalView && (
-        <div className='modal show d-block' tabIndex="-1">
-          <div className='modal-backdrop show' onClick={handleCloseModalView}></div>
-          <VisualizarLista
-            item={selectedItem}
-            onClose={handleCloseModalView}
-          />
+        <div className="modal show d-block" tabIndex="-1">
+          <div
+            className="modal-backdrop show"
+            onClick={handleCloseModalView}
+          ></div>
+          <VisualizarLista item={selectedItem} onClose={handleCloseModalView} />
         </div>
       )}
 
       {showModalDelete && (
         <div className="modal show d-block" tabIndex="-1">
-          <div className="modal-backdrop show" onClick={handleCloseModalDelete}></div>
+          <div
+            className="modal-backdrop show"
+            onClick={handleCloseModalDelete}
+          ></div>
           <DeleteModal
             item={selectedItem}
             onClose={handleCloseModalDelete}
             onConfirm={handleConfirmDelete}
           />
         </div>
-        )}
+      )}
 
       {showModalEdit && (
         <>

@@ -10,14 +10,18 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
+
     const token = localStorage.getItem("Token");
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
+
+      console.log("Cabeçalhos Enviados: ", config.headers)
     }
 
     return config;
   },
   (error) => {
+    console.log("Erro no receptor de requisição! ", error)
     return Promise.reject(error);
   }
 );
@@ -27,6 +31,7 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
+    console.log("Erro no receptor de resposta! ", error)
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
@@ -70,4 +75,19 @@ const loginUser = async (email, senha) => {
   }
 };
 
-export default loginUser;
+const editUser = async (id , payload) => {
+  if (id){
+    try {
+      const response = await api.put(`/api/Usuarios/${id}`, payload)
+      return response;
+    } catch (error) {
+      console.error("Erro ao editar usuario: ", error.message)
+    }
+  }
+}
+
+const apiUser = {
+  loginUser, editUser
+}
+
+export default apiUser;

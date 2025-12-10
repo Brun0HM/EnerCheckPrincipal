@@ -24,16 +24,17 @@ const VisualizarLista = ({ item, onClose, title = "Visualizar" }) => {
           <div className="d-flex flex-column gap-3">
             
             {/* Renderização dinâmica baseada no tipo de item */}
+            {item.id && renderField("ID", item.id)}
+            
             {item.email && renderField("Email", item.email)}
-            {item.usuarioNome && renderField("Nome", item.usuarioNome)}
+
             {item.nome && renderField("Nome", item.nome)}
             
             {item.descricao && renderField("Descrição", item.descricao)}
-            {item.tipoProjeto && renderField("Tipo Projeto", item.tipoProjeto)}
-            {item.tipoConta && renderField("Tipo Conta", item.tipoConta)}
+            
             {item.dataInicio && renderField("Data Início", item.dataInicio)}
-            {item.dataFim && renderField("Data Fim", item.dataFim)}
-            {item.statusProjeto && renderField("Status", item.statusProjeto)}
+        
+            {item.status && renderField("Status", item.status)}
             
             {item.crea && renderField("CREA", item.crea)}
             {item.dataCriacao && renderField("Data de Criação", item.dataCriacao)}
@@ -41,9 +42,8 @@ const VisualizarLista = ({ item, onClose, title = "Visualizar" }) => {
             
             {item.preco && renderField("Preço", item.preco)}
             {item.req && renderField("Requisições", item.req)}
-            {item.ativo !== undefined && renderField("Ativo", item.ativo ? "Sim" : "Não")}
-            
-            {item.id && renderField("ID", item.id)}
+            {item.plano?.nome && renderField("Plano Cadastrado ", item.plano?.nome)}
+            {item.planoAtivo !== undefined && renderField("Status Plano", item.planoAtivo ? "Ativo" : "Não Ativo")}
 
           </div>
         </div>

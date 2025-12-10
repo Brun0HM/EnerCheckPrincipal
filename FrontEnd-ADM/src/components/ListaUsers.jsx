@@ -7,8 +7,7 @@ import Editar from "./Editar";
 import apiService from "../../../FronEnd/services/api";
 import { toast, ToastContainer } from "react-toastify";
 
-export const ListaUsers = (props) => {
-  const { paginatedData } = props;
+export const ListaUsers = ({filteredData, paginatedData}) => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModalView, setShowModalView] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
@@ -77,6 +76,10 @@ export const ListaUsers = (props) => {
     }
   };
 
+  
+  const dataToRender = filteredData || paginatedData;
+
+
   return (
     <>
       <ToastContainer></ToastContainer>
@@ -84,7 +87,7 @@ export const ListaUsers = (props) => {
         className="d-flex flex-column gap-2 rounded-4"
         style={{ maxHeight: "500px" }}
       >
-        {!paginatedData || paginatedData.length === 0 ? (
+        {!dataToRender || dataToRender.length === 0 ? (
           <div className="d-flex flex-column align-items-center text-center gap-3 mt-5">
             <div
               style={{ width: "5rem", height: "5rem" }}
@@ -95,7 +98,7 @@ export const ListaUsers = (props) => {
             <p>Carregando Informações...</p>
           </div>
         ) : !carregando ? (
-          paginatedData.map((usuario) => (
+          dataToRender.map((usuario) => (
             <ComponenteLista
               key={usuario.id}
               nome={usuario.nome}
@@ -143,7 +146,7 @@ export const ListaUsers = (props) => {
           <DeleteModal
             item={selectedItem}
             onClose={handleCloseModalDelete}
-            onConfirm={handleConfirmDelete}
+            endpointDelete={handleConfirmDelete}
           />
         </div>
       )}
@@ -154,7 +157,7 @@ export const ListaUsers = (props) => {
 
           {/* Modal centralizado */}
           <div className="d-flex justify-content-center align-items-center w-100 h-100 position-fixed z-3 top-0 end-0">
-            <Editar fechar={() => setShowModalEdit(false)} />
+            <Editar usuarios={selectedItem} fechar={() => setShowModalEdit(false)} />
           </div>
         </>
       )}

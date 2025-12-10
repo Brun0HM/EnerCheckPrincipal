@@ -1,9 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 
-import monitoramento from '../apis/monitoramento';
 import apiService from '../../../FronEnd/services/api';
 import apiPlanos from '../apis/planos';
-import apiProjetos from '../apis/monitoramento';
+
 
 const ContainerLista = (props) => {
 
@@ -15,7 +14,7 @@ const ContainerLista = (props) => {
   useEffect(() => {
   apiPlanos.listagemPlanos().then(setPlanos);
   apiService.getUser().then(setUsuarios);
-  apiProjetos.getProjetos().then(setProjetos);
+  apiService.getProjetos().then(setProjetos);
   }, [])
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -38,7 +37,7 @@ const ContainerLista = (props) => {
       } else if (componentType && componentType.name === 'ListaPlanos') {
         return planos;
       } else if (componentType && componentType.name === 'ListaProjetos') {
-        return monitoramento;
+        return projetos;
       }
     }
     return [];

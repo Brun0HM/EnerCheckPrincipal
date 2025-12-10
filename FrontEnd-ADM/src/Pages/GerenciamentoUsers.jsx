@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { TabelaGeral } from "../components/TabelaGeral";
 import { ContainerLista } from "../components/ContainerLista";
 
@@ -7,50 +7,36 @@ import Modal from "../components/Modal";
 import apiService from "../../../FronEnd/services/api";
 import { ToastContainer, toast } from "react-toastify";
 import { ListaPlanos } from "../components/ListaPlanos";
+import apiUser from "../apis/usuarios";
 
 const GerenciamentoUsers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [usuarios, setUsuarios] = useState([]);
   const [carregando, setCarregando] = useState(false);
+  const [executado, setExecutado] = useState(false);
+  const [busca, setBusca] = useState("");
 
-  
-  
-  
-  const listarUsers = async () => {
-
-    const notificacao = toast.loading(" Carregando dados...", {
-      position: "bottom-right",
-      className: "bg-primary text-light",
+  const dadosFiltrados = useMemo(() => {
+    if (!busca) return usuarios;
+    const textoBusca = busca.toLowerCase().trim();
+    return usuarios.filter((usuario) => {
+      const nome = usuario?.nome?.toLowerCase();
+      const email = usuario?.email?.toLowerCase();
+      const empresa = usuario?.empresa?.toLowerCase();
+      return (
+        nome.includes(textoBusca) ||
+        email.includes(textoBusca) ||
+        empresa.includes(textoBusca)
+      );
     });
-    setUsuarios("");
-    setCarregando(true);
+  }, [usuarios, busca]);
 
-
-    
+  const listarUsers = async () => {
     try {
-      const dados = await apiService.getUser();
-      if (dados && Array.isArray(dados)) setUsuarios(dados);
-      if (usuarios) {
-        toast.update(notificacao, {
-          render: "Dados Carregados!",
-          type: "success",
-          className: "bg-success text-light border border-2 border-light",
-          isLoading: false,
-          autoClose: 2000,
-          progressClassName: "text-light bg-success-subtle",
-        });
-      }
+      const response = await apiService.getUser();
+      setUsuarios(response);
     } catch (error) {
-      console.log("Erro ao buscar usuarios: " + error);
-      toast.update(notificacao, {
-        render: "Erro ao acessar a API. cheque o console para mais informações",
-        type: "danger",
-        className: "bg-danger text-light",
-        isLoading: false,
-        autoClose: 2000,
-      });
-    } finally {
-      setCarregando(false);
+      console.error("Erro ao listar usuários:", error);
     }
   };
 
@@ -70,17 +56,22 @@ const GerenciamentoUsers = () => {
             Ler, criar, editar e excluir cadastro de usuários
           </p>
         </div>
-        <div className="d-flex flex-md-row  flex-column gap-2 gap-md-5 overflow-hidden">
-          <TabelaGeral
-            topic1={"Cadastros Totais"}
-            t1info={usuarios.length}
-            
-          />
+        <div className="d-flex flex-column gap-2 gap-md-5 overflow-hidden">
+          <input
+          placeholder="Pesquise por nome, email ou empresa..."
+            type="search"
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+            className="col-3  rounded-2 border-2 bg-body-tertiary"
+          ></input>
+          <TabelaGeral topic1={"Cadastros Totais"} t1info={usuarios.length} />
           <ContainerLista
             topico={"Listagem de usuários"}
             desc={"gerencie os usuários disponíveis"}
             getLista={listarUsers}
-            lista={<ListaUsers users={usuarios} getLista={listarUsers} />}
+            lista={
+              <ListaUsers filteredData={dadosFiltrados} getLista={listarUsers} />
+            }
             ModalOpen={() => setIsModalOpen(true)}
           />
         </div>

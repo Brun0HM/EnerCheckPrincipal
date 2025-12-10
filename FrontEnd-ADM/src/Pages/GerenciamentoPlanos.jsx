@@ -5,12 +5,23 @@ import { ListaPlanos } from "../components/ListaPlanos";
 import apiPlanos from "../apis/planos";
 import { ToastContainer, toast } from "react-toastify";
 const GerenciamentoPlanos = () => {
-
+  
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [planos, setPlanos] = useState([]);
   const [carregando, setCarregando] = useState(false);
+
+  
+  // const mediaPlanos = planos.reduce((acc, curr, index, array) => {
+  //   acc += (curr.preco * curr.quantidadeUsers)
+  
+  //   if (index === array.length - 1) {
+  //     return acc / array.length;
+  //   }
+  //   return acc;
+  // }, 0)
+
 
   const listarPlanos = async () => {
     setCarregando(true);
@@ -48,9 +59,7 @@ const GerenciamentoPlanos = () => {
     listarPlanos();
   }, []);
 
-  //  const faturamentoTotal = planos.reduce((valorAnt, plano) => {
-  //    return valorAnt + plano.preco * plano.totalUsuarios;
-  //  }, 0);
+
   return (
     <div className="container py-5 mt-2 pt-2 mb-3 pb-3">
       <ToastContainer></ToastContainer>
@@ -66,7 +75,7 @@ const GerenciamentoPlanos = () => {
           topic1={"Planos Disponíveis"}
           t1info={planos.length}
           topic2={"Faturamento Atual"}
-          t2info={"R$"}
+          t2info={"R$ " + "100,00"}
           topic3={"Tópico 3"}
           t3info={"41"}
         />
