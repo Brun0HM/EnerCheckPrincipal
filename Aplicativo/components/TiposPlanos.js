@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const TiposPlanos = ({ icon, title, descricao, preco, itens, theme, onSelect }) => {
@@ -124,7 +124,6 @@ const styles = StyleSheet.create({
     minHeight: 225,
     maxHeight: 225,
     paddingVertical: 8,
-    
   },
   benefitItem: {
     flexDirection: 'row',

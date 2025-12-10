@@ -1,22 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   ScrollView, 
   View, 
   Text, 
   StyleSheet, 
-  Pressable
+  Pressable,
+
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import CardStatusProjetoDashboard from '../components/CardStatusProjetoDashboard';
 import ProjetosRecentes from '../components/ProjetosRecentes';
 import { useTheme } from '../contexts/ThemeContext';
+import { usuariosAPI } from '../api/Usuarios'; 
 
-export default function GeralScreen() {
+export default function GeralScreen({route}) {
   const { theme, isLoaded } = useTheme();
   const navigation = useNavigation();
+  const [userData, setUserData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
+    useFocusEffect(
+    useCallback(() => {
+      console.log('🔄 GeralScreen - Recarregando dados...');
+      loadUserData();
+    }, [route?.params?.timestamp]) // Recarrega quando timestamp muda
+  );
 
+  const loadUserData = async () => {
+    try {
+      setIsLoading(true);
+      const user = await usuariosAPI.getUserByToken();
+      setUserData(user);
+      console.log('✅ Dados recarregados:', {
+        email: user?.email,
+        plano: user?.plano?.nome,
+        requisicoes: user?.userReq
+      });
+    } catch (error) {
+      console.error('Erro ao carregar dados:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (!isLoaded) {
     return (
