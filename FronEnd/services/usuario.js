@@ -1,4 +1,4 @@
-import api from "./api.js";
+import { api } from "./api.js";
 
 // Função que busca os usuarios na API e retorna uma lista simplificada
 const getUser = async () => {

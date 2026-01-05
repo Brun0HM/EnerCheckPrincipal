@@ -51,7 +51,6 @@ api.interceptors.response.use(
       } catch (refreshError) {
         console.error("O refresh token falhou: ", refreshError);
         localStorage.clear();
-        
       }
     }
   }
@@ -76,7 +75,7 @@ const getUser = async () => {
         crea: user.numeroCrea,
         empresa: user.empresa,
         plano: user.plano,
-        planoAtivo: user.planoAtivo
+        planoAtivo: user.planoAtivo,
       }));
 
       return listaSimples;
@@ -121,8 +120,7 @@ const loginUser = async (email, senha) => {
     });
 
     // Ajuste conforme a estrutura real da sua API (token, accessToken, data.token etc.)
-    const token =
-    response.data?.accessToken;
+    const token = response.data?.accessToken;
     const refreshToken = response.data?.refreshToken;
     console.log("Login bem-sucedido!");
     console.log("Token Bearer:", token);
@@ -162,19 +160,14 @@ const loginUser = async (email, senha) => {
 
 // 3. Projetos ------------------------------------------------------------------------------
 
-
-const getProjetos =  async () => {
-
+const getProjetos = async () => {
   try {
-    const response = await api.get("/api/Projetos")
-    if (response)
-      return response.data;
+    const response = await api.get("/api/Projetos");
+    if (response) return response.data;
   } catch (error) {
-
-    console.log("Erro ao listar projetos: " + error)
+    console.log("Erro ao listar projetos: " + error);
   }
-
-}
+};
 
 // Exporta as funções que o componente usará
 const apiService = {
@@ -183,7 +176,9 @@ const apiService = {
   deleteUser,
   loginUser,
   getProjetos,
-
 };
+
+// Exporta a instância do axios para uso direto em outros serviços
+export { api };
 
 export default apiService;

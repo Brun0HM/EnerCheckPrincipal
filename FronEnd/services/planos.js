@@ -1,4 +1,4 @@
-import api from "./api.js";
+import { api } from "./api.js";
 
 const putPlanos = async (planoId, config = {}) => {
   const token = localStorage.getItem("Token");
